@@ -17,6 +17,11 @@ class MTMenuView: UIView {
         }
     }
     
+    @IBOutlet weak var cutoutImageView: UIImageView! {
+        didSet {
+            cutoutImageView.image = UIImage(named: "buddha")?.imageWithRenderingMode(.AlwaysTemplate)
+        }
+    }
     override func awakeFromNib() {
         super.awakeFromNib()
     }

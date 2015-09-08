@@ -16,9 +16,9 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e5s-6J-eYm">
-                    <rect key="frame" x="40" y="170" width="335" height="327"/>
+                    <rect key="frame" x="40" y="170" width="350" height="327"/>
                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="2Ub-F3-k3L">
-                        <rect key="frame" x="0.0" y="0.0" width="335" height="327"/>
+                        <rect key="frame" x="0.0" y="0.0" width="350" height="327"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R4r-Ie-Keo">
@@ -27,56 +27,65 @@
                                     <rect key="frame" x="0.0" y="0.0" width="995" height="667"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="buddha" translatesAutoresizingMaskIntoConstraints="NO" id="1eD-e6-znF">
-                                            <rect key="frame" x="163" y="192" width="292" height="283"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="292" id="8Ww-8T-aOw"/>
-                                            </constraints>
-                                        </imageView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ro0-dt-p4Z" userLabel="Menu Content">
                                             <rect key="frame" x="80" y="192" width="200" height="283"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bMh-68-Icc">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bMh-68-Icc">
                                                     <rect key="frame" x="8" y="8" width="93" height="34"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="Meditation"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8e-ZZ-0KW">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8e-ZZ-0KW">
                                                     <rect key="frame" x="8" y="43" width="42" height="34"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="Chat"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8pn-db-Rcf">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8pn-db-Rcf">
                                                     <rect key="frame" x="8" y="78" width="68" height="34"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="Commit"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FpX-uQ-V9d">
+                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FpX-uQ-V9d">
                                                     <rect key="frame" x="8" y="116" width="73" height="34"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="Settings"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lyi-pZ-pay">
+                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lyi-pZ-pay">
                                                     <rect key="frame" x="8" y="158" width="53" height="34"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="About"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mp5-ye-z5I">
+                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mp5-ye-z5I">
                                                     <rect key="frame" x="8" y="200" width="61" height="34"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="Logout"/>
                                                 </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1eD-e6-znF">
+                                                    <rect key="frame" x="58" y="0.0" width="292" height="283"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="292" id="8Ww-8T-aOw"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="200" id="0Ay-eJ-D4k"/>
+                                                <constraint firstItem="1eD-e6-znF" firstAttribute="leading" secondItem="n8e-ZZ-0KW" secondAttribute="trailing" constant="8" symbolic="YES" id="1Hm-9w-oyV"/>
+                                                <constraint firstItem="n8e-ZZ-0KW" firstAttribute="top" secondItem="ro0-dt-p4Z" secondAttribute="top" constant="43" id="Bda-QW-bmX"/>
+                                                <constraint firstItem="1eD-e6-znF" firstAttribute="leading" secondItem="ro0-dt-p4Z" secondAttribute="leading" constant="58" id="KdQ-mC-wso"/>
+                                                <constraint firstItem="n8e-ZZ-0KW" firstAttribute="leading" secondItem="8pn-db-Rcf" secondAttribute="leading" id="RTD-iB-fgq"/>
+                                                <constraint firstItem="n8e-ZZ-0KW" firstAttribute="top" secondItem="bMh-68-Icc" secondAttribute="bottom" constant="1" id="aHv-tP-61D"/>
+                                                <constraint firstItem="n8e-ZZ-0KW" firstAttribute="leading" secondItem="FpX-uQ-V9d" secondAttribute="leading" id="dye-xZ-Jvq"/>
+                                                <constraint firstItem="n8e-ZZ-0KW" firstAttribute="leading" secondItem="Lyi-pZ-pay" secondAttribute="leading" id="gID-xF-750"/>
+                                                <constraint firstAttribute="bottom" secondItem="1eD-e6-znF" secondAttribute="bottom" id="gpY-ud-Yrw"/>
+                                                <constraint firstItem="n8e-ZZ-0KW" firstAttribute="leading" secondItem="mp5-ye-z5I" secondAttribute="leading" id="h18-DV-fOu"/>
+                                                <constraint firstItem="n8e-ZZ-0KW" firstAttribute="leading" secondItem="bMh-68-Icc" secondAttribute="leading" id="vB7-Ib-MIU"/>
+                                                <constraint firstItem="8pn-db-Rcf" firstAttribute="top" secondItem="n8e-ZZ-0KW" secondAttribute="bottom" constant="1" id="wB9-cT-aVB"/>
+                                                <constraint firstItem="1eD-e6-znF" firstAttribute="top" secondItem="ro0-dt-p4Z" secondAttribute="top" id="zj5-ST-a2T"/>
                                             </constraints>
                                         </view>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="ro0-dt-p4Z" firstAttribute="top" secondItem="1eD-e6-znF" secondAttribute="top" id="4Lw-zz-OBZ"/>
-                                        <constraint firstItem="1eD-e6-znF" firstAttribute="leading" secondItem="voX-Lk-jzG" secondAttribute="leading" constant="163" id="Caz-jb-jFC"/>
                                         <constraint firstItem="ro0-dt-p4Z" firstAttribute="centerY" secondItem="voX-Lk-jzG" secondAttribute="centerY" id="DJi-ok-lOS"/>
-                                        <constraint firstItem="ro0-dt-p4Z" firstAttribute="bottom" secondItem="1eD-e6-znF" secondAttribute="bottom" id="bdZ-4Z-XVF"/>
                                         <constraint firstItem="ro0-dt-p4Z" firstAttribute="top" secondItem="voX-Lk-jzG" secondAttribute="top" constant="192" id="fbi-zL-Rf4"/>
                                         <constraint firstItem="ro0-dt-p4Z" firstAttribute="leading" secondItem="voX-Lk-jzG" secondAttribute="leading" constant="80" id="ftm-1s-k5c"/>
                                     </constraints>
@@ -94,7 +103,7 @@
                 <constraint firstItem="e5s-6J-eYm" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="170" id="0j2-NF-ptg"/>
                 <constraint firstItem="R4r-Ie-Keo" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="-20" id="CVO-z8-4qh"/>
                 <constraint firstAttribute="bottom" secondItem="R4r-Ie-Keo" secondAttribute="bottom" id="R8r-39-sYB"/>
-                <constraint firstAttribute="trailing" secondItem="e5s-6J-eYm" secondAttribute="trailing" id="YlT-7z-glY"/>
+                <constraint firstAttribute="trailing" secondItem="e5s-6J-eYm" secondAttribute="trailing" constant="-15" id="YlT-7z-glY"/>
                 <constraint firstItem="e5s-6J-eYm" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="40" id="c9w-Ya-hg1"/>
                 <constraint firstAttribute="bottom" secondItem="e5s-6J-eYm" secondAttribute="bottom" constant="170" id="dvF-0L-Pje"/>
                 <constraint firstAttribute="trailing" secondItem="R4r-Ie-Keo" secondAttribute="trailing" constant="-600" id="tMk-xE-iVg"/>
@@ -103,10 +112,8 @@
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
             <connections>
                 <outlet property="blurView" destination="e5s-6J-eYm" id="9mL-Yi-pS0"/>
+                <outlet property="cutoutImageView" destination="1eD-e6-znF" id="T1s-MT-wqO"/>
             </connections>
         </view>
     </objects>
-    <resources>
-        <image name="buddha" width="277" height="319"/>
-    </resources>
 </document>
