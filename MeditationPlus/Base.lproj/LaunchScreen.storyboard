@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8151.3"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -18,17 +17,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="nwT-J2-5N7">
-                                <rect key="frame" x="20" y="20" width="560" height="580"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="nwT-J2-5N7">
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                             </imageView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="nwT-J2-5N7" secondAttribute="trailing" id="1uz-ys-dC8"/>
-                            <constraint firstItem="nwT-J2-5N7" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" id="ESs-5s-89G"/>
-                            <constraint firstItem="nwT-J2-5N7" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" id="IH3-F6-sPB"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="nwT-J2-5N7" secondAttribute="bottom" id="aMN-QD-8Ux"/>
+                            <constraint firstItem="nwT-J2-5N7" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="1Gt-d8-jIP"/>
+                            <constraint firstItem="nwT-J2-5N7" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" id="6zM-ZD-7wb"/>
+                            <constraint firstAttribute="trailing" secondItem="nwT-J2-5N7" secondAttribute="trailing" id="G4d-ca-QOC"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="nwT-J2-5N7" secondAttribute="bottom" id="hdY-6d-yMt"/>
                         </constraints>
                     </view>
                 </viewController>

@@ -35,6 +35,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         drawerViewController.leftViewController   = menuViewController
         drawerViewController.backgroundImage      = UIImage(named: "background")
         
+        drawerViewController.openDrawer(KGDrawerSide.Right, animated: false) { (finished) -> Void in
+                //
+        }
+        
+        drawerViewController.closeDrawer(KGDrawerSide.Right, animated: true, complete: { (finished) -> Void in
+            //
+        })
+        
         return drawerViewController
     }
 }
