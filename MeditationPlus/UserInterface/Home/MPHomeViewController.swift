@@ -22,7 +22,7 @@ class MPHomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Meditation+s"
+        self.title = "Meditation+"
         
         self.navigationController?.navigationBar.translucent    = false
         self.navigationController?.hidesBarsOnSwipe             = true
