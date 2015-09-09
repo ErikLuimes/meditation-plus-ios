@@ -22,7 +22,7 @@ private class MPMenuItem {
 class MPMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private var menuItems: [MPMenuItem] = [MPMenuItem]()
     private var menuView: MPMenuView { return self.view as! MPMenuView }
-    private let menuCellidentifier = "menuCellidentifier"
+    private let menuCellIdentifier = "menuCellIdentifier"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +49,8 @@ class MPMenuViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         self.menuView.menuTableView.delegate   = self
         self.menuView.menuTableView.dataSource = self
+        self.menuView.menuTableView.registerNib(UINib(nibName: "MPMenuCell", bundle: nil), forCellReuseIdentifier: self.menuCellIdentifier)
+        self.menuView.menuTableView.tableFooterView = UIView(frame: CGRectZero)
     }
 
     // MARK: UITableViewDataSource
@@ -58,7 +60,7 @@ class MPMenuViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell             = tableView.dequeueReusableCellWithIdentifier(self.menuCellidentifier, forIndexPath: indexPath)
+        let cell             = tableView.dequeueReusableCellWithIdentifier(self.menuCellIdentifier, forIndexPath: indexPath)
         cell.textLabel?.text = self.menuItems[indexPath.row].name
         
         return cell

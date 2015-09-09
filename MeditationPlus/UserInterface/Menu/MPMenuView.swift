@@ -26,12 +26,16 @@ class MPMenuView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
     }
-    /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let tableViewHeight        = CGRectGetHeight(self.menuTableView.frame)
+        let tableViewContentHeight = self.menuTableView.contentSize.height
+        
+        if tableViewContentHeight < tableViewHeight {
+            self.menuTableView.contentInset = UIEdgeInsetsMake((tableViewHeight - tableViewContentHeight) / 2, 0, 0, 0)
+        }
     }
-    */
 
 }

@@ -11,7 +11,7 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT" customClass="MPMenuView" customModule="MeditationPlus">
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT" customClass="MPMenuView" customModule="MeditationPlus" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -30,9 +30,11 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ro0-dt-p4Z" userLabel="Menu Content">
                                             <rect key="frame" x="80" y="192" width="200" height="283"/>
                                             <subviews>
-                                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3nI-xm-ls8">
+                                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3nI-xm-ls8">
                                                     <rect key="frame" x="0.0" y="0.0" width="200" height="283"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="separatorColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                                                    <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </tableView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1eD-e6-znF">
                                                     <rect key="frame" x="58" y="0.0" width="292" height="283"/>
@@ -80,9 +82,9 @@
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
             <connections>
-                <outlet property="blurView" destination="e5s-6J-eYm" id="CGa-aP-nlr"/>
-                <outlet property="cutoutImageView" destination="1eD-e6-znF" id="9kc-Ko-Zz6"/>
-                <outlet property="menuTableView" destination="3nI-xm-ls8" id="2vE-TG-NQT"/>
+                <outlet property="blurView" destination="e5s-6J-eYm" id="Bwy-jZ-hxK"/>
+                <outlet property="cutoutImageView" destination="1eD-e6-znF" id="P3I-1o-ilc"/>
+                <outlet property="menuTableView" destination="3nI-xm-ls8" id="ZxN-tZ-7zF"/>
             </connections>
         </view>
     </objects>
