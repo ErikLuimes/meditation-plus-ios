@@ -45,17 +45,17 @@
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="Commit"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FpX-uQ-V9d">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FpX-uQ-V9d">
                                                     <rect key="frame" x="8" y="116" width="73" height="34"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="Settings"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lyi-pZ-pay">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lyi-pZ-pay">
                                                     <rect key="frame" x="8" y="158" width="53" height="34"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="About"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mp5-ye-z5I">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mp5-ye-z5I">
                                                     <rect key="frame" x="8" y="200" width="61" height="34"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="Logout"/>
@@ -70,11 +70,14 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="200" id="0Ay-eJ-D4k"/>
                                                 <constraint firstItem="1eD-e6-znF" firstAttribute="leading" secondItem="n8e-ZZ-0KW" secondAttribute="trailing" constant="8" symbolic="YES" id="1Hm-9w-oyV"/>
+                                                <constraint firstItem="mp5-ye-z5I" firstAttribute="top" secondItem="Lyi-pZ-pay" secondAttribute="bottom" constant="8" symbolic="YES" id="3Kg-1l-HnJ"/>
                                                 <constraint firstItem="n8e-ZZ-0KW" firstAttribute="top" secondItem="ro0-dt-p4Z" secondAttribute="top" constant="43" id="Bda-QW-bmX"/>
+                                                <constraint firstAttribute="bottom" secondItem="mp5-ye-z5I" secondAttribute="bottom" constant="49" id="HAe-d4-cZ3"/>
                                                 <constraint firstItem="1eD-e6-znF" firstAttribute="leading" secondItem="ro0-dt-p4Z" secondAttribute="leading" constant="58" id="KdQ-mC-wso"/>
                                                 <constraint firstItem="n8e-ZZ-0KW" firstAttribute="leading" secondItem="8pn-db-Rcf" secondAttribute="leading" id="RTD-iB-fgq"/>
                                                 <constraint firstItem="n8e-ZZ-0KW" firstAttribute="top" secondItem="bMh-68-Icc" secondAttribute="bottom" constant="1" id="aHv-tP-61D"/>
                                                 <constraint firstItem="n8e-ZZ-0KW" firstAttribute="leading" secondItem="FpX-uQ-V9d" secondAttribute="leading" id="dye-xZ-Jvq"/>
+                                                <constraint firstItem="Lyi-pZ-pay" firstAttribute="top" secondItem="FpX-uQ-V9d" secondAttribute="bottom" constant="8" symbolic="YES" id="f9k-Pt-lVf"/>
                                                 <constraint firstItem="n8e-ZZ-0KW" firstAttribute="leading" secondItem="Lyi-pZ-pay" secondAttribute="leading" id="gID-xF-750"/>
                                                 <constraint firstAttribute="bottom" secondItem="1eD-e6-znF" secondAttribute="bottom" id="gpY-ud-Yrw"/>
                                                 <constraint firstItem="n8e-ZZ-0KW" firstAttribute="leading" secondItem="mp5-ye-z5I" secondAttribute="leading" id="h18-DV-fOu"/>

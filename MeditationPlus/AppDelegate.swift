@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let drawerViewController = KGDrawerViewController()
         drawerViewController.animator.springDamping = 1
         
-        let initialContentViewController = MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil)
+        let initialContentViewController = MPHomeViewController(nibName: "MPHomeViewController", bundle: nil)
         let menuViewController = MPMenuViewController(nibName: "MPMenuViewController", bundle: nil)
         
         drawerViewController.centerViewController = UINavigationController(rootViewController: initialContentViewController)
