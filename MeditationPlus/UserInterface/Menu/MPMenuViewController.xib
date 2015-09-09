@@ -31,7 +31,7 @@
                                             <rect key="frame" x="80" y="192" width="200" height="283"/>
                                             <subviews>
                                                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3nI-xm-ls8">
-                                                    <rect key="frame" x="0.0" y="0.0" width="200" height="283"/>
+                                                    <rect key="frame" x="-16" y="0.0" width="232" height="283"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <color key="separatorColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                                     <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -46,9 +46,9 @@
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="200" id="0Ay-eJ-D4k"/>
                                                 <constraint firstItem="1eD-e6-znF" firstAttribute="leading" secondItem="ro0-dt-p4Z" secondAttribute="leading" constant="58" id="KdQ-mC-wso"/>
-                                                <constraint firstAttribute="trailing" secondItem="3nI-xm-ls8" secondAttribute="trailing" id="KhD-gJ-HD6"/>
+                                                <constraint firstAttribute="trailing" secondItem="3nI-xm-ls8" secondAttribute="trailing" constant="-16" id="KhD-gJ-HD6"/>
                                                 <constraint firstAttribute="bottom" secondItem="3nI-xm-ls8" secondAttribute="bottom" id="Zbg-CJ-YPn"/>
-                                                <constraint firstItem="3nI-xm-ls8" firstAttribute="leading" secondItem="ro0-dt-p4Z" secondAttribute="leading" id="a7J-oT-gDq"/>
+                                                <constraint firstItem="3nI-xm-ls8" firstAttribute="leading" secondItem="ro0-dt-p4Z" secondAttribute="leading" constant="-16" id="a7J-oT-gDq"/>
                                                 <constraint firstAttribute="bottom" secondItem="1eD-e6-znF" secondAttribute="bottom" id="gpY-ud-Yrw"/>
                                                 <constraint firstItem="3nI-xm-ls8" firstAttribute="top" secondItem="ro0-dt-p4Z" secondAttribute="top" id="yfd-Nq-vRz"/>
                                                 <constraint firstItem="1eD-e6-znF" firstAttribute="top" secondItem="ro0-dt-p4Z" secondAttribute="top" id="zj5-ST-a2T"/>
