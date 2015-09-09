@@ -8,7 +8,8 @@
 
 import UIKit
 
-class MTMenuView: UIView {
+class MPMenuView: UIView {
+    @IBOutlet weak var menuTableView: UITableView!
 
     @IBOutlet weak var blurView: UIVisualEffectView! {
         didSet {

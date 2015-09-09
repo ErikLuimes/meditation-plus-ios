@@ -8,28 +8,65 @@
 
 import UIKit
 
-class MPMenuViewController: UIViewController {
+private class MPMenuItem {
+    private(set) var name: String!
+    
+    private(set) var navigationBlock: (()->Void)?
+    
+    required init(name: String, _ navigationBlock: (() -> Void)? = nil) {
+        self.name            = name
+        self.navigationBlock = navigationBlock
+    }
+}
 
+class MPMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    private var menuItems: [MPMenuItem] = [MPMenuItem]()
+    private var menuView: MPMenuView { return self.view as! MPMenuView }
+    private let menuCellidentifier = "menuCellidentifier"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        let homeItem = MPMenuItem(name: "Home") {
+            NSLog("home")
+        }
+        self.menuItems.append(homeItem)
+        
+        let settingsItem = MPMenuItem(name: "Settings") {
+            NSLog("settings")
+        }
+        self.menuItems.append(settingsItem)
+        
+        let aboutItem = MPMenuItem(name: "About") {
+            NSLog("about")
+        }
+        self.menuItems.append(aboutItem)
+        
+        let logoutItem = MPMenuItem(name: "Logout") {
+            NSLog("logout")
+        }
+        self.menuItems.append(logoutItem)
+        
+        self.menuView.menuTableView.delegate   = self
+        self.menuView.menuTableView.dataSource = self
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    // MARK: UITableViewDataSource
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return menuItems.count
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell             = tableView.dequeueReusableCellWithIdentifier(self.menuCellidentifier, forIndexPath: indexPath)
+        cell.textLabel?.text = self.menuItems[indexPath.row].name
+        
+        return cell
     }
-    */
+    
+    // MARK: UITableViewDelegate
 
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.menuItems[indexPath.row].navigationBlock?()
+    }
 }
