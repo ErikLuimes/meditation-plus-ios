@@ -167,6 +167,7 @@ public class CAPSPageMenu: UIViewController, UIScrollViewDelegate, UIGestureReco
     
     public convenience init(viewControllers: [UIViewController], frame: CGRect, pageMenuOptions: [CAPSPageMenuOption]?) {
         self.init(viewControllers:viewControllers, frame:frame, options:nil)
+//        self.init(viewControllers: viewControllers, frame: frame, options: nil)
         
         if let options = pageMenuOptions {
             for option in options {
@@ -230,10 +231,13 @@ public class CAPSPageMenu: UIViewController, UIScrollViewDelegate, UIGestureReco
             configureUserInterface()
         }
     }
-    
+
     required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
+    
+
+
 	
 	// MARK: - Container View Controller
 	public override func shouldAutomaticallyForwardAppearanceMethods() -> Bool {
