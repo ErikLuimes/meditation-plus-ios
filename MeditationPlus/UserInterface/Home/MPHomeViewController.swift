@@ -24,6 +24,8 @@ class MPHomeViewController: UIViewController {
         
         self.title = "Meditation+"
         
+        self.view.clipsToBounds = true
+        
         self.navigationController?.navigationBar.translucent    = false
         self.navigationController?.hidesBarsOnSwipe             = true
         self.navigationController?.hidesBarsOnTap               = true
