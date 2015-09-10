@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8187.4" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8151.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -14,22 +14,23 @@
                         <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="nwT-J2-5N7">
-                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
+                                <rect key="frame" x="-40" y="-20" width="455" height="727"/>
                             </imageView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="nwT-J2-5N7" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="1Gt-d8-jIP"/>
-                            <constraint firstItem="nwT-J2-5N7" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" id="6zM-ZD-7wb"/>
-                            <constraint firstAttribute="trailing" secondItem="nwT-J2-5N7" secondAttribute="trailing" id="G4d-ca-QOC"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="nwT-J2-5N7" secondAttribute="bottom" id="hdY-6d-yMt"/>
+                            <constraint firstItem="nwT-J2-5N7" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="-40" id="1Gt-d8-jIP"/>
+                            <constraint firstItem="nwT-J2-5N7" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="-40" id="6zM-ZD-7wb"/>
+                            <constraint firstAttribute="trailing" secondItem="nwT-J2-5N7" secondAttribute="trailing" constant="-40" id="G4d-ca-QOC"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="nwT-J2-5N7" secondAttribute="bottom" constant="-40" id="hdY-6d-yMt"/>
                         </constraints>
                     </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

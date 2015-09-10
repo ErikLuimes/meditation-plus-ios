@@ -37,10 +37,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        drawerViewController.centerViewController = UINavigationController(rootViewController: initialContentViewController)
         drawerViewController.centerViewController = navigationController
         drawerViewController.leftViewController   = menuViewController
-        drawerViewController.backgroundImage      = UIImage(named: "background")
+        drawerViewController.backgroundImage      = UIImage(named: "background_blurred")
         
         return drawerViewController
     }
     
 }
+
 

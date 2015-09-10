@@ -9,18 +9,32 @@
 import UIKit
 
 class MPSplashViewController: UIViewController {
+    private var splashScreenView: MPSplashView { return self.view as! MPSplashView }
 
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.view.clipsToBounds = true
-        self.title = "Test"
-        // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        self.splashScreenView.transitionToBlurredBackground()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
+    @IBAction func didPressLoginButton(sender: UIButton) {
+        self.navigationController?.popToRootViewControllerAnimated(true)
+    }
 }

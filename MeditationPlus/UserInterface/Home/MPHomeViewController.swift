@@ -29,11 +29,13 @@ class MPHomeViewController: UIViewController {
         self.view.clipsToBounds = true
         
         self.navigationController?.navigationBar.translucent    = false
-        self.navigationController?.hidesBarsOnSwipe             = true
-        self.navigationController?.hidesBarsOnTap               = true
-        self.navigationController?.hidesBarsWhenKeyboardAppears = true
+        //self.navigationController?.hidesBarsOnSwipe             = true
+        //self.navigationController?.hidesBarsOnTap               = true
+        //self.navigationController?.hidesBarsWhenKeyboardAppears = true
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Menu", style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+        
+        
         
         // Array to keep track of controllers in page menu
         var controllerArray : [UIViewController] = []
@@ -55,9 +57,21 @@ class MPHomeViewController: UIViewController {
         controllerArray.append(meditatorController)
         controllerArray.append(chatController)
         controllerArray.append(commitController)
+        // AED284
+        //            .ScrollMenuBackgroundColor(UIColor(red: 0xae / 255.0, green: 0xd2 / 255.0, blue: 0x84 / 255.0, alpha: 1.0))
+
+        var xAED284 = UIColor(red: 0xae / 255.0, green: 0xd2 / 255.0, blue: 0x84 / 255.0, alpha: 1.0)
+        var x80AC9C = UIColor(red: 0x80 / 255.0, green: 0xAC / 255.0, blue: 0x9C / 255.0, alpha: 1.0)
+        var parameters: [CAPSPageMenuOption] = [
+            .ScrollMenuBackgroundColor(UIColor.whiteColor()),
+            .SelectionIndicatorColor(x80AC9C),
+            CAPSPageMenuOption.AddBottomMenuHairline(false),
+            CAPSPageMenuOption.SelectedMenuItemLabelColor(x80AC9C)
+        ]
         
         // Initialize page menu with controller array, frame, and optional parameters
-        pageMenu = CAPSPageMenu(viewControllers: controllerArray, frame: CGRectMake(0.0, 0, self.view.frame.width, self.view.frame.height), pageMenuOptions: nil)
+        pageMenu = CAPSPageMenu(viewControllers: controllerArray, frame: CGRectMake(0.0, 0, self.view.frame.width, self.view.frame.height), pageMenuOptions: parameters)
+        
         
         // Lastly add page menu as subview of base view controller view
         // or use pageMenu controller in you view hierachy as desired
