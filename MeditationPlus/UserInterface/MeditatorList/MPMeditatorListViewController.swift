@@ -9,10 +9,16 @@
 import UIKit
 
 class MPMeditatorListViewController: UIViewController {
+    private let meditatorManager = MPMeditatorManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        self.meditatorManager.meditatorList(failure: { (error) -> Void in
+            NSLog("error: \(error)")
+        }) { (meditators) -> Void in
+            NSLog("meditators: \(meditators)")
+        }
         self.view.backgroundColor = UIColor.orangeColor()
         // Do any additional setup after loading the view.
     }

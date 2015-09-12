@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import SlackTextViewController
 
-class MPChatViewController: UIViewController {
+class MPChatViewController: SLKTextViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -48,7 +48,8 @@ class MPHomeViewController: UIViewController {
         let meditatorController : UIViewController = MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil)
         meditatorController.title = "Meditators"
         
-        let chatController : UIViewController = MPChatViewController(nibName: "MPChatViewController", bundle: nil)
+//        let chatController : UIViewController = MPChatViewController(nibName: "MPChatViewController", bundle: nil)
+        let chatController : UIViewController = MPChatViewController()
         chatController.title = "Chat"
         
         let commitController : UIViewController = MPCommitViewController(nibName: "MPCommitViewController", bundle: nil)
