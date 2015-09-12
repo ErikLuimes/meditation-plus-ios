@@ -28,7 +28,17 @@ class MPHomeViewController: UIViewController {
         
         self.view.clipsToBounds = true
         
-        self.navigationController?.navigationBar.translucent    = false
+        UINavigationBar.appearance().setBackgroundImage(
+            UIImage(),
+            forBarPosition: .Any,
+            barMetrics: .Default)
+        
+        UINavigationBar.appearance().shadowImage = UIImage()
+        
+        self.navigationController?.navigationBar.tintColor = UIColor.orangeColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.translucent = false
+//        self.navigationController?.navigationBar.shadowImage = UIImage()
         //self.navigationController?.hidesBarsOnSwipe             = true
         //self.navigationController?.hidesBarsOnTap               = true
         //self.navigationController?.hidesBarsWhenKeyboardAppears = true
@@ -66,7 +76,8 @@ class MPHomeViewController: UIViewController {
         var parameters: [CAPSPageMenuOption] = [
             .ScrollMenuBackgroundColor(UIColor.whiteColor()),
             .SelectionIndicatorColor(x80AC9C),
-            CAPSPageMenuOption.AddBottomMenuHairline(false),
+            CAPSPageMenuOption.AddBottomMenuHairline(true),
+            CAPSPageMenuOption.BottomMenuHairlineColor(x80AC9C),
             CAPSPageMenuOption.SelectedMenuItemLabelColor(x80AC9C)
         ]
         

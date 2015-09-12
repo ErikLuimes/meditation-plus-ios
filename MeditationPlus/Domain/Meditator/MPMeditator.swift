@@ -60,7 +60,7 @@ class MPMeditator: Mappable {
         
         if let meditationTotal = self.timeDiff, meditationEndTime = self.end where meditationTotal > 0 {
             let timeLeft = meditationEndTime.timeIntervalSinceNow
-            progress     = clamp(timeLeft / meditationTotal, 0, 1)
+            progress     = clamp((meditationTotal - timeLeft) / meditationTotal, 0, 1)
         }
         
         return progress

@@ -20,6 +20,7 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate {
 
         self.meditatorView.tableView.delegate   = self
         self.meditatorView.tableView.dataSource = self.meditatorDataSource
+        self.meditatorView.refreshControl.addTarget(self, action: "refreshMeditators:", forControlEvents: UIControlEvents.ValueChanged)
 
         self.meditatorManager.meditatorList(failure: { (error) -> Void in
             NSLog("error: \(error)")
@@ -36,14 +37,19 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate {
         return 80
     }
     
+    // MARK: Actions
     
-    /*
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
+    func refreshMeditators(refreshControl: UIRefreshControl) {
+        self.meditatorManager.meditatorList(failure: { (error) -> Void in
+            NSLog("error: \(error)")
+            refreshControl.endRefreshing()
+        }) { (meditators) -> Void in
+            self.meditatorDataSource.updateMeditators(meditators)
+            self.meditatorView.tableView.reloadData()
+            refreshControl.endRefreshing()
+        }
+        
     }
-    */
+    
+    
 }

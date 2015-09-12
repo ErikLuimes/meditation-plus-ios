@@ -10,12 +10,16 @@ import UIKit
 
 class MPMeditatorView: UIView {
     @IBOutlet weak var tableView: UITableView!
-    
+
+    var refreshControl: UIRefreshControl!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         
-//        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: MPMeditatorDataSource.MPMeditatorCellIdentifier)
         self.tableView.registerNib(UINib(nibName: "MPMeditatorCell", bundle: nil), forCellReuseIdentifier: MPMeditatorDataSource.MPMeditatorCellIdentifier)
+
+        self.refreshControl = UIRefreshControl()
+        self.tableView.addSubview(self.refreshControl)
     }
 
     /*
