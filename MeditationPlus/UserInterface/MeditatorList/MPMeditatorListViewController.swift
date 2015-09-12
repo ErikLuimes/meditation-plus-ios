@@ -8,24 +8,32 @@
 
 import UIKit
 
-class MPMeditatorListViewController: UIViewController {
-    private let meditatorManager = MPMeditatorManager()
+class MPMeditatorListViewController: UIViewController, UITableViewDelegate {
+    private var meditatorView: MPMeditatorView { return self.view as! MPMeditatorView }
+
+    private let meditatorManager    = MPMeditatorManager()
+    private let meditatorDataSource = MPMeditatorDataSource()
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.meditatorView.tableView.delegate   = self
+        self.meditatorView.tableView.dataSource = self.meditatorDataSource
+
         self.meditatorManager.meditatorList(failure: { (error) -> Void in
             NSLog("error: \(error)")
         }) { (meditators) -> Void in
-            NSLog("meditators: \(meditators)")
+            self.meditatorDataSource.updateMeditators(meditators)
+            self.meditatorView.tableView.reloadData()
         }
-        self.view.backgroundColor = UIColor.orangeColor()
+//        self.view.backgroundColor = UIColor.orangeColor()
         // Do any additional setup after loading the view.
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 80
     }
     
     

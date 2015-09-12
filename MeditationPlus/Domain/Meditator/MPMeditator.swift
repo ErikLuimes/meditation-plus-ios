@@ -38,6 +38,6 @@ class MPMeditator: Mappable {
 	// Mappable
 	func mapping(map: Map) {
 		self.username <- map["username"]
-		self.avatar   <- map["avatar"]
+		self.avatar   <- (map["avatar"], URLTransform())
 	}
 }
