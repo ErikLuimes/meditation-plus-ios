@@ -11,12 +11,15 @@ import UIKit
 class MPMeditatorView: UIView {
     @IBOutlet weak var tableView: UITableView!
 
+    @IBOutlet weak var actionView: UIView!
+    
     var refreshControl: UIRefreshControl!
 
     override func awakeFromNib() {
         super.awakeFromNib()
         
         self.tableView.registerNib(UINib(nibName: "MPMeditatorCell", bundle: nil), forCellReuseIdentifier: MPMeditatorDataSource.MPMeditatorCellIdentifier)
+        self.tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(self.actionView.frame), 0.0, 15.0, 0.0)
 
         self.refreshControl = UIRefreshControl()
         self.tableView.addSubview(self.refreshControl)
