@@ -22,7 +22,6 @@ class MPSplashView: UIView {
 
         self.loginView.transform = CGAffineTransformMakeScale(0.2, 0.2)
 
-//        self.loginView.transform = CGAffineTransformMakeScale(3, 3)
         self.loginView.alpha = 0
         
         self.passwordField.attributedPlaceholder = NSAttributedString(string:self.passwordField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.8)])
@@ -40,26 +39,11 @@ class MPSplashView: UIView {
             self.backgroundImageView.image = UIImage(named: "background_blurred")
             self.backgroundImageView.transform = CGAffineTransformMakeScale(0.95, 0.95)
         }, completion: nil)
-//        UIView.transitionWithView(self.backgroundImageView,
-//            duration:0.75,
-//            options: [UIViewAnimationOptions.TransitionCrossDissolve, UIViewAnimationOptions.CurveEaseInOut],
-//            animations: {
-//                self.backgroundImageView.image = UIImage(named: "background_blurred")
-//                self.backgroundImageView.transform = CGAffineTransformMakeScale(0.95, 0.95)
-//        }, completion: nil)
         
         UIView.animateWithDuration(0.75, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 9.8, options: nil, animations: { () -> Void in
             self.loginView.alpha = 1
             self.loginView.transform = CGAffineTransformIdentity
         }, completion: nil)
     }
-    
-    /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
-    }
-    */
 
 }

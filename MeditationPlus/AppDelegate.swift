@@ -29,11 +29,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let drawerViewController = KGDrawerViewController()
         drawerViewController.animator.springDamping = 1
         
-        let initialContentViewController = MPHomeViewController(nibName: "MPHomeViewController", bundle: nil)
+//        let initialContentViewController = MPHomeViewController(nibName: "MPHomeViewController", bundle: nil)
+        let initialContentViewController = MPSplashViewController(nibName: "MPSplashViewController", bundle: nil)
         let menuViewController = MPMenuViewController(nibName: "MPMenuViewController", bundle: nil)
         
         let navigationController = UINavigationController(rootViewController: initialContentViewController)
-        navigationController.pushViewController(MPSplashViewController(nibName: "MPSplashViewController", bundle: nil), animated: false)
+//        navigationController.pushViewController(MPSplashViewController(nibName: "MPSplashViewController", bundle: nil), animated: false)
         
 //        drawerViewController.centerViewController = UINavigationController(rootViewController: initialContentViewController)
         drawerViewController.centerViewController = navigationController

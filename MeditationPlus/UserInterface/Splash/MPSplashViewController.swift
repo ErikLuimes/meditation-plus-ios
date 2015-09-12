@@ -31,10 +31,10 @@ class MPSplashViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
     @IBAction func didPressLoginButton(sender: UIButton) {
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.setViewControllers([MPHomeViewController(nibName: "MPHomeViewController", bundle: nil)], animated: true)
     }
 }

@@ -7,7 +7,7 @@
         <!--Splash View Controller-->
         <scene sceneID="c8j-gZ-jMP">
             <objects>
-                <viewController id="61y-TP-8ii" customClass="MPSplashViewController" customModule="MeditationPlus" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="launch" useStoryboardIdentifierAsRestorationIdentifier="YES" id="61y-TP-8ii" customClass="MPSplashViewController" customModule="MeditationPlus" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="x5U-iy-tzY"/>
                         <viewControllerLayoutGuide type="bottom" id="gTk-Zz-z25"/>
