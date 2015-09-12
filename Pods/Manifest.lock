@@ -1,0 +1,39 @@
+PODS:
+  - AFNetworking (2.6.0):
+    - AFNetworking/NSURLConnection (= 2.6.0)
+    - AFNetworking/NSURLSession (= 2.6.0)
+    - AFNetworking/Reachability (= 2.6.0)
+    - AFNetworking/Security (= 2.6.0)
+    - AFNetworking/Serialization (= 2.6.0)
+    - AFNetworking/UIKit (= 2.6.0)
+  - AFNetworking/NSURLConnection (2.6.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.6.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.6.0)
+  - AFNetworking/Security (2.6.0)
+  - AFNetworking/Serialization (2.6.0)
+  - AFNetworking/UIKit (2.6.0):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - KGFloatingDrawer (0.1.3)
+  - Locksmith (1.2.2)
+  - PageMenu (1.2.8)
+
+DEPENDENCIES:
+  - AFNetworking (= 2.6.0)
+  - KGFloatingDrawer (= 0.1.3)
+  - Locksmith (= 1.2.2)
+  - PageMenu (= 1.2.8)
+
+SPEC CHECKSUMS:
+  AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
+  KGFloatingDrawer: 159abb66ba8fe4fc10e15dbb7e9fbb394b4a78fa
+  Locksmith: c84c10bf23f99e6d04703dba65065dc38b038d88
+  PageMenu: 703e82e173f54a4626ab88fcdca7703ee52e0cbe
+
+COCOAPODS: 0.38.2

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import KGFloatingDrawer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        self.window?.rootViewController = self.prepareDrawerViewController()
+        self.window?.rootViewController = self.drawerViewController
         
         self.window?.backgroundColor = UIColor.whiteColor()
         self.window?.makeKeyAndVisible()
@@ -24,18 +25,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    func prepareDrawerViewController() -> KGDrawerViewController {
+    var drawerViewController: KGDrawerViewController {
         let drawerViewController = KGDrawerViewController()
         drawerViewController.animator.springDamping = 1
         
-        let initialContentViewController = MPHomeViewController(nibName: "MPHomeViewController", bundle: nil)
-        let menuViewController = MPMenuViewController(nibName: "MPMenuViewController", bundle: nil)
+        let initialContentViewController = MPSplashViewController(nibName: "MPSplashViewController", bundle: nil)
+        let menuViewController           = MPMenuViewController(nibName: "MPMenuViewController", bundle: nil)
+        let navigationController         = UINavigationController(rootViewController: initialContentViewController)
         
-        drawerViewController.centerViewController = UINavigationController(rootViewController: initialContentViewController)
+        drawerViewController.centerViewController = navigationController
         drawerViewController.leftViewController   = menuViewController
-        drawerViewController.backgroundImage      = UIImage(named: "background")
+        drawerViewController.backgroundImage      = UIImage(named: "background_blurred")
         
         return drawerViewController
     }
 }
+
 
