@@ -24,13 +24,15 @@ class MPSplashView: UIView {
 
         self.loginView.alpha = 0
         
-        self.passwordField.attributedPlaceholder = NSAttributedString(string:self.passwordField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.8)])
-        self.passwordField.layer.borderColor = UIColor.whiteColor().CGColor
-        self.passwordField.layer.borderWidth = 2
+        self.passwordField.attributedPlaceholder = NSAttributedString(string:self.passwordField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.6)])
+        self.passwordField.layer.borderColor = UIColor.whiteColor().colorWithAlphaComponent(0.6).CGColor
+        self.passwordField.layer.borderWidth = 1
+        self.passwordField.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
         
-        self.usernameField.attributedPlaceholder = NSAttributedString(string:self.usernameField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.8)])
-        self.usernameField.layer.borderColor = UIColor.whiteColor().CGColor
-        self.usernameField.layer.borderWidth = 2
+        self.usernameField.attributedPlaceholder = NSAttributedString(string:self.usernameField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.6)])
+        self.usernameField.layer.borderColor = UIColor.whiteColor().colorWithAlphaComponent(0.6).CGColor
+        self.usernameField.layer.borderWidth = 1
+        self.usernameField.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
     }
     
     func transitionToBlurredBackground() {
@@ -45,5 +47,21 @@ class MPSplashView: UIView {
             self.loginView.transform = CGAffineTransformIdentity
         }, completion: nil)
     }
-
+    
+    func shake() {
+        let shakeAnimation = CAKeyframeAnimation( keyPath:"transform" )
+        
+        shakeAnimation.values = [
+            NSValue( CATransform3D:CATransform3DMakeTranslation(-15, 0, 0 ) ),
+            NSValue( CATransform3D:CATransform3DMakeTranslation( 15, 0, 0 ) )
+        ]
+        
+        shakeAnimation.autoreverses = true
+        shakeAnimation.repeatCount  = 2
+        shakeAnimation.duration     = 0.07
+        
+        self.loginView.layer.addAnimation(shakeAnimation, forKey: "shakeAnimation")
+        
+    }
+    
 }

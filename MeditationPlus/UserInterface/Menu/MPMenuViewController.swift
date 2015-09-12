@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import KGFloatingDrawer
 
 private class MPMenuItem {
     private(set) var name: String!
@@ -43,7 +44,14 @@ class MPMenuViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.menuItems.append(aboutItem)
         
         let logoutItem = MPMenuItem(name: "Logout") {
-            NSLog("logout")
+            MTAuthenticationManager.sharedInstance.logout()
+            self.drawerViewController?.centerViewController = UINavigationController(rootViewController: MPSplashViewController(nibName: "MPSplashViewController", bundle: nil))
+            
+            self.drawerViewController?.closeDrawer(.Left, animated: false, complete: { (finished) -> Void in
+                //
+            })
+            
+            NSLog("logout pressed")
         }
         self.menuItems.append(logoutItem)
         
@@ -51,6 +59,7 @@ class MPMenuViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.menuView.menuTableView.dataSource = self
         self.menuView.menuTableView.registerNib(UINib(nibName: "MPMenuCell", bundle: nil), forCellReuseIdentifier: self.menuCellIdentifier)
         self.menuView.menuTableView.tableFooterView = UIView(frame: CGRectZero)
+        self.menuView.menuTableView.bounces         = false
     }
 
     // MARK: UITableViewDataSource
@@ -70,5 +79,19 @@ class MPMenuViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.menuItems[indexPath.row].navigationBlock?()
+    }
+    
+    var drawerViewController: KGDrawerViewController? {
+        var parentViewController = self.parentViewController
+        
+        while parentViewController != nil &&  !(parentViewController is KGDrawerViewController) {
+            parentViewController = parentViewController?.parentViewController
+        }
+        
+        if (parentViewController is KGDrawerViewController) {
+            return parentViewController as? KGDrawerViewController
+        }
+        
+        return nil
     }
 }

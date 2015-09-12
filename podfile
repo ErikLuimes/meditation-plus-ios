@@ -6,3 +6,4 @@ use_frameworks!
 pod 'AFNetworking',     '2.6.0'
 pod 'PageMenu',         '1.2.8'
 pod 'KGFloatingDrawer', '0.1.3'
+pod 'Locksmith',        '1.2.2'
