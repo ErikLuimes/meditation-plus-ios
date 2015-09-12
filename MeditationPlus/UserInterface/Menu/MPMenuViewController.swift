@@ -60,7 +60,7 @@ class MPMenuViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell             = tableView.dequeueReusableCellWithIdentifier(self.menuCellIdentifier, forIndexPath: indexPath)
+        let cell             = tableView.dequeueReusableCellWithIdentifier(self.menuCellIdentifier, forIndexPath: indexPath) as! UITableViewCell
         cell.textLabel?.text = self.menuItems[indexPath.row].name
         
         return cell

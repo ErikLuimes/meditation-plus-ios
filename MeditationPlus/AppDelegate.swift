@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import KGFloatingDrawer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

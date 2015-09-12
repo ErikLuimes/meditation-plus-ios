@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import PageMenu
+import KGFloatingDrawer
 
 class MPHomeViewController: UIViewController {
     var pageMenu : CAPSPageMenu?
@@ -15,12 +17,10 @@ class MPHomeViewController: UIViewController {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
 
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
