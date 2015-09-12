@@ -22,22 +22,47 @@ import ObjectMapper
 		"me": "false"
 */
 class MPMeditator: Mappable {
-    var username: String = ""
-    var avatar:   NSURL?
-    var start:    NSDate?
-    var end:      NSDate?
-    var walking:  Int?
-	var sitting:  Int?
-	var country:  String?
-	var me:       Bool?
+    var username:         String = ""
+    var avatar:           NSURL?
+    var start:            NSDate?
+    var end:              NSDate?
+    var timeDiff:         NSTimeInterval?
+    var walkingMinutes:   Int?
+	var sittingMinutes:   Int?
+    var anumodanaMinutes: Int?
+	var country:          String?
+	var me:               Bool?
+
+    // MARK: Mappable
 
     class func newInstance(map: Map) -> Mappable? {
         return MPMeditator()
     }
 
-	// Mappable
 	func mapping(map: Map) {
-		self.username <- map["username"]
-		self.avatar   <- (map["avatar"], URLTransform())
+		self.username         <- map["username"]
+		self.avatar           <- (map["avatar"],    URLTransform())
+		self.walkingMinutes   <- (map["walking"],   MPValueTransform.transformIntString())
+		self.sittingMinutes   <- (map["sitting"],   MPValueTransform.transformIntString())
+        self.anumodanaMinutes <- (map["anumodana"], MPValueTransform.transformIntString())
+        self.country          <- map["country"]
+        self.start            <- (map["start"],     MPValueTransform.transformDateEpochString())
+        self.end              <- (map["end"],       MPValueTransform.transformDateEpochString())
+        self.me               <- map["me"]
+        
+        if let startDate = self.start, endDate: NSDate = self.end {
+            self.timeDiff = endDate.timeIntervalSinceDate(startDate)
+        }
 	}
+    
+    var normalizedProgress: Double {
+        var progress: Double = 0
+        
+        if let meditationTotal = self.timeDiff, meditationEndTime = self.end where meditationTotal > 0 {
+            let timeLeft = meditationEndTime.timeIntervalSinceNow
+            progress     = clamp(timeLeft / meditationTotal, 0, 1)
+        }
+        
+        return progress
+    }
 }
