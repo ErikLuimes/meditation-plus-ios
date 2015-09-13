@@ -17,6 +17,7 @@ class MPMeditatorView: UIView {
     
     @IBOutlet weak var startButton: UIButton!
     
+    @IBOutlet weak var profileImageView: UIImageView!
     var refreshControl: UIRefreshControl!
 
     override func awakeFromNib() {
@@ -25,6 +26,7 @@ class MPMeditatorView: UIView {
         self.tableView.registerNib(UINib(nibName: "MPMeditatorCell", bundle: nil), forCellReuseIdentifier: MPMeditatorDataSource.MPMeditatorCellIdentifier)
         self.tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(self.actionView.frame), 0.0, 15.0, 0.0)
         
+        self.profileImageView.setImageWithURL(NSURL(string: "http://3.bp.blogspot.com/_HtW_SPtpj0c/TLFVC8kb3yI/AAAAAAAAAGM/AAzGYbO6gP4/s1600/Buddha%5B1%5D.jpg")!)
         self.refreshControl = UIRefreshControl()
         self.tableView.addSubview(self.refreshControl)
     }

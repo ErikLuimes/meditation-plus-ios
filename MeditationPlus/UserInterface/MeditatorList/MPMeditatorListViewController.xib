@@ -22,7 +22,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cxL-y1-pQn" userLabel="Action View">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="183"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="buddha" translatesAutoresizingMaskIntoConstraints="NO" id="RGv-5p-IDW">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="buddha" translatesAutoresizingMaskIntoConstraints="NO" id="RGv-5p-IDW" userLabel="Profile Image View">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="183"/>
                         </imageView>
                     </subviews>
@@ -31,40 +31,63 @@
                         <constraint firstAttribute="width" secondItem="cxL-y1-pQn" secondAttribute="height" multiplier="375:227" constant="72.687224669603552" id="GiA-Uz-PKa"/>
                     </constraints>
                 </view>
-                <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PE3-mm-smu">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="183"/>
-                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Nh8-Vc-hNs">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="183"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B2N-KF-Tjy">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="183"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Qut-fa-16f">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="183"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h8-iZ-Fyz">
-                                            <rect key="frame" x="164" y="145" width="33" height="30"/>
-                                            <state key="normal" title="Start">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="didPressStartMeditationButton:" destination="-1" eventType="touchUpInside" id="Djh-7i-fSo"/>
-                                            </connections>
-                                        </button>
-                                        <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="agf-8b-wyP" userLabel="Time Picker View">
-                                            <rect key="frame" x="46" y="24" width="268" height="113"/>
-                                        </pickerView>
-                                    </subviews>
-                                </view>
-                                <vibrancyEffect>
-                                    <blurEffect style="light"/>
-                                </vibrancyEffect>
-                            </visualEffectView>
-                        </subviews>
-                    </view>
-                    <blurEffect style="light"/>
-                </visualEffectView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rN1-Eg-Kgg" userLabel="Selection View">
+                    <rect key="frame" x="0.0" y="-300" width="375" height="183"/>
+                    <subviews>
+                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PE3-mm-smu" userLabel="Picker Effect View">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="139"/>
+                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Nh8-Vc-hNs">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="139"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agf-8b-wyP" userLabel="Time Picker View">
+                                        <rect key="frame" x="64" y="-11.5" width="247" height="162"/>
+                                    </pickerView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="agf-8b-wyP" firstAttribute="top" secondItem="Nh8-Vc-hNs" secondAttribute="top" id="2Aa-CS-Gat"/>
+                                    <constraint firstItem="agf-8b-wyP" firstAttribute="leading" secondItem="Nh8-Vc-hNs" secondAttribute="leading" constant="64" id="HlX-bt-5xL"/>
+                                    <constraint firstAttribute="trailing" secondItem="agf-8b-wyP" secondAttribute="trailing" constant="64" id="Iag-88-489"/>
+                                    <constraint firstAttribute="bottom" secondItem="agf-8b-wyP" secondAttribute="bottom" id="SON-JF-9so"/>
+                                </constraints>
+                            </view>
+                            <blurEffect style="light"/>
+                        </visualEffectView>
+                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xL0-gE-v15" userLabel="Confirmation Effect View">
+                            <rect key="frame" x="0.0" y="139" width="375" height="44"/>
+                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="oDh-z4-1rz">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h8-iZ-Fyz">
+                                        <rect key="frame" x="171" y="7" width="33" height="30"/>
+                                        <state key="normal" title="Start">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="didPressStartMeditationButton:" destination="-1" eventType="touchUpInside" id="Djh-7i-fSo"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="5h8-iZ-Fyz" secondAttribute="centerX" id="DdY-0T-i5z"/>
+                                    <constraint firstAttribute="centerY" secondItem="5h8-iZ-Fyz" secondAttribute="centerY" id="hHJ-tf-4ls"/>
+                                </constraints>
+                            </view>
+                            <blurEffect style="extraLight"/>
+                        </visualEffectView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="xL0-gE-v15" firstAttribute="top" secondItem="PE3-mm-smu" secondAttribute="bottom" id="9op-E2-2sE"/>
+                        <constraint firstAttribute="trailing" secondItem="xL0-gE-v15" secondAttribute="trailing" id="DVQ-wK-whC"/>
+                        <constraint firstItem="PE3-mm-smu" firstAttribute="leading" secondItem="rN1-Eg-Kgg" secondAttribute="leading" id="GPk-x7-Lqu"/>
+                        <constraint firstAttribute="bottom" secondItem="PE3-mm-smu" secondAttribute="bottom" constant="44" id="Grq-6D-W4h"/>
+                        <constraint firstAttribute="bottom" secondItem="xL0-gE-v15" secondAttribute="bottom" id="bYT-6q-Aop"/>
+                        <constraint firstItem="PE3-mm-smu" firstAttribute="top" secondItem="rN1-Eg-Kgg" secondAttribute="top" id="cwC-bD-Bmw"/>
+                        <constraint firstItem="xL0-gE-v15" firstAttribute="leading" secondItem="rN1-Eg-Kgg" secondAttribute="leading" id="nU4-CB-LIP"/>
+                        <constraint firstAttribute="trailing" secondItem="PE3-mm-smu" secondAttribute="trailing" id="qTA-2i-1Br"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
@@ -72,14 +95,19 @@
                 <constraint firstAttribute="trailing" secondItem="cxL-y1-pQn" secondAttribute="trailing" id="C0G-mb-7BL"/>
                 <constraint firstItem="cxL-y1-pQn" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="DIL-Qo-9KR"/>
                 <constraint firstItem="cxL-y1-pQn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="P6Y-AG-cXd"/>
+                <constraint firstItem="rN1-Eg-Kgg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="WrO-Fo-YJl"/>
                 <constraint firstItem="eyu-oc-l3Q" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="fSp-oT-HSv"/>
                 <constraint firstAttribute="trailing" secondItem="eyu-oc-l3Q" secondAttribute="trailing" id="gJw-oC-NQI"/>
                 <constraint firstItem="eyu-oc-l3Q" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hI6-hU-vHF"/>
+                <constraint firstItem="rN1-Eg-Kgg" firstAttribute="width" secondItem="cxL-y1-pQn" secondAttribute="width" id="oMS-eo-rR4"/>
+                <constraint firstItem="rN1-Eg-Kgg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="-300" id="rE3-WZ-0SI"/>
+                <constraint firstItem="rN1-Eg-Kgg" firstAttribute="height" secondItem="cxL-y1-pQn" secondAttribute="height" id="wHd-jd-KNE"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
             <connections>
                 <outlet property="actionView" destination="cxL-y1-pQn" id="O1Y-tf-Z1c"/>
                 <outlet property="meditationPickerView" destination="agf-8b-wyP" id="qNA-aF-Cof"/>
+                <outlet property="profileImageView" destination="RGv-5p-IDW" id="rii-IG-TYW"/>
                 <outlet property="startButton" destination="5h8-iZ-Fyz" id="NGf-HV-BNW"/>
                 <outlet property="tableView" destination="eyu-oc-l3Q" id="Puf-3Y-DNM"/>
             </connections>
