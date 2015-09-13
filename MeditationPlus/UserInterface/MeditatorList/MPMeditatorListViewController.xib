@@ -32,18 +32,10 @@
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="cxL-y1-pQn" secondAttribute="height" multiplier="375:227" constant="72.687224669603552" id="GiA-Uz-PKa"/>
-                        <constraint firstAttribute="centerX" secondItem="RGv-5p-IDW" secondAttribute="centerX" id="NYb-Xh-TE7"/>
-                        <constraint firstItem="RGv-5p-IDW" firstAttribute="leading" secondItem="cxL-y1-pQn" secondAttribute="leading" id="ayo-nM-r4k"/>
                         <constraint firstAttribute="bottom" secondItem="RGv-5p-IDW" secondAttribute="bottom" constant="15" id="frd-hw-r5n"/>
                         <constraint firstItem="RGv-5p-IDW" firstAttribute="top" secondItem="cxL-y1-pQn" secondAttribute="top" constant="42" id="hfq-oG-KJ5"/>
                         <constraint firstItem="RGv-5p-IDW" firstAttribute="leading" secondItem="cxL-y1-pQn" secondAttribute="leading" constant="15" id="yAL-jh-cHN"/>
                     </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="NYb-Xh-TE7"/>
-                            <exclude reference="ayo-nM-r4k"/>
-                        </mask>
-                    </variation>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rN1-Eg-Kgg" userLabel="Selection View">
                     <rect key="frame" x="0.0" y="-300" width="375" height="203"/>

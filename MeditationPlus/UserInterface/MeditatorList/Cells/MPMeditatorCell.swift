@@ -33,8 +33,8 @@ class MPMeditatorCell: UITableViewCell {
         super.awakeFromNib()
 
         self.circlePathTrackLayer.frame       = self.avatarImageView.bounds
-        self.circlePathTrackLayer.lineWidth   = 10
-        self.circlePathTrackLayer.strokeColor = UIColor.blackColor().colorWithAlphaComponent(0.3).CGColor
+        self.circlePathTrackLayer.lineWidth   = 12
+        self.circlePathTrackLayer.strokeColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
         self.circlePathTrackLayer.fillColor   = UIColor.clearColor().CGColor
         self.circlePathTrackLayer.path        = UIBezierPath(ovalInRect: self.avatarImageView.bounds).CGPath
         self.circlePathTrackLayer.strokeEnd   = 1
@@ -42,7 +42,7 @@ class MPMeditatorCell: UITableViewCell {
 
         var pathRect = CGRectInset(self.avatarImageView.bounds, 4, 4)
         self.circlePathLayer.frame       = self.avatarImageView.bounds
-        self.circlePathLayer.lineWidth   = 8
+        self.circlePathLayer.lineWidth   = 10
         self.circlePathLayer.strokeColor = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
         self.circlePathLayer.fillColor   = UIColor.clearColor().CGColor
         self.circlePathLayer.path        = UIBezierPath(ovalInRect: self.avatarImageView.bounds).CGPath
@@ -61,7 +61,7 @@ class MPMeditatorCell: UITableViewCell {
         if let imageUrl = meditator.avatar {
             self.avatarImageView.setImageWithURL(imageUrl)
             self.avatarImageView.clipsToBounds = true
-            self.avatarImageView.layer.borderColor = UIColor.lightGrayColor().CGColor
+            self.avatarImageView.layer.borderColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
             self.avatarImageView.layer.borderWidth = 1
             self.avatarImageView.layer.masksToBounds = true
             self.avatarImageView.layer.cornerRadius  = self.avatarImageView.bounds.size.height / 2.0
