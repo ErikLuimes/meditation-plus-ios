@@ -25,6 +25,7 @@ PODS:
   - ObjectMapper (0.15)
   - PageMenu (1.2.8)
   - SlackTextViewController (1.7)
+  - UIImage+Additions (2.1.0)
 
 DEPENDENCIES:
   - AFNetworking (= 2.6.0)
@@ -33,6 +34,7 @@ DEPENDENCIES:
   - ObjectMapper (= 0.15)
   - PageMenu (= 1.2.8)
   - SlackTextViewController (= 1.7)
+  - UIImage+Additions (= 2.1.0)
 
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
@@ -41,5 +43,6 @@ SPEC CHECKSUMS:
   ObjectMapper: 0656dc1c155825897e5acfcd25362c6b61786dcb
   PageMenu: 703e82e173f54a4626ab88fcdca7703ee52e0cbe
   SlackTextViewController: 57e28248dd38b9753277733544449519842f1ea5
+  UIImage+Additions: 6181430b139099649e56171d58a52d6c37d57e42
 
 COCOAPODS: 0.38.2

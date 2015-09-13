@@ -48,6 +48,11 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         // Do any additional setup after loading the view.
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.meditatorView.setSelectionViewHidden(false, animated: true)
+    }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 80

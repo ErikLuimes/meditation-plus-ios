@@ -58,6 +58,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods/ObjectMapper.framework'
   install_framework 'Pods/PageMenu.framework'
   install_framework 'Pods/SlackTextViewController.framework'
+  install_framework 'Pods/UIImage_Additions.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods/AFNetworking.framework'
@@ -66,4 +67,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods/ObjectMapper.framework'
   install_framework 'Pods/PageMenu.framework'
   install_framework 'Pods/SlackTextViewController.framework'
+  install_framework 'Pods/UIImage_Additions.framework'
 fi

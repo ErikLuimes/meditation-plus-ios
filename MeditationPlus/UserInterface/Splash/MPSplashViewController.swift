@@ -54,7 +54,7 @@ class MPSplashViewController: UIViewController {
             }, completion: { (user) -> Void in
                 sender.enabled = true
                 NSLog("Logged in")
-                self.navigationController?.setNavigationBarHidden(false, animated: true)
+//                self.navigationController?.setNavigationBarHidden(false, animated: false)
                 self.navigationController?.setViewControllers([MPHomeViewController(nibName: "MPHomeViewController", bundle: nil)], animated: true)
             })
             
