@@ -46,6 +46,7 @@
                     <constraint firstItem="hKb-KM-NoW" firstAttribute="top" secondItem="7C9-Mi-pBw" secondAttribute="bottom" id="taa-4p-OUH"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="avatarImageView" destination="4ob-iQ-TZW" id="OG0-a5-3Zu"/>
                 <outlet property="meditationDescription" destination="hKb-KM-NoW" id="aiz-XJ-Eig"/>

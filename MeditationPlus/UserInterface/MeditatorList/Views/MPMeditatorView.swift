@@ -27,6 +27,8 @@ class MPMeditatorView: UIView {
     
     @IBOutlet weak var confirmationEffectView: UIVisualEffectView!
     
+    @IBOutlet weak var meditationTimerLabel: UILabel!
+    
     @IBOutlet weak var selectionViewTopConstraint: NSLayoutConstraint! {
         didSet {
             self.originalSelectionViewTopConstant = -self.selectionView.frame.size.height + self.confirmationEffectViewHeight
@@ -61,14 +63,13 @@ class MPMeditatorView: UIView {
 
     func setSelectionViewHidden(hidden: Bool, animated: Bool) {
         self.startButton.setTitle(hidden ? "stop" : "start", forState: UIControlState.Normal)
-        
         self.selectionViewHidden = hidden
         
         let duration       = animated ? 0.5 : 0.0
         let curConstant    = self.selectionViewTopConstraint.constant
         let downedConstant = self.confirmationEffectViewHeight - 20 - self.confirmationEffectViewHeight
         
-        self.selectionViewTopConstraint.constant = curConstant == downedConstant ? self.originalSelectionViewTopConstant : downedConstant
+        self.selectionViewTopConstraint.constant = hidden ? self.originalSelectionViewTopConstant : downedConstant
         
         UIView.animateWithDuration(duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 9.8, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
             self.layoutIfNeeded()

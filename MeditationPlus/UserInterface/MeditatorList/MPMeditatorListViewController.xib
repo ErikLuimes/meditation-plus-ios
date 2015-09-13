@@ -28,7 +28,7 @@
                                 <constraint firstAttribute="width" secondItem="RGv-5p-IDW" secondAttribute="height" multiplier="1:1" id="MW0-N3-zXc"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZFq-S9-nFp">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="27" translatesAutoresizingMaskIntoConstraints="NO" id="ZFq-S9-nFp">
                             <rect key="frame" x="173" y="72" width="170" height="64.5"/>
                             <fontDescription key="fontDescription" type="system" weight="black" pointSize="54"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
@@ -75,14 +75,20 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h8-iZ-Fyz">
-                                        <rect key="frame" x="147" y="0.0" width="80" height="32"/>
+                                        <rect key="frame" x="167" y="-1" width="40" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="80" id="keA-m7-JD4"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                         <state key="normal" title="Start">
+                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="keA-m7-JD4"/>
+                                            </mask>
+                                        </variation>
                                         <connections>
                                             <action selector="didPressStartMeditationButton:" destination="-1" eventType="touchUpInside" id="Djh-7i-fSo"/>
                                         </connections>
@@ -93,9 +99,6 @@
                                     <constraint firstAttribute="centerY" secondItem="5h8-iZ-Fyz" secondAttribute="centerY" id="hHJ-tf-4ls"/>
                                 </constraints>
                             </view>
-                            <constraints>
-                                <constraint firstItem="5h8-iZ-Fyz" firstAttribute="height" secondItem="xL0-gE-v15" secondAttribute="height" id="kv4-Av-yRk"/>
-                            </constraints>
                             <blurEffect style="extraLight"/>
                         </visualEffectView>
                     </subviews>
@@ -130,6 +133,7 @@
                 <outlet property="actionView" destination="cxL-y1-pQn" id="O1Y-tf-Z1c"/>
                 <outlet property="confirmationEffectView" destination="xL0-gE-v15" id="bVt-cO-JOc"/>
                 <outlet property="meditationPickerView" destination="agf-8b-wyP" id="qNA-aF-Cof"/>
+                <outlet property="meditationTimerLabel" destination="ZFq-S9-nFp" id="5sv-Jw-N0m"/>
                 <outlet property="profileImageView" destination="RGv-5p-IDW" id="rii-IG-TYW"/>
                 <outlet property="selectionView" destination="rN1-Eg-Kgg" id="XjF-Iw-RKn"/>
                 <outlet property="selectionViewTopConstraint" destination="rE3-WZ-0SI" id="aCW-LN-LbR"/>

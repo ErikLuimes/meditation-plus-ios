@@ -14,6 +14,10 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     private let meditatorManager    = MPMeditatorManager()
     private let meditatorDataSource = MPMeditatorDataSource()
 
+    private let timeInterval: NSTimeInterval = 1
+    private var meditationTimer: NSTimer?
+    private var remainingMeditationTime: NSTimeInterval = 0
+    
     var times = [Int]()
 
     override func viewDidLoad() {
@@ -44,6 +48,8 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
                 times.append(i)
             }
         }
+
+        self.meditatorView.setSelectionViewHidden(false, animated: true)
 //        self.view.backgroundColor = UIColor.orangeColor()
         // Do any additional setup after loading the view.
     }
@@ -51,7 +57,6 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.meditatorView.setSelectionViewHidden(false, animated: true)
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -72,7 +77,35 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     }
 
     @IBAction func didPressStartMeditationButton(sender: UIButton) {
-        self.toggleSelectionView()
+        self.meditationTimer?.invalidate()
+        
+        if self.meditatorView.isSelectionViewHidden {
+            self.remainingMeditationTime = 0
+            self.updateRemainingTimeLabel()
+            self.meditatorView.setSelectionViewHidden(false, animated: true)
+            
+        } else {
+            // Start
+            let selectedWalkingMeditationTime = self.meditatorView.meditationPickerView.selectedRowInComponent(0)
+            let selectedSittingMeditationTime = self.meditatorView.meditationPickerView.selectedRowInComponent(1)
+            var totalTime = 0
+            
+            if selectedSittingMeditationTime > 0 {
+                totalTime += self.times[selectedSittingMeditationTime]
+            }
+            
+            if selectedWalkingMeditationTime > 0 {
+                totalTime += self.times[selectedWalkingMeditationTime]
+            }
+            
+            if totalTime != 0 {
+                self.remainingMeditationTime = Double(totalTime * 60)
+                
+                self.meditationTimer = NSTimer.scheduledTimerWithTimeInterval(self.timeInterval, target: self, selector: "meditationTimerTick", userInfo: nil, repeats: true)
+                self.updateRemainingTimeLabel()
+                self.meditatorView.setSelectionViewHidden(true, animated: true)
+            }
+        }
     }
 
     // returns the number of 'columns' to display.
@@ -102,6 +135,25 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     func toggleSelectionView() {
         self.meditatorView.setSelectionViewHidden(!self.meditatorView.isSelectionViewHidden, animated: true)
     }
-
+    
+    func meditationTimerTick() {
+        self.remainingMeditationTime -= self.timeInterval
+        
+        self.updateRemainingTimeLabel()
+    }
+    
+    private func updateRemainingTimeLabel() {
+        if self.remainingMeditationTime <= 0 {
+            self.meditationTimer?.invalidate()
+            self.meditatorView.meditationTimerLabel.text = "00:00:00"
+            self.remainingMeditationTime = 0
+            self.meditatorView.setSelectionViewHidden(true, animated: true)
+        } else {
+            var seconds = self.remainingMeditationTime % 60;
+            var hours   = self.remainingMeditationTime / 3600
+            var minutes = self.remainingMeditationTime / 60 % 60
+            self.meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d" , Int(hours) , Int(minutes), Int(seconds))
+        }
+    }
 
 }
