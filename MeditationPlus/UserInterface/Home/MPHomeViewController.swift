@@ -12,7 +12,9 @@ import KGFloatingDrawer
 
 class MPHomeViewController: UIViewController {
     var pageMenu : CAPSPageMenu?
-
+    
+    private var meditatorViewController: MPMeditatorListViewController!
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -44,6 +46,7 @@ class MPHomeViewController: UIViewController {
         //self.navigationController?.hidesBarsWhenKeyboardAppears = true
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Menu", style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "didPressSelectMeditation:")
         
         
         
@@ -55,8 +58,9 @@ class MPHomeViewController: UIViewController {
         // (Can be any UIViewController subclass)
         // Make sure the title property of all view controllers is set
         // Example:
-        let meditatorController : UIViewController = MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil)
+        let meditatorController : MPMeditatorListViewController = MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil)
         meditatorController.title = "Meditators"
+        self.meditatorViewController = meditatorController
         
 //        let chatController : UIViewController = MPChatViewController(nibName: "MPChatViewController", bundle: nil)
         let chatController : UIViewController = MPChatViewController()
@@ -96,6 +100,10 @@ class MPHomeViewController: UIViewController {
         self.drawerViewController?.toggleDrawer(.Left, animated: true, complete: { (finished) -> Void in
             // do nothing
         })
+    }
+    
+    func didPressSelectMeditation(sender: UIBarButtonItem) {
+        self.meditatorViewController.toggleSelectionView()
     }
     
     var drawerViewController: KGDrawerViewController? {

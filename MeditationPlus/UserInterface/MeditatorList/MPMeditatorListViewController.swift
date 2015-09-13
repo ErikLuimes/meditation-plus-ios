@@ -93,6 +93,9 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         return title
     }
 
+    func toggleSelectionView() {
+        self.meditatorView.setSelectionViewHidden(!self.meditatorView.isSelectionViewHidden, animated: true)
+    }
 
 
 }

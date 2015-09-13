@@ -18,6 +18,19 @@ class MPMeditatorView: UIView {
     @IBOutlet weak var startButton: UIButton!
     
     @IBOutlet weak var profileImageView: UIImageView!
+    
+    @IBOutlet weak var selectionViewTopConstraint: NSLayoutConstraint! {
+        didSet {
+            self.originalSelectionViewTopConstant = -self.actionView.frame.size.height + 44
+        }
+    }
+    
+    var isSelectionViewHidden: Bool {
+        return selectionViewTopConstraint.constant < 0
+    }
+    
+    var originalSelectionViewTopConstant: CGFloat = 0
+    
     var refreshControl: UIRefreshControl!
 
     override func awakeFromNib() {
@@ -27,7 +40,32 @@ class MPMeditatorView: UIView {
         self.tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(self.actionView.frame), 0.0, 15.0, 0.0)
         
         self.profileImageView.setImageWithURL(NSURL(string: "http://3.bp.blogspot.com/_HtW_SPtpj0c/TLFVC8kb3yI/AAAAAAAAAGM/AAzGYbO6gP4/s1600/Buddha%5B1%5D.jpg")!)
+        self.profileImageView.clipsToBounds       = true
+        self.profileImageView.layer.borderColor   = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
+        self.profileImageView.layer.borderWidth   = 5
+        self.profileImageView.layer.masksToBounds = true
+
+        
         self.refreshControl = UIRefreshControl()
         self.tableView.addSubview(self.refreshControl)
     }
+
+    func setSelectionViewHidden(hidden: Bool, animated: Bool) {
+        let duration = animated ? 0.5 : 0.0
+        
+        let curConstant = self.selectionViewTopConstraint.constant
+        
+        self.selectionViewTopConstraint.constant = curConstant == 0 ? self.originalSelectionViewTopConstant : 0
+        
+        UIView.animateWithDuration(duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 9.8, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+            self.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.profileImageView.layer.cornerRadius  = self.profileImageView.bounds.size.height / 2.0
+    }
+    
 }
