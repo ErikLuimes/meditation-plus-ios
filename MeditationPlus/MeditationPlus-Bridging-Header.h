@@ -3,3 +3,7 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
+
+#import <SlackTextViewController/SLKTextViewController.h>
+
+#import <UIImage_Additions/UIImage+Additions.h>

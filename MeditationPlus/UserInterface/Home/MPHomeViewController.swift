@@ -9,10 +9,13 @@
 import UIKit
 import PageMenu
 import KGFloatingDrawer
+import UIImage_Additions
 
 class MPHomeViewController: UIViewController {
     var pageMenu : CAPSPageMenu?
-
+    
+//    private var meditatorViewController: MPMeditatorListViewController!
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -28,12 +31,25 @@ class MPHomeViewController: UIViewController {
         
         self.view.clipsToBounds = true
         
-        self.navigationController?.navigationBar.translucent    = false
+        UINavigationBar.appearance().setBackgroundImage(
+            UIImage(),
+            forBarPosition: .Any,
+            barMetrics: .Default)
+        
+        UINavigationBar.appearance().shadowImage = UIImage()
+        
+        self.navigationController?.navigationBar.tintColor = UIColor.lightGrayColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.translucent = false
+//        self.navigationController?.navigationBar.shadowImage = UIImage()
         //self.navigationController?.hidesBarsOnSwipe             = true
         //self.navigationController?.hidesBarsOnTap               = true
         //self.navigationController?.hidesBarsWhenKeyboardAppears = true
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Menu", style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Menu", style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("menu_btn", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("user_icon", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "didPressSelectMeditation:")
         
         
         
@@ -45,10 +61,12 @@ class MPHomeViewController: UIViewController {
         // (Can be any UIViewController subclass)
         // Make sure the title property of all view controllers is set
         // Example:
-        let meditatorController : UIViewController = MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil)
+        let meditatorController : MPMeditatorListViewController = MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil)
         meditatorController.title = "Meditators"
+//        self.meditatorViewController = meditatorController
         
-        let chatController : UIViewController = MPChatViewController(nibName: "MPChatViewController", bundle: nil)
+//        let chatController : UIViewController = MPChatViewController(nibName: "MPChatViewController", bundle: nil)
+        let chatController : UIViewController = MPChatViewController()
         chatController.title = "Chat"
         
         let commitController : UIViewController = MPCommitViewController(nibName: "MPCommitViewController", bundle: nil)
@@ -65,7 +83,8 @@ class MPHomeViewController: UIViewController {
         var parameters: [CAPSPageMenuOption] = [
             .ScrollMenuBackgroundColor(UIColor.whiteColor()),
             .SelectionIndicatorColor(x80AC9C),
-            CAPSPageMenuOption.AddBottomMenuHairline(false),
+            CAPSPageMenuOption.AddBottomMenuHairline(true),
+            CAPSPageMenuOption.BottomMenuHairlineColor(x80AC9C),
             CAPSPageMenuOption.SelectedMenuItemLabelColor(x80AC9C)
         ]
         
@@ -78,6 +97,12 @@ class MPHomeViewController: UIViewController {
         self.view.addSubview(pageMenu!.view)
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
     // MARK: Actions
     
     func didPressMenuButton(sender: UIBarButtonItem) {
@@ -85,6 +110,10 @@ class MPHomeViewController: UIViewController {
             // do nothing
         })
     }
+    
+//    func didPressSelectMeditation(sender: UIBarButtonItem) {
+//        self.meditatorViewController.toggleSelectionView()
+//    }
     
     var drawerViewController: KGDrawerViewController? {
         var parentViewController = self.parentViewController

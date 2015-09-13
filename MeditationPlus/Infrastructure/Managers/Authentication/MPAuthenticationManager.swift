@@ -123,7 +123,7 @@ class MTAuthenticationManager {
     func logout () -> Void {
         self.loggedInUser = nil
         self.token        = nil
-        self.password     = nil
+//        self.password     = nil
         self.autologin    = false
         
 //        if let username = self.username {
