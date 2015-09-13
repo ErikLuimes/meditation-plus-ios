@@ -13,6 +13,10 @@ class MPMeditatorView: UIView {
 
     @IBOutlet weak var actionView: UIView!
     
+    @IBOutlet weak var meditationPickerView: UIPickerView!
+    
+    @IBOutlet weak var startButton: UIButton!
+    
     var refreshControl: UIRefreshControl!
 
     override func awakeFromNib() {
@@ -20,17 +24,8 @@ class MPMeditatorView: UIView {
         
         self.tableView.registerNib(UINib(nibName: "MPMeditatorCell", bundle: nil), forCellReuseIdentifier: MPMeditatorDataSource.MPMeditatorCellIdentifier)
         self.tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(self.actionView.frame), 0.0, 15.0, 0.0)
-
+        
         self.refreshControl = UIRefreshControl()
         self.tableView.addSubview(self.refreshControl)
     }
-
-    /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
-    }
-    */
-
 }
