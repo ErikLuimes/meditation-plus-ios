@@ -75,7 +75,11 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h8-iZ-Fyz">
-                                        <rect key="frame" x="171" y="1" width="33" height="30"/>
+                                        <rect key="frame" x="147" y="0.0" width="80" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="80" id="keA-m7-JD4"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                         <state key="normal" title="Start">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -89,6 +93,9 @@
                                     <constraint firstAttribute="centerY" secondItem="5h8-iZ-Fyz" secondAttribute="centerY" id="hHJ-tf-4ls"/>
                                 </constraints>
                             </view>
+                            <constraints>
+                                <constraint firstItem="5h8-iZ-Fyz" firstAttribute="height" secondItem="xL0-gE-v15" secondAttribute="height" id="kv4-Av-yRk"/>
+                            </constraints>
                             <blurEffect style="extraLight"/>
                         </visualEffectView>
                     </subviews>

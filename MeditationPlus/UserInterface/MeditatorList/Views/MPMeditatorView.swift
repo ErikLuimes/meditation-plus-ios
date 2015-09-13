@@ -11,6 +11,8 @@ import UIKit
 class MPMeditatorView: UIView {
     private var confirmationEffectViewHeight: CGFloat = 32
     
+    private var selectionViewHidden = true
+    
     @IBOutlet weak var tableView: UITableView!
 
     @IBOutlet weak var actionView: UIView!
@@ -33,7 +35,7 @@ class MPMeditatorView: UIView {
     }
     
     var isSelectionViewHidden: Bool {
-        return selectionViewTopConstraint.constant < 0
+        return self.selectionViewHidden
     }
     
     var originalSelectionViewTopConstant: CGFloat = 0
@@ -58,10 +60,12 @@ class MPMeditatorView: UIView {
     }
 
     func setSelectionViewHidden(hidden: Bool, animated: Bool) {
-        let duration = animated ? 0.5 : 0.0
+        self.startButton.setTitle(hidden ? "stop" : "start", forState: UIControlState.Normal)
         
-        let curConstant = self.selectionViewTopConstraint.constant
+        self.selectionViewHidden = hidden
         
+        let duration       = animated ? 0.5 : 0.0
+        let curConstant    = self.selectionViewTopConstraint.constant
         let downedConstant = self.confirmationEffectViewHeight - 20 - self.confirmationEffectViewHeight
         
         self.selectionViewTopConstraint.constant = curConstant == downedConstant ? self.originalSelectionViewTopConstant : downedConstant

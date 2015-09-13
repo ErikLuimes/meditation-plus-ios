@@ -72,6 +72,7 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     }
 
     @IBAction func didPressStartMeditationButton(sender: UIButton) {
+        self.toggleSelectionView()
     }
 
     // returns the number of 'columns' to display.
