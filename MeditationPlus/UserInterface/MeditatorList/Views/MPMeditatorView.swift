@@ -9,9 +9,13 @@
 import UIKit
 
 class MPMeditatorView: UIView {
+    private var confirmationEffectViewHeight: CGFloat = 32
+    
     @IBOutlet weak var tableView: UITableView!
 
     @IBOutlet weak var actionView: UIView!
+    
+    @IBOutlet weak var selectionView: UIView!
     
     @IBOutlet weak var meditationPickerView: UIPickerView!
     
@@ -19,9 +23,12 @@ class MPMeditatorView: UIView {
     
     @IBOutlet weak var profileImageView: UIImageView!
     
+    @IBOutlet weak var confirmationEffectView: UIVisualEffectView!
+    
     @IBOutlet weak var selectionViewTopConstraint: NSLayoutConstraint! {
         didSet {
-            self.originalSelectionViewTopConstant = -self.actionView.frame.size.height + 44
+            self.originalSelectionViewTopConstant = -self.selectionView.frame.size.height + self.confirmationEffectViewHeight
+            self.selectionViewTopConstraint.constant = self.originalSelectionViewTopConstant
         }
     }
     
@@ -55,7 +62,9 @@ class MPMeditatorView: UIView {
         
         let curConstant = self.selectionViewTopConstraint.constant
         
-        self.selectionViewTopConstraint.constant = curConstant == 0 ? self.originalSelectionViewTopConstant : 0
+        let downedConstant = self.confirmationEffectViewHeight - 20 - self.confirmationEffectViewHeight
+        
+        self.selectionViewTopConstraint.constant = curConstant == downedConstant ? self.originalSelectionViewTopConstant : downedConstant
         
         UIView.animateWithDuration(duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 9.8, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
             self.layoutIfNeeded()

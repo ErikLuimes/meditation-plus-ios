@@ -23,7 +23,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="183"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="buddha" translatesAutoresizingMaskIntoConstraints="NO" id="RGv-5p-IDW" userLabel="Profile Image View">
-                            <rect key="frame" x="116" y="20" width="143" height="143"/>
+                            <rect key="frame" x="15" y="42" width="126" height="126"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="RGv-5p-IDW" secondAttribute="height" multiplier="1:1" id="MW0-N3-zXc"/>
                             </constraints>
@@ -34,30 +34,32 @@
                         <constraint firstAttribute="width" secondItem="cxL-y1-pQn" secondAttribute="height" multiplier="375:227" constant="72.687224669603552" id="GiA-Uz-PKa"/>
                         <constraint firstAttribute="centerX" secondItem="RGv-5p-IDW" secondAttribute="centerX" id="NYb-Xh-TE7"/>
                         <constraint firstItem="RGv-5p-IDW" firstAttribute="leading" secondItem="cxL-y1-pQn" secondAttribute="leading" id="ayo-nM-r4k"/>
-                        <constraint firstAttribute="bottom" secondItem="RGv-5p-IDW" secondAttribute="bottom" constant="20" id="frd-hw-r5n"/>
-                        <constraint firstItem="RGv-5p-IDW" firstAttribute="top" secondItem="cxL-y1-pQn" secondAttribute="top" constant="20" id="hfq-oG-KJ5"/>
+                        <constraint firstAttribute="bottom" secondItem="RGv-5p-IDW" secondAttribute="bottom" constant="15" id="frd-hw-r5n"/>
+                        <constraint firstItem="RGv-5p-IDW" firstAttribute="top" secondItem="cxL-y1-pQn" secondAttribute="top" constant="42" id="hfq-oG-KJ5"/>
+                        <constraint firstItem="RGv-5p-IDW" firstAttribute="leading" secondItem="cxL-y1-pQn" secondAttribute="leading" constant="15" id="yAL-jh-cHN"/>
                     </constraints>
                     <variation key="default">
                         <mask key="constraints">
+                            <exclude reference="NYb-Xh-TE7"/>
                             <exclude reference="ayo-nM-r4k"/>
                         </mask>
                     </variation>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rN1-Eg-Kgg" userLabel="Selection View">
-                    <rect key="frame" x="0.0" y="-300" width="375" height="183"/>
+                    <rect key="frame" x="0.0" y="-300" width="375" height="203"/>
                     <subviews>
                         <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PE3-mm-smu" userLabel="Picker Effect View">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="139"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="171"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Nh8-Vc-hNs">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="139"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="171"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agf-8b-wyP" userLabel="Time Picker View">
-                                        <rect key="frame" x="64" y="-12" width="247" height="162"/>
+                                        <rect key="frame" x="64" y="14.5" width="247" height="162"/>
                                     </pickerView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="agf-8b-wyP" firstAttribute="top" secondItem="Nh8-Vc-hNs" secondAttribute="top" id="2Aa-CS-Gat"/>
+                                    <constraint firstItem="agf-8b-wyP" firstAttribute="top" secondItem="Nh8-Vc-hNs" secondAttribute="top" constant="20" id="2Aa-CS-Gat"/>
                                     <constraint firstItem="agf-8b-wyP" firstAttribute="leading" secondItem="Nh8-Vc-hNs" secondAttribute="leading" constant="64" id="HlX-bt-5xL"/>
                                     <constraint firstAttribute="trailing" secondItem="agf-8b-wyP" secondAttribute="trailing" constant="64" id="Iag-88-489"/>
                                     <constraint firstAttribute="bottom" secondItem="agf-8b-wyP" secondAttribute="bottom" id="SON-JF-9so"/>
@@ -66,13 +68,13 @@
                             <blurEffect style="light"/>
                         </visualEffectView>
                         <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xL0-gE-v15" userLabel="Confirmation Effect View">
-                            <rect key="frame" x="0.0" y="139" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="171" width="375" height="32"/>
                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="oDh-z4-1rz">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="32"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h8-iZ-Fyz">
-                                        <rect key="frame" x="171" y="7" width="33" height="30"/>
+                                        <rect key="frame" x="171" y="1" width="33" height="30"/>
                                         <state key="normal" title="Start">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -93,7 +95,7 @@
                         <constraint firstItem="xL0-gE-v15" firstAttribute="top" secondItem="PE3-mm-smu" secondAttribute="bottom" id="9op-E2-2sE"/>
                         <constraint firstAttribute="trailing" secondItem="xL0-gE-v15" secondAttribute="trailing" id="DVQ-wK-whC"/>
                         <constraint firstItem="PE3-mm-smu" firstAttribute="leading" secondItem="rN1-Eg-Kgg" secondAttribute="leading" id="GPk-x7-Lqu"/>
-                        <constraint firstAttribute="bottom" secondItem="PE3-mm-smu" secondAttribute="bottom" constant="44" id="Grq-6D-W4h"/>
+                        <constraint firstAttribute="bottom" secondItem="PE3-mm-smu" secondAttribute="bottom" constant="32" id="Grq-6D-W4h"/>
                         <constraint firstAttribute="bottom" secondItem="xL0-gE-v15" secondAttribute="bottom" id="bYT-6q-Aop"/>
                         <constraint firstItem="PE3-mm-smu" firstAttribute="top" secondItem="rN1-Eg-Kgg" secondAttribute="top" id="cwC-bD-Bmw"/>
                         <constraint firstItem="xL0-gE-v15" firstAttribute="leading" secondItem="rN1-Eg-Kgg" secondAttribute="leading" id="nU4-CB-LIP"/>
@@ -113,13 +115,15 @@
                 <constraint firstItem="eyu-oc-l3Q" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hI6-hU-vHF"/>
                 <constraint firstItem="rN1-Eg-Kgg" firstAttribute="width" secondItem="cxL-y1-pQn" secondAttribute="width" id="oMS-eo-rR4"/>
                 <constraint firstItem="rN1-Eg-Kgg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="-300" id="rE3-WZ-0SI"/>
-                <constraint firstItem="rN1-Eg-Kgg" firstAttribute="height" secondItem="cxL-y1-pQn" secondAttribute="height" id="wHd-jd-KNE"/>
+                <constraint firstItem="rN1-Eg-Kgg" firstAttribute="height" secondItem="cxL-y1-pQn" secondAttribute="height" constant="20" id="wHd-jd-KNE"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
             <connections>
                 <outlet property="actionView" destination="cxL-y1-pQn" id="O1Y-tf-Z1c"/>
+                <outlet property="confirmationEffectView" destination="xL0-gE-v15" id="bVt-cO-JOc"/>
                 <outlet property="meditationPickerView" destination="agf-8b-wyP" id="qNA-aF-Cof"/>
                 <outlet property="profileImageView" destination="RGv-5p-IDW" id="rii-IG-TYW"/>
+                <outlet property="selectionView" destination="rN1-Eg-Kgg" id="XjF-Iw-RKn"/>
                 <outlet property="selectionViewTopConstraint" destination="rE3-WZ-0SI" id="aCW-LN-LbR"/>
                 <outlet property="startButton" destination="5h8-iZ-Fyz" id="NGf-HV-BNW"/>
                 <outlet property="tableView" destination="eyu-oc-l3Q" id="Puf-3Y-DNM"/>
