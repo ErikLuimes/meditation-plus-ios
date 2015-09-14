@@ -1,16 +1,16 @@
 //
-// Created by Erik Luimes on 12/09/15.
+// Created by Erik Luimes on 13/09/15.
 // Copyright (c) 2015 Maya Interactive. All rights reserved.
 //
 
 import Foundation
 import AFNetworking
 
-class MPMeditatorManager {
+class MPChatManager {
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
-    func meditatorList(failure: ((NSError?) -> Void)? = nil, completion: ([MPMeditator]) -> Void) {
-        if let username = self.authenticationManager.loggedInUser?.username, token = self.authenticationManager.token {
+    func chatList(failure: ((NSError?) -> Void)? = nil, completion: ([MPChatItem]) -> Void) {
+        if let username = self.authenticationManager.loggedInUser, token = self.authenticationManager.token {
             let parameters = [
                     "username": username,
                     "token":    token,
@@ -19,7 +19,7 @@ class MPMeditatorManager {
             let manager    = AFHTTPRequestOperationManager()
             let endpoint   = "http://meditation.sirimangalo.org/db.php"
 
-            var jsonResponseSerializer : AFJSONResponseSerializer = MPResponseObjectSerializer<MPMeditatorList>()
+            var jsonResponseSerializer : AFJSONResponseSerializer = MPResponseObjectSerializer<MPChatList>()
             var acceptableContentTypes = NSMutableSet(set: jsonResponseSerializer.acceptableContentTypes!)
             acceptableContentTypes.addObject("text/html")
 
@@ -30,18 +30,18 @@ class MPMeditatorManager {
                 endpoint,
                 parameters: parameters,
                 success: { (operation: AFHTTPRequestOperation!, responseObject: AnyObject?) in
-                    if let meditatorList = responseObject as? MPMeditatorList where meditatorList.meditators != nil {
-                        completion(meditatorList.meditators!)
+                    if let chatList = responseObject as? MPChatList where chatList.chats != nil {
+                        completion(chatList.chats!)
                     } else {
                         failure?(nil)
                     }
-                    
+
                 },
                 failure: { (operation: AFHTTPRequestOperation!, error: NSError!) in
                     failure?(nil)
                 }
             )
-
         }
     }
 }
+
