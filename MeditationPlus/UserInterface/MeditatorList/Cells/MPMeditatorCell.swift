@@ -79,13 +79,13 @@ class MPMeditatorCell: UITableViewCell {
         self.nameLabel?.text = meditator.username
         
         var meditations: [String] = [String]()
-
-        if let sittingMinutes: Int = meditator.sittingMinutes where sittingMinutes > 0 {
-            meditations.append("sitting \(sittingMinutes)m")
-        }
         
         if let walkingMinutes: Int = meditator.walkingMinutes where walkingMinutes > 0 {
             meditations.append("walking \(walkingMinutes)m")
+        }
+
+        if let sittingMinutes: Int = meditator.sittingMinutes where sittingMinutes > 0 {
+            meditations.append("sitting \(sittingMinutes)m")
         }
         
         if let anumodanaMinutes: Int = meditator.anumodanaMinutes where anumodanaMinutes > 0 {

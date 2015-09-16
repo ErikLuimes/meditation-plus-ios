@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
     private var meditatorView: MPMeditatorView { return self.view as! MPMeditatorView }
@@ -20,8 +21,22 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     
     var times = [Int]()
 
+    // Current meditation times
+    private var sittingTimeInMinutes: Int?
+    
+    private var walkingTimeInMinutes: Int?
+    
+    private var sampleUrl : NSURL!
+    
+    private var audioPlayer: AVAudioPlayer!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.sampleUrl = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
+        
+        self.audioPlayer = AVAudioPlayer(contentsOfURL: self.sampleUrl, error: nil)
+        self.audioPlayer.prepareToPlay()
 
         self.meditatorView.tableView.delegate   = self
         self.meditatorView.tableView.dataSource = self.meditatorDataSource
@@ -80,6 +95,17 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         self.meditationTimer?.invalidate()
         
         if self.meditatorView.isSelectionViewHidden {
+            self.meditatorManager.cancelMeditation(self.sittingTimeInMinutes, walkingTimeInMinutes: self.walkingTimeInMinutes, completion: { () -> Void in
+                //
+                NSLog("Did cancel")
+            }, failure: { (error) -> Void in
+                NSLog("Cancel meditation failed")
+                //
+            })
+            
+            self.sittingTimeInMinutes = nil
+            self.walkingTimeInMinutes = nil
+            
             self.remainingMeditationTime = 0
             self.updateRemainingTimeLabel()
             self.meditatorView.setSelectionViewHidden(false, animated: true)
@@ -90,20 +116,35 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
             let selectedSittingMeditationTime = self.meditatorView.meditationPickerView.selectedRowInComponent(1)
             var totalTime = 0
             
+            self.walkingTimeInMinutes = nil
+            self.sittingTimeInMinutes = nil
+            
             if selectedSittingMeditationTime > 0 {
-                totalTime += self.times[selectedSittingMeditationTime]
+                self.sittingTimeInMinutes = self.times[selectedSittingMeditationTime]
+                totalTime += self.sittingTimeInMinutes!
             }
             
             if selectedWalkingMeditationTime > 0 {
-                totalTime += self.times[selectedWalkingMeditationTime]
+                self.walkingTimeInMinutes = self.times[selectedWalkingMeditationTime]
+                totalTime += self.walkingTimeInMinutes!
             }
             
             if totalTime != 0 {
+                
+                self.meditatorManager.startMeditation(self.sittingTimeInMinutes, walkingTimeInMinutes: self.walkingTimeInMinutes, completion: { () -> Void in
+                    //
+                    NSLog("Did start")
+                }, failure: { (error) -> Void in
+                    NSLog("Start meditation failed")
+                    //
+                })
                 self.remainingMeditationTime = Double(totalTime * 60)
                 
                 self.meditationTimer = NSTimer.scheduledTimerWithTimeInterval(self.timeInterval, target: self, selector: "meditationTimerTick", userInfo: nil, repeats: true)
                 self.updateRemainingTimeLabel()
                 self.meditatorView.setSelectionViewHidden(true, animated: true)
+                
+                self.audioPlayer.play()
             }
         }
     }
@@ -122,7 +163,7 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         var title = ""
         
         if row == 0 {
-            title = component == 0 ? "Sitting" : "Walking"
+            title = component == 0 ? "Walking" : "Sitting"
         } else {
             var hours   = times[row] / 60
             var minutes = times[row] % 60
@@ -138,6 +179,10 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     
     func meditationTimerTick() {
         self.remainingMeditationTime -= self.timeInterval
+        
+        if self.remainingMeditationTime <= 0{
+            self.audioPlayer.play()
+        }
         
         self.updateRemainingTimeLabel()
     }

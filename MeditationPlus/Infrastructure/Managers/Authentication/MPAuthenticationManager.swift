@@ -83,7 +83,7 @@ class MTAuthenticationManager {
         self.username = username
         self.password = password
         
-        let parameters = ["username": username, "password": password, "submit": "Login"]
+        let parameters = ["username": username, "password": password, "submit": "Login", "source": "ios"]
         let manager    = AFHTTPRequestOperationManager()
         let endpoint   = "http://meditation.sirimangalo.org/post.php"
 
