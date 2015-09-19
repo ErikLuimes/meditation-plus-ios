@@ -15,12 +15,19 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool
     {
+
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         self.window!.rootViewController = MPMenuContainerViewController()
         self.window!.backgroundColor = UIColor.whiteColor()
         self.window!.makeKeyAndVisible()
 
+        self.setupMeditationTimer();
+
         return true
+    }
+
+    func setupMeditationTimer() {
+        MPMeditationTimer.sharedInstance.addDelegate(MPAudioPlayerManager.sharedInstance)
     }
 }
 
