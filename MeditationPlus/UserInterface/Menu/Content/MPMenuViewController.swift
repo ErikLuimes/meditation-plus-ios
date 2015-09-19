@@ -75,10 +75,13 @@ class MPMenuViewController: UIViewController, UITableViewDelegate
     {
         if let menuItem = self.menuDataSource.itemForIndexPath(indexPath) {
             switch menuItem {
-            case .Logout:
-                self.drawerNavigationHandler?(MPSplashViewController(nibName: "MPSplashViewController", bundle: nil), false)
-            default:
-                NSLog("default")
+                case .Meditators:
+                    self.drawerNavigationHandler?(MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil), true)
+
+                case .Logout:
+                    self.drawerNavigationHandler?(MPSplashViewController(nibName: "MPSplashViewController", bundle: nil), false)
+                default:
+                    NSLog("default")
             }
         }
     }
