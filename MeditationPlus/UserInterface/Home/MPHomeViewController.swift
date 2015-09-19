@@ -31,23 +31,23 @@ class MPHomeViewController: UIViewController {
         
         self.view.clipsToBounds = true
         
-        UINavigationBar.appearance().setBackgroundImage(
-            UIImage(),
-            forBarPosition: .Any,
-            barMetrics: .Default)
-        
-        UINavigationBar.appearance().shadowImage = UIImage()
-        
-        self.navigationController?.navigationBar.tintColor = UIColor.lightGrayColor()
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.translucent = false
-//        self.navigationController?.navigationBar.shadowImage = UIImage()
-        //self.navigationController?.hidesBarsOnSwipe             = true
-        //self.navigationController?.hidesBarsOnTap               = true
-        //self.navigationController?.hidesBarsWhenKeyboardAppears = true
-        
-//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Menu", style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("menu_btn", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+//        UINavigationBar.appearance().setBackgroundImage(
+//            UIImage(),
+//            forBarPosition: .Any,
+//            barMetrics: .Default)
+//
+//        UINavigationBar.appearance().shadowImage = UIImage()
+//
+//        self.navigationController?.navigationBar.tintColor = UIColor.lightGrayColor()
+//        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+//        self.navigationController?.navigationBar.translucent = false
+////        self.navigationController?.navigationBar.shadowImage = UIImage()
+//        //self.navigationController?.hidesBarsOnSwipe             = true
+//        //self.navigationController?.hidesBarsOnTap               = true
+//        //self.navigationController?.hidesBarsWhenKeyboardAppears = true
+//
+////        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Menu", style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("menu_btn", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
 //        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("user_icon", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
 //        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "didPressSelectMeditation:")
         

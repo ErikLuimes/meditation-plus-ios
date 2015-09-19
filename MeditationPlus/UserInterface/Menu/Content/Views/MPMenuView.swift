@@ -52,8 +52,7 @@ class MPMenuView: UIView
         super.awakeFromNib()
 
         self.menuTableView.tableFooterView = UIView(frame: CGRectZero)
-        self.menuTableView.bounces = false
-        self.menuTableView.registerNib(UINib(nibName: "MPMenuCell", bundle: nil), forCellReuseIdentifier: "menuCellIdentifier")
+        self.menuTableView.bounces         = false
     }
 
     override func layoutSubviews()
