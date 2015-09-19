@@ -66,15 +66,15 @@ class MPHomeViewController: UIViewController {
 //        self.meditatorViewController = meditatorController
         
 //        let chatController : UIViewController = MPChatViewController(nibName: "MPChatViewController", bundle: nil)
-        let chatController : UIViewController = MPChatViewController()
-        chatController.title = "Chat"
+//        let chatController : UIViewController = MPChatViewController()
+//        chatController.title = "Chat"
         
-        let commitController : UIViewController = MPCommitViewController(nibName: "MPCommitViewController", bundle: nil)
-        commitController.title = "Commit"
+//        let commitController : UIViewController = MPCommitViewController(nibName: "MPCommitViewController", bundle: nil)
+//        commitController.title = "Commit"
         
         controllerArray.append(meditatorController)
-        controllerArray.append(chatController)
-        controllerArray.append(commitController)
+//        controllerArray.append(chatController)
+//        controllerArray.append(commitController)
         // AED284
         //            .ScrollMenuBackgroundColor(UIColor(red: 0xae / 255.0, green: 0xd2 / 255.0, blue: 0x84 / 255.0, alpha: 1.0))
 
