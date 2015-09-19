@@ -26,16 +26,19 @@
 import UIKit
 
 class MPMenuCell: UITableViewCell {
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    struct ViewData {
+        let title: String
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    var viewData: ViewData? {
+        didSet {
+            textLabel!.text = viewData?.title
+        }
     }
-    
+}
+
+extension MPMenuCell.ViewData {
+    init(menuItem: MPMenuItem) {
+        self.title = menuItem.title
+    }
 }

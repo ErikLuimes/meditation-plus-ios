@@ -1,4 +1,5 @@
 //
+
 //  MPMenuViewController.swift
 //  MeditationPlus
 //
@@ -26,87 +27,122 @@
 import UIKit
 import KGFloatingDrawer
 
-private class MPMenuItem {
+class MPMenuItem
+{
     private(set) var name: String!
-    
-    private(set) var navigationBlock: (()->Void)?
-    
-    required init(name: String, _ navigationBlock: (() -> Void)? = nil) {
-        self.name            = name
+    var title: String { return name }
+
+    private(set) var navigationBlock: (() -> Void)?
+
+    required init(name: String, _ navigationBlock: (() -> Void)? = nil)
+    {
+        self.name = name
         self.navigationBlock = navigationBlock
     }
 }
 
-class MPMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MPMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
+{
     private var menuItems: [MPMenuItem] = [MPMenuItem]()
-    private var menuView: MPMenuView { return self.view as! MPMenuView }
+    private var menuView: MPMenuView
+    {
+        return self.view as! MPMenuView
+    }
     private let menuCellIdentifier = "menuCellIdentifier"
-    
-    override func viewDidLoad() {
+
+    private var cellConfigurationHandler: ((MPMenuCell, MPMenuItem) -> ())!
+
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
+    {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+
+        self.cellConfigurationHandler = { cell, menuItem in
+            cell.viewData = MPMenuCell.ViewData(menuItem: menuItem)
+        }
+    }
+
+    required init(coder aDecoder: NSCoder)
+    {
+        super.init(coder: aDecoder)
+    }
+
+
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
 
-        let homeItem = MPMenuItem(name: "Home") {
+        let homeItem = MPMenuItem(name: "Home")
+        {
             NSLog("home")
         }
         self.menuItems.append(homeItem)
-        
-        let settingsItem = MPMenuItem(name: "Settings") {
+
+        let settingsItem = MPMenuItem(name: "Settings")
+        {
             NSLog("settings")
         }
         self.menuItems.append(settingsItem)
-        
-        let aboutItem = MPMenuItem(name: "About") {
+
+        let aboutItem = MPMenuItem(name: "About")
+        {
             NSLog("about")
         }
         self.menuItems.append(aboutItem)
-        
-        let logoutItem = MPMenuItem(name: "Logout") {
+
+        let logoutItem = MPMenuItem(name: "Logout")
+        {
             MTAuthenticationManager.sharedInstance.logout()
             self.drawerViewController?.centerViewController = UINavigationController(rootViewController: MPSplashViewController(nibName: "MPSplashViewController", bundle: nil))
-            
-            self.drawerViewController?.closeDrawer(.Left, animated: false, complete: { (finished) -> Void in
+
+            self.drawerViewController?.closeDrawer(.Left, animated: false, complete: {
+                (finished) -> Void in
                 //
             })
-            
+
             NSLog("logout pressed")
         }
         self.menuItems.append(logoutItem)
-        
-        self.menuView.menuTableView.delegate   = self
+
+        self.menuView.menuTableView.delegate = self
         self.menuView.menuTableView.dataSource = self
     }
 
     // MARK: UITableViewDataSource
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
         return menuItems.count
     }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell             = tableView.dequeueReusableCellWithIdentifier(self.menuCellIdentifier, forIndexPath: indexPath) as! UITableViewCell
+
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell
+        = tableView.dequeueReusableCellWithIdentifier(self.menuCellIdentifier, forIndexPath: indexPath) as! UITableViewCell
         cell.textLabel?.text = self.menuItems[indexPath.row].name
-        
+
         return cell
     }
-    
+
     // MARK: UITableViewDelegate
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    {
         self.menuItems[indexPath.row].navigationBlock?()
     }
 
     // Bad
-    var drawerViewController: KGDrawerViewController? {
+    var drawerViewController: KGDrawerViewController?
+    {
         var parentViewController = self.parentViewController
-        
-        while parentViewController != nil &&  !(parentViewController is KGDrawerViewController) {
+
+        while parentViewController != nil && !(parentViewController is KGDrawerViewController) {
             parentViewController = parentViewController?.parentViewController
         }
-        
+
         if (parentViewController is KGDrawerViewController) {
             return parentViewController as? KGDrawerViewController
         }
-        
+
         return nil
     }
 }
