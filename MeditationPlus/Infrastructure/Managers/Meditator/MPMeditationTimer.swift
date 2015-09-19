@@ -27,34 +27,53 @@ import Foundation
 import AVFoundation
 
 protocol MPMeditationTimerDelegate: NSObjectProtocol {
-    func meditationTimerDidStart(meditationTimer: MPMeditationTimer)
-
-    // preparation timer
-    func meditationTimer(meditationTimer: MPMeditationTimer, preparationTimerDidProgress: Double, timeLeft: NSTimeInterval)
-    func meditationTimerPreparationDidStop(meditationTimer: MPMeditationTimer)
-
-    // Meditation timer
-    func meditationTimer(meditationTimer: MPMeditationTimer, meditationTimerDidProgress: Double, timeLeft: NSTimeInterval)
-    func meditationTimerDidStop(meditationTimer: MPMeditationTimer)
+    func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
+    func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+    func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
 }
 
-enum MPMeditationTimingType: Int {
+enum MPMeditationState: Int {
+    case Stopped
     case Preparation
     case Meditation
+
+    init(remainingMeditationTime: NSTimeInterval, remainingPreparationTime: NSTimeInterval)
+    {
+        if remainingPreparationTime > 0 {
+            self = .Preparation
+        } else if remainingMeditationTime > 0 {
+            self = .Meditation
+        } else {
+            self = .Stopped
+        }
+    }
+
+    var title: String {
+        switch self {
+            case .Stopped:     return "Stopped"
+            case .Preparation: return "Preparation"
+            case .Meditation:  return "Meditation"
+        }
+    }
 }
 
-class MPMeditationTimer
+class MPMeditationTimer: NSObject
 {
-    let sharedInstance: MPMeditationTimer = MPMeditationTimer()
+    static let sharedInstance: MPMeditationTimer = MPMeditationTimer()
     weak var delegate: MPMeditationTimerDelegate?
 
-    private var sampleUrl = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
-    private var audioPlayer: AVAudioPlayer
-    var playAudio = true
+//    var stateChangeHandler: (fromState: MPMeditationState, toState: MPMeditationState) -> Void = {[weak self] (fromState, toState) -> Void in
+
+    private var state: MPMeditationState = .Stopped {
+        didSet {
+            if (oldValue != self.state) { self.stateChangeHandlerFromState(oldValue, toState: self.state) }
+        }
+    }
 
     private let timeInterval:            NSTimeInterval = 1
     private var meditationTimer:         NSTimer?
 
+    // MARK: Meditation time
     private var totalMeditationTime:      NSTimeInterval = 0 {
         didSet {
             self.remainingMeditationTime = self.totalMeditationTime
@@ -67,76 +86,79 @@ class MPMeditationTimer
         return self.calculateProgress(self.totalMeditationTime, remaining: self.remainingMeditationTime)
     }
 
-    private var totalPreparationTime: NSTimeInterval? {
+
+    // MARK: Preparation time
+    private var totalPreparationTime: NSTimeInterval = 0 {
         didSet {
             self.remainingPreparationTime = self.totalPreparationTime
         }
     }
 
-    private var remainingPreparationTime: NSTimeInterval?
+    private var remainingPreparationTime: NSTimeInterval = 0
 
     private var preparationProgress: Double {
-        var progress: Double = 0.0
-
-        if let total = self.totalPreparationTime, remaining = self.remainingPreparationTime {
-            progress = self.calculateProgress(total, remaining: remaining)
-        }
-
-        return progress
+        return self.calculateProgress(totalPreparationTime, remaining: remainingPreparationTime)
+    }
+    
+    private func calculateProgress(total: NSTimeInterval, remaining: NSTimeInterval) -> Double
+    {
+        return total > 0 ? (total - remaining) / total : 0.0
     }
 
-    init() {
-        self.audioPlayer = AVAudioPlayer(contentsOfURL: self.sampleUrl, error: nil)
-        self.audioPlayer.prepareToPlay()
+    // MARK: Init
+
+    override init() {
+        super.init()
     }
 
-    func startTimer(meditationTime: NSTimeInterval, preparationTime: NSTimeInterval?) {
+    // MARK: Timer functions
+
+    func startTimer(meditationTime: NSTimeInterval, preparationTime: NSTimeInterval = 0) {
         self.totalPreparationTime = preparationTime
         self.totalMeditationTime  = meditationTime
 
-        self.meditationTimer = NSTimer.scheduledTimerWithTimeInterval(self.timeInterval, target: self, selector: "timerTick", userInfo: nil, repeats: true)
+        self.meditationTimer = NSTimer.scheduledTimerWithTimeInterval(self.timeInterval, target: self, selector: "meditationTimerTick", userInfo: nil, repeats: true)
     }
 
     func stopTimer() {
         self.meditationTimer?.invalidate()
-        self.meditationTimer = nil
 
-        self.remainingPreparationTime = nil
-        self.remainingMeditationTime = 0
+        self.remainingPreparationTime = 0
+        self.remainingMeditationTime  = 0
     }
 
-    func timerTick() {
-        if let delay = self.remainingPreparationTime {
-            self.delegate?.meditationTimer(self, preparationTimerDidProgress: self.preparationProgress, timeLeft: delay)
+    func meditationTimerTick()
+    {
+        self.state = MPMeditationState(remainingMeditationTime: self.remainingMeditationTime, remainingPreparationTime: self.remainingPreparationTime)
 
-            if delay == 0 {
-                self.remainingPreparationTime = nil
-                self.delegate?.meditationTimerPreparationDidStop(self)
-            } else {
-                self.remainingPreparationTime! -= self.timeInterval
-            }
-        } else {
-            if self.playAudio && self.totalMeditationTime == self.remainingMeditationTime {
-                self.audioPlayer.play()
-            }
-
-            self.delegate?.meditationTimer(self, meditationTimerDidProgress: self.meditationProgress, timeLeft: self.remainingMeditationTime)
-
-            if self.remainingMeditationTime <= 0{
-                if (self.playAudio) {
-                    self.audioPlayer.play()
-                }
-                self.stopTimer()
-                self.delegate?.meditationTimerDidStop(self)
-            } else {
+        switch self.state {
+            case .Preparation:
+                self.remainingPreparationTime -= self.timeInterval
+                self.delegate?.meditationTimer(self, didProgress: self.preparationProgress, withState: self.state, timeLeft: self.remainingPreparationTime)
+            case .Meditation:
                 self.remainingMeditationTime -= self.timeInterval
+                self.delegate?.meditationTimer(self, didProgress: self.meditationProgress, withState: self.state, timeLeft: self.remainingMeditationTime)
+            default:
+                self.stopTimer()
+        }
+    }
+    
+    // MARK State change notifications 
+    func stateChangeHandlerFromState(fromState: MPMeditationState, toState: MPMeditationState) -> Void
+    {
+        if toState == .Stopped {
+            self.delegate?.meditationTimer(self, didStopWithState: fromState)
+        } else {
+            switch fromState {
+                case .Stopped:
+                    self.delegate?.meditationTimer(self, didStartWithState: toState)
+                case .Preparation:
+                    self.delegate?.meditationTimer(self, didStopWithState: fromState)
+                    self.delegate?.meditationTimer(self, didStartWithState: toState)
+                default:
+                    break
             }
-
         }
     }
 
-    func calculateProgress(total: NSTimeInterval, remaining: NSTimeInterval) -> Double
-    {
-        return total > 0 ? (total - remaining) / total : 0.0
-    }
 }
