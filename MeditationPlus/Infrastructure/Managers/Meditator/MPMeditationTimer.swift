@@ -60,9 +60,7 @@ enum MPMeditationState: Int {
 class MPMeditationTimer: NSObject
 {
     static let sharedInstance: MPMeditationTimer = MPMeditationTimer()
-    weak var delegate: MPMeditationTimerDelegate?
-
-//    var stateChangeHandler: (fromState: MPMeditationState, toState: MPMeditationState) -> Void = {[weak self] (fromState, toState) -> Void in
+    internal var delegate: MPMeditationTimerDelegate?
 
     private var state: MPMeditationState = .Stopped {
         didSet {
@@ -162,3 +160,4 @@ class MPMeditationTimer: NSObject
     }
 
 }
+

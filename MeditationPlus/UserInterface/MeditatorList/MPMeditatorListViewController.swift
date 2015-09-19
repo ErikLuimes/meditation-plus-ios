@@ -9,10 +9,39 @@
 import UIKit
 import AVFoundation
 
+// Be sure to remove your delegates since there are no weak references
+class MPAudioPlayerTimerDelegate: NSObject, MPMeditationTimerDelegate
+{
+    private let sampleUrl = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
+    private var audioPlayer: AVAudioPlayer!
+
+    override init() {
+        self.audioPlayer = AVAudioPlayer(contentsOfURL: self.sampleUrl, error: nil)
+        self.audioPlayer.prepareToPlay()
+    }
+
+    func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
+    {
+        if state == MPMeditationState.Meditation {
+            self.audioPlayer.play()
+        }
+    }
+
+    func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+    {}
+
+    func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
+    {
+        if state == MPMeditationState.Meditation {
+            self.audioPlayer.play()
+        }
+    }
+}
+
 class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, MPMeditationTimerDelegate {
     private var meditatorView: MPMeditatorView { return self.view as! MPMeditatorView }
 
-
+    private var audioPlayerDelegate =  MPAudioPlayerTimerDelegate()
     private let timer = MPMeditationTimer.sharedInstance
 
     private let meditatorManager    = MPMeditatorManager()
@@ -33,7 +62,9 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         super.viewDidLoad()
 
 
-        self.timer.delegate = self
+//        self.timer.delegate = self
+        self.timer.addDelegate(self)
+        self.timer.addDelegate(self.audioPlayerDelegate)
 
         self.meditatorView.tableView.delegate   = self
         self.meditatorView.tableView.dataSource = self.meditatorDataSource
