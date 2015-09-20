@@ -112,59 +112,10 @@ class MTAuthenticationManager {
             }
         }
     }
-//    func loginWithUsername(username: String, password: String,failure: ((NSError?) -> Void)? = nil, completion: (MPUser) -> Void) {
-//        self.username = username
-//        self.password = password
-//        
-//        let parameters = ["username": username, "password": password, "submit": "Login", "source": "ios"]
-//        let manager    = AFHTTPRequestOperationManager()
-//        let endpoint   = "http://meditation.sirimangalo.org/post.php"
-//
-//        let jsonResponseSerializer : AFJSONResponseSerializer = AFJSONResponseSerializer()
-//        var acceptableContentTypes = NSMutableSet(set: jsonResponseSerializer.acceptableContentTypes!)
-//        acceptableContentTypes.addObject("text/html")
-//        
-//        jsonResponseSerializer.acceptableContentTypes = acceptableContentTypes as Set
-//        manager.responseSerializer = jsonResponseSerializer
-//
-//        manager.POST(
-//            endpoint,
-//            parameters: parameters,
-//            success: { (operation: AFHTTPRequestOperation!, responseObject: AnyObject?) in
-//                if let jsonResponse = responseObject as? [String: AnyObject], token = jsonResponse["login_token"] as? String {
-//                    let user = MPUser(username)
-//                    
-//                    self.loggedInUser = user
-//                    self.token        = token
-//                    NSLog("login token: \(token)")
-//                    
-//                    completion(user)
-//                } else {
-//                    NSLog("Failed logging in")
-//                    failure?(nil)
-//                }
-//            },
-//            failure: { (operation: AFHTTPRequestOperation!, error: NSError!) in
-//                NSLog("error: \(error.localizedDescription)")
-//                self.token        = nil
-//                self.loggedInUser = nil
-//                failure?(nil)
-//            }
-//        )
-//    }
     
     func logout () -> Void {
         self.loggedInUser = nil
         self.token        = nil
-//        self.password     = nil
         self.autologin    = false
-        
-//        if let username = self.username {
-//            let parameters = ["username": username, "submit": "Logout"]
-//            let manager    = AFHTTPRequestOperationManager()
-//            let endpoint   = "http://meditation.sirimangalo.org/post.php"
-//
-//            manager.POST(endpoint, parameters: parameters, success: nil, failure: nil)
-//        }
     }
 }
