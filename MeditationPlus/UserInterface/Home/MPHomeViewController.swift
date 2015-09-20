@@ -31,23 +31,23 @@ class MPHomeViewController: UIViewController {
         
         self.view.clipsToBounds = true
         
-        UINavigationBar.appearance().setBackgroundImage(
-            UIImage(),
-            forBarPosition: .Any,
-            barMetrics: .Default)
-        
-        UINavigationBar.appearance().shadowImage = UIImage()
-        
-        self.navigationController?.navigationBar.tintColor = UIColor.lightGrayColor()
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.translucent = false
-//        self.navigationController?.navigationBar.shadowImage = UIImage()
-        //self.navigationController?.hidesBarsOnSwipe             = true
-        //self.navigationController?.hidesBarsOnTap               = true
-        //self.navigationController?.hidesBarsWhenKeyboardAppears = true
-        
-//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Menu", style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("menu_btn", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+//        UINavigationBar.appearance().setBackgroundImage(
+//            UIImage(),
+//            forBarPosition: .Any,
+//            barMetrics: .Default)
+//
+//        UINavigationBar.appearance().shadowImage = UIImage()
+//
+//        self.navigationController?.navigationBar.tintColor = UIColor.lightGrayColor()
+//        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+//        self.navigationController?.navigationBar.translucent = false
+////        self.navigationController?.navigationBar.shadowImage = UIImage()
+//        //self.navigationController?.hidesBarsOnSwipe             = true
+//        //self.navigationController?.hidesBarsOnTap               = true
+//        //self.navigationController?.hidesBarsWhenKeyboardAppears = true
+//
+////        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Menu", style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("menu_btn", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
 //        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("user_icon", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
 //        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "didPressSelectMeditation:")
         
@@ -66,15 +66,15 @@ class MPHomeViewController: UIViewController {
 //        self.meditatorViewController = meditatorController
         
 //        let chatController : UIViewController = MPChatViewController(nibName: "MPChatViewController", bundle: nil)
-        let chatController : UIViewController = MPChatViewController()
-        chatController.title = "Chat"
+//        let chatController : UIViewController = MPChatViewController()
+//        chatController.title = "Chat"
         
-        let commitController : UIViewController = MPCommitViewController(nibName: "MPCommitViewController", bundle: nil)
-        commitController.title = "Commit"
+//        let commitController : UIViewController = MPCommitViewController(nibName: "MPCommitViewController", bundle: nil)
+//        commitController.title = "Commit"
         
         controllerArray.append(meditatorController)
-        controllerArray.append(chatController)
-        controllerArray.append(commitController)
+//        controllerArray.append(chatController)
+//        controllerArray.append(commitController)
         // AED284
         //            .ScrollMenuBackgroundColor(UIColor(red: 0xae / 255.0, green: 0xd2 / 255.0, blue: 0x84 / 255.0, alpha: 1.0))
 

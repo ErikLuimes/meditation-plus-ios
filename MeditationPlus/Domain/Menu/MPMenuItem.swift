@@ -1,8 +1,8 @@
 //
-//  MPMeditatorList.swift
+//  MPMenuItem.swift
 //  MeditationPlus
 //
-//  Created by Erik Luimes on 12/09/15.
+//  Created by Erik Luimes on 19/09/15.
 //  Copyright (c) 2015 Maya Interactive
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,16 +24,24 @@
 // THE SOFTWARE.
 
 import Foundation
-import ObjectMapper
 
-class MPMeditatorList: Mappable {
-    var meditators: [MPMeditator]?
+enum MPMenuItem: Int
+{
+    case Meditators
+    case Chat
+    case Videos
+    case Settings
+    case About
+    case Logout
 
-    class func newInstance(map: Map) -> Mappable? {
-        return MPMeditatorList()
-    }
-
-    func mapping(map: Map) {
-        self.meditators <- map["list"]
+    var title: String {
+        switch self {
+            case .Meditators: return "Meditators"
+            case .Chat:       return "Chat"
+            case .Videos:     return "Videos"
+            case .Settings:   return "Settings"
+            case .About:      return "About"
+            case .Logout:     return "Logout"
+        }
     }
 }

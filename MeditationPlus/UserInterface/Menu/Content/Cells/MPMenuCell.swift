@@ -1,8 +1,8 @@
 //
-//  MPMeditatorList.swift
+//  MPMenuCell.swift
 //  MeditationPlus
 //
-//  Created by Erik Luimes on 12/09/15.
+//  Created by Erik Luimes on 09/09/15.
 //  Copyright (c) 2015 Maya Interactive
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,17 +23,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-import ObjectMapper
+import UIKit
 
-class MPMeditatorList: Mappable {
-    var meditators: [MPMeditator]?
-
-    class func newInstance(map: Map) -> Mappable? {
-        return MPMeditatorList()
+class MPMenuCell: UITableViewCell {
+    struct ViewData {
+        let title: String
     }
 
-    func mapping(map: Map) {
-        self.meditators <- map["list"]
+    var viewData: ViewData? {
+        didSet {
+            textLabel!.text = viewData?.title
+        }
+    }
+}
+
+extension MPMenuCell.ViewData {
+    init(menuItem: MPMenuItem) {
+        self.title = menuItem.title
     }
 }

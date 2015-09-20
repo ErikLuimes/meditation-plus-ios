@@ -1,8 +1,8 @@
 //
-//  MPMeditatorList.swift
+//  MPAudioPlayerManager.swift
 //  MeditationPlus
 //
-//  Created by Erik Luimes on 12/09/15.
+//  Created by Erik Luimes on 19/09/15
 //  Copyright (c) 2015 Maya Interactive
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,16 +24,36 @@
 // THE SOFTWARE.
 
 import Foundation
-import ObjectMapper
+import AVFoundation
 
-class MPMeditatorList: Mappable {
-    var meditators: [MPMeditator]?
+class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
+{
+    static let sharedInstance = MPAudioPlayerManager()
 
-    class func newInstance(map: Map) -> Mappable? {
-        return MPMeditatorList()
+    private var audioPlayer: AVAudioPlayer!
+
+    private let sampleUrl = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
+
+    private override init() {
+        self.audioPlayer = AVAudioPlayer(contentsOfURL: self.sampleUrl, error: nil)
+        self.audioPlayer.prepareToPlay()
     }
 
-    func mapping(map: Map) {
-        self.meditators <- map["list"]
+    func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
+    {
+        if state == MPMeditationState.Meditation {
+            self.audioPlayer.play()
+        }
+    }
+
+    func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+    {}
+
+    func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
+    {
+        if state == MPMeditationState.Meditation {
+            self.audioPlayer.play()
+        }
     }
 }
+

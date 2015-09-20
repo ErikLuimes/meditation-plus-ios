@@ -1,8 +1,8 @@
 //
-//  MPMeditatorList.swift
+//  Array.swift
 //  MeditationPlus
 //
-//  Created by Erik Luimes on 12/09/15.
+//  Created by Erik Luimes on 19/09/15
 //  Copyright (c) 2015 Maya Interactive
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,16 +24,10 @@
 // THE SOFTWARE.
 
 import Foundation
-import ObjectMapper
 
-class MPMeditatorList: Mappable {
-    var meditators: [MPMeditator]?
-
-    class func newInstance(map: Map) -> Mappable? {
-        return MPMeditatorList()
-    }
-
-    func mapping(map: Map) {
-        self.meditators <- map["list"]
+extension Array {
+    // Optional retrieval of array elements
+    subscript (safe index: Int) -> T? {
+        return indices(self) ~= index ? self[index] : nil
     }
 }

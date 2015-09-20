@@ -1,8 +1,8 @@
 //
-//  MPMeditatorList.swift
+//  MPAppDelegate.swift
 //  MeditationPlus
 //
-//  Created by Erik Luimes on 12/09/15.
+//  Created by Erik Luimes on 08/09/15.
 //  Copyright (c) 2015 Maya Interactive
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,17 +23,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-import ObjectMapper
+import UIKit
 
-class MPMeditatorList: Mappable {
-    var meditators: [MPMeditator]?
+@UIApplicationMain
+class MPAppDelegate: UIResponder, UIApplicationDelegate
+{
+    var window: UIWindow?
 
-    class func newInstance(map: Map) -> Mappable? {
-        return MPMeditatorList()
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool
+    {
+
+        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        self.window!.rootViewController = MPMenuContainerViewController()
+        self.window!.backgroundColor = UIColor.whiteColor()
+        self.window!.makeKeyAndVisible()
+
+        self.setupMeditationTimer();
+
+        return true
     }
 
-    func mapping(map: Map) {
-        self.meditators <- map["list"]
+    func setupMeditationTimer() {
+        MPMeditationTimer.sharedInstance.addDelegate(MPAudioPlayerManager.sharedInstance)
     }
 }
+
+
