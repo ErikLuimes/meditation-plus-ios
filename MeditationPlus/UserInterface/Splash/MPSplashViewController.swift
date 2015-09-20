@@ -43,8 +43,9 @@ class MPSplashViewController: UIViewController {
         sender.enabled = false
         
         if (self.validate()) {
-            let username = self.splashScreenView.usernameField.text
-            let password = self.splashScreenView.passwordField.text
+            guard let username = self.splashScreenView.usernameField.text, password = self.splashScreenView.passwordField.text else {
+                return
+            }
             
             self.authenticationManager.loginWithUsername(username, password: password, failure: { (error) -> Void in
                 if let errorResponse = error {
@@ -68,7 +69,12 @@ class MPSplashViewController: UIViewController {
     func validate() -> Bool {
         var isValid = true
         
-        if count(self.splashScreenView.usernameField.text) == 0 || count(self.splashScreenView.passwordField.text) == 0 {
+        guard let username = self.splashScreenView.usernameField.text, password = self.splashScreenView.passwordField.text else {
+            isValid = false
+            return isValid
+        }
+        
+        if username.characters.count == 0 || password.characters.count == 0 {
             isValid = false
         }
         

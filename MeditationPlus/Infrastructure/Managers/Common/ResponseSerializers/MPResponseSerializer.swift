@@ -29,7 +29,10 @@ public class MPResponseSerializer: AFJSONResponseSerializer {
             
         }
         
-        return self.mapResponse(resultObject)
+        if var value = self.mapResponse(resultObject) {
+            return value
+        }
+        throw error
     }
     
     /**

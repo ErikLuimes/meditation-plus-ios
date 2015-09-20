@@ -59,7 +59,7 @@ class MPSplashView: UIView {
             self.backgroundImageView.transform = CGAffineTransformMakeScale(0.95, 0.95)
         }, completion: nil)
         
-        UIView.animateWithDuration(0.75, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 9.8, options: nil, animations: { () -> Void in
+        UIView.animateWithDuration(0.75, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 9.8, options: [], animations: { () -> Void in
             self.loginView.alpha = 1
             self.loginView.transform = CGAffineTransformIdentity
         }, completion: nil)

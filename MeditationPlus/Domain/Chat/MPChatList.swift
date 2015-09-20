@@ -29,8 +29,8 @@ import ObjectMapper
 class MPChatList: Mappable {
     var chats: [MPChatItem]?
 
-    class func newInstance(map: Map) -> Mappable? {
-        return MPChatList()
+    required init?(_ map: Map) {
+        self.mapping(map)
     }
 
     func mapping(map: Map) {

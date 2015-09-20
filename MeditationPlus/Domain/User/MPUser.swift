@@ -24,12 +24,18 @@
 // THE SOFTWARE.
 
 import Foundation
+import ObjectMapper
 
-public class MPUser
+class MPUser: Mappable
 {
-    private (set) var username: String
-
-    init(_ username: String) {
-        self.username = username
+    var username: String?
+    private (set) var token: String?
+    
+    required init?(_ map: Map) {
+        self.mapping(map)
+    }
+    
+    func mapping(map: Map) {
+        self.token <- map["login_token"]
     }
 }

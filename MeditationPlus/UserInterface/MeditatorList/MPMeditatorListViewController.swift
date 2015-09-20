@@ -36,7 +36,7 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         self.meditatorView.meditationPickerView.dataSource = self
         self.meditatorView.meditationPickerView.delegate   = self
 
-        self.meditatorManager.meditatorList(failure: { (error) -> Void in
+        self.meditatorManager.meditatorList({ (error) -> Void in
             NSLog("error: \(error)")
         }) { (meditators) -> Void in
             self.meditatorDataSource.updateMeditators(meditators)
@@ -70,7 +70,7 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     // MARK: Actions
     
     func refreshMeditators(refreshControl: UIRefreshControl) {
-        self.meditatorManager.meditatorList(failure: { (error) -> Void in
+        self.meditatorManager.meditatorList({ (error) -> Void in
             NSLog("error: \(error)")
             refreshControl.endRefreshing()
         }) { (meditators) -> Void in

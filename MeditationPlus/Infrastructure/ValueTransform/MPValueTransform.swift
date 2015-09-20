@@ -30,7 +30,12 @@ public class MPValueTransform {
     class public func transformIntString() -> TransformOf<Int, String> {
         return TransformOf<Int, String>(fromJSON: { (value: String?) -> Int? in
             // transform value from String? to Int?
-            return value?.toInt()
+            guard let stringValue = value else {
+                return nil
+            }
+            
+            
+            return Int(stringValue)
         }, toJSON: { (value: Int?) -> String? in
             // transform value from Int? to String?
             if let value = value {
@@ -43,7 +48,11 @@ public class MPValueTransform {
     class public func transformTimeIntervalMinuteString() -> TransformOf<NSTimeInterval, String> {
         return TransformOf<NSTimeInterval, String>(fromJSON: { (value: String?) -> NSTimeInterval? in
             // transform value from String? to NSTimeInterval?
-            if let minuteInt = value?.toInt() {
+            guard let stringValue = value else {
+                return nil
+            }
+            
+            if let minuteInt = Int(stringValue) {
                 return NSTimeInterval(Double(minuteInt * 60))
             }
             return nil
@@ -59,9 +68,13 @@ public class MPValueTransform {
 
     class public func transformDateEpochString() -> TransformOf<NSDate, String> {
         return TransformOf<NSDate, String>(fromJSON: { (value: String?) -> NSDate? in
-            var date: NSDate?
+            guard let stringValue = value else {
+                return nil
+            }
+            
+            var date: NSDate? = nil
 
-            if let dateInteger = value?.toInt() {
+            if let dateInteger = Int(stringValue) {
                 date = NSDate(timeIntervalSince1970: Double(dateInteger))
             }
 

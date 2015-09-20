@@ -29,8 +29,8 @@ import ObjectMapper
 class MPMeditatorList: Mappable {
     var meditators: [MPMeditator]?
 
-    class func newInstance(map: Map) -> Mappable? {
-        return MPMeditatorList()
+    required init?(_ map: Map) {
+        self.mapping(map)
     }
 
     func mapping(map: Map) {

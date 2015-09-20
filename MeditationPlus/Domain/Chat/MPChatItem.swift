@@ -42,14 +42,11 @@ class MPChatItem: Mappable {
         self.me       = true
     }
     
-    init() {
-        
-    }
 
     // MARK: Mappable
 
-    class func newInstance(map: Map) -> Mappable? {
-        return MPChatItem()
+    required init?(_ map: Map) {
+        self.mapping(map)
     }
 
     func mapping(map: Map) {

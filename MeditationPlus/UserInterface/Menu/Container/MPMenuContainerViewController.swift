@@ -65,7 +65,7 @@ class MPMenuContainerViewController: KGDrawerViewController
         self.backgroundImage      = UIImage(named: "background_blurred")
     }
 
-    required init(coder aDecoder: NSCoder)
+    required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
     }
