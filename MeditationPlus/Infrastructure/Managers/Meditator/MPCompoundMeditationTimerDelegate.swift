@@ -69,7 +69,7 @@ extension MPMeditationTimer: MPMeditationTimerCompoundDelegate {
 
     func removeDelegate(delegate: MPMeditationTimerDelegate) {
         if let compoundDelegate = self.delegate as? MPCompoundMeditationTimerDelegate {
-            compoundDelegate.delegates = filter(compoundDelegate.delegates) { return $0 !== delegate }
+            compoundDelegate.delegates = compoundDelegate.delegates.filter { return $0 !== delegate }
         }
     }
 }

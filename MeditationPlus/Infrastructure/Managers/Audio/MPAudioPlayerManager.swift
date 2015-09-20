@@ -35,7 +35,7 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
     private let sampleUrl = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
 
     private override init() {
-        self.audioPlayer = AVAudioPlayer(contentsOfURL: self.sampleUrl, error: nil)
+        self.audioPlayer = try? AVAudioPlayer(contentsOfURL: self.sampleUrl)
         self.audioPlayer.prepareToPlay()
     }
 

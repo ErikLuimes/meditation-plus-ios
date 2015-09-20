@@ -3,10 +3,21 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, "8.0"
 use_frameworks!
 
-pod 'AFNetworking',            '2.6.0'
-pod 'PageMenu',                '1.2.8'
-pod 'KGFloatingDrawer',        '0.1.3'
-pod 'Locksmith',               '1.2.2'
+#pod 'AFNetworking',            '2.6.0'
+#pod 'PageMenu',                '1.2.8'
+#pod 'KGFloatingDrawer',        '0.1.3'
+#pod 'Locksmith',               '1.2.2'
+#pod 'SlackTextViewController', '1.7'
+#pod 'ObjectMapper',            '0.15'
+#pod 'UIImage+Additions',       '2.1.0'
+
+pod 'Alamofire',               '2.0'
+pod 'AlamofireObjectMapper',   '0.9'
+pod 'ObjectMapper',            '0.17'
+
+pod 'PageMenu',                :git => 'https://github.com/uacaps/PageMenu.git', :branch => 'master'
+pod 'KGFloatingDrawer',        :git => 'https://github.com/ErikLuimes/KGFloatingDrawer.git', :tag => '0.2.0'
+pod 'Locksmith',               '2.0.1'
 pod 'SlackTextViewController', '1.7'
-pod 'ObjectMapper',            '0.15'
 pod 'UIImage+Additions',       '2.1.0'
+pod 'SDWebImage',              '~>3.7'

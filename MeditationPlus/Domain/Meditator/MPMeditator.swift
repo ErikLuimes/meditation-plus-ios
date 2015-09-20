@@ -55,9 +55,13 @@ class MPMeditator: Mappable {
 
     // MARK: Mappable
 
-    class func newInstance(map: Map) -> Mappable? {
-        return MPMeditator()
+    
+    required init?(_ map: Map) {
+        self.mapping(map)
     }
+//    class func newInstance(map: Map) -> Mappable? {
+//        return MPMeditator()
+//    }
 
 	func mapping(map: Map) {
 		self.username         <- map["username"]
@@ -81,7 +85,7 @@ class MPMeditator: Mappable {
         
         if let meditationTotal = self.timeDiff, meditationEndTime = self.end where meditationTotal > 0 {
             let timeLeft = meditationEndTime.timeIntervalSinceNow
-            progress     = clamp((meditationTotal - timeLeft) / meditationTotal, 0, 1)
+            progress     = clamp((meditationTotal - timeLeft) / meditationTotal, lowerBound: 0, upperBound: 1)
         }
         
         return progress

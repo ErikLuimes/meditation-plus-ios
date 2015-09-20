@@ -5,3 +5,5 @@
 #import <AFNetworking/AFNetworking.h>
 
 #import <UIImage_Additions/UIImage+Additions.h>
+
+#import <SDWebImage/SDImageCache.h>

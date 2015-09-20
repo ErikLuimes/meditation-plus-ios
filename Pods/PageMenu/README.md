@@ -4,8 +4,34 @@
 [![Version](https://img.shields.io/cocoapods/v/PageMenu.svg?style=flat)](http://cocoapods.org/pods/PageMenu)
 [![License](https://img.shields.io/cocoapods/l/PageMenu.svg?style=flat)](http://cocoapods.org/pods/PageMenu)
 [![Platform](https://img.shields.io/cocoapods/p/PageMenu.svg?style=flat)](http://cocoapods.org/pods/PageMenu)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 **Objective-C version in Beta**
+
+####Featured In
+<table>
+ <tr>
+  <td align="center">
+  <a href="https://itunes.apple.com/us/app/funny-or-die/id299546679?mt=8"><img src="http://a2.mzstatic.com/us/r30/Purple3/v4/7b/34/8a/7b348a8b-54d9-e1b2-f50b-a447f6dff4be/icon100x100.jpeg" /></a>
+  </td>
+  <td align="center">
+  <a href="https://itunes.apple.com/us/app/alabama-mvd/id399424940?mt=8"><img src="http://a1.mzstatic.com/us/r30/Purple7/v4/e8/f3/df/e8f3df11-5807-9f4c-9725-afb84b461804/icon100x100.png" /></a>
+  </td>
+  <td align="center">
+  <a href="https://itunes.apple.com/gb/app/healthful-work-smart-not-hard!/id970747415?mt="><img src="http://a4.mzstatic.com/eu/r30/Purple7/v4/e9/d5/53/e9d5538d-056a-2a69-f655-f55e44066a02/icon100x100.jpeg" /></a>
+  </td>
+  <tr>
+   <td align="center"><b>Funny Or Die</b></td>
+   <td align="center"><b>Alabama MVD</b></td>
+   <td align="center"><b>HEALTHFUL</b></td>
+  </tr>
+  <tr>
+   <td align="center">Funny Or Die, Inc.</td>
+   <td align="center">CAPS</td>
+   <td align="center">Junaid Younus</td>
+  </tr>
+ </tr>
+</table>
 
 ## Latest Update
 
@@ -35,13 +61,21 @@ A fully customizable and flexible paging menu controller built from other view c
 
 ## Installation
 
-**Cocoa Pods**
+**CocoaPods**
 
 PageMenu is available through [CocoaPods](http://cocoapods.org). !! Swift only !!
 
 To install add the following line to your Podfile:
 
     pod 'PageMenu'
+
+**Carthage**
+
+PageMenu is also available through [Carthage](https://github.com/carthage/carthage).  Append this line to Cartfile and follow [this instruction](https://github.com/carthage/carthage#adding-frameworks-to-an-application).
+
+```
+github "uacaps/PageMenu"
+```
 
 **Manual Installation**
 
@@ -294,20 +328,19 @@ There are many ways you are able to customize page menu for your needs and there
 
 ## Apps using PageMenu
 
-Please let me know if your app in the AppStore uses this library so I can add your app to this list.
-
-* [Alabama MVD](http://bit.ly/AlabamaMVD) by CAPS
+Please let me know if your app in the AppStore uses this library so I can add your app to the list of apps featuring PageMenu.
 
 ## Future Work
 
 - [x] Screen rotation support
 - [x] Objective-C version
-- [ ] Infinite scroll option
+- [ ] Infinite scroll option / Wrap items
+- [ ] Carthage support
 - [ ] More customization options
 
 ## Credits
 
-[Niklas Fahl (fahlout)](http://bit.ly/fahlout) - iOS Developer
+[Niklas Fahl (fahlout)](http://bit.ly/fahlout) - iOS Developer ([LinkedIn](http://bit.ly/linked-in-niklas-fahl))
 
 **Thank you for your contributions:**
 

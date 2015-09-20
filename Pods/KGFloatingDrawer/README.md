@@ -1,8 +1,3 @@
-###Important Note
-
-This project is using `Swift 1.2` which is currently in beta and cannot be used in applications
-submitted to the Apple App Store.
-
 # KGFloatingDrawer
 
 KGFloatingDrawer is a reimplementation of
@@ -34,12 +29,12 @@ func prepareDrawerViewController() -> KGDrawerViewController {
 KGFloatingDrawer can be installed as a CocoaPod. To install it, simply add the following line to your Podfile:
 
 ```
-pod 'KGFloatingDrawer', '~> 0.1.2'
+pod 'KGFloatingDrawer', '~> 0.2.0'
 ```
 
 ###Important Note
 
-KGFloatingDrawer requires `Swift 1.2`, `XCode 6.3` and `CocoaPods 0.36.0.rc.1`
+KGFloatingDrawer requires `Swift 2.0`, `XCode 7.0` and `CocoaPods 0.36.0`
 
 
 #How it Works

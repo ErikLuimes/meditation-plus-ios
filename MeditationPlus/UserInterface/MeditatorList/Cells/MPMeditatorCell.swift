@@ -8,6 +8,7 @@
 
 import UIKit
 import QuartzCore
+import SDWebImage
 
 class MPMeditatorCell: UITableViewCell {
 
@@ -25,7 +26,7 @@ class MPMeditatorCell: UITableViewCell {
 
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -59,7 +60,7 @@ class MPMeditatorCell: UITableViewCell {
     
     func configureWithMeditator(meditator: MPMeditator){
         if let imageUrl = meditator.avatar {
-            self.avatarImageView.setImageWithURL(imageUrl)
+            self.avatarImageView.sd_setImageWithURL(imageUrl)
             self.avatarImageView.clipsToBounds = true
             self.avatarImageView.layer.borderColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
             self.avatarImageView.layer.borderWidth = 1
@@ -67,7 +68,7 @@ class MPMeditatorCell: UITableViewCell {
             self.avatarImageView.layer.cornerRadius  = self.avatarImageView.bounds.size.height / 2.0
         }
 
-        var strokeAnim            = CABasicAnimation(keyPath:"strokeEnd")
+        let strokeAnim            = CABasicAnimation(keyPath:"strokeEnd")
         strokeAnim.duration       = 0.75
         strokeAnim.fromValue      = self.circlePathLayer.strokeEnd
         strokeAnim.toValue        = meditator.normalizedProgress
@@ -92,7 +93,7 @@ class MPMeditatorCell: UITableViewCell {
             meditations.append("anumodana \(anumodanaMinutes)m")
         }
         
-        self.meditationDescription.text = ", ".join(meditations)
+        self.meditationDescription.text = meditations.joinWithSeparator(", ")
     }
     
     override func layoutSubviews() {
