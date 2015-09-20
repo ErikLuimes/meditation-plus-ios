@@ -34,6 +34,7 @@ class MPMenuContainerViewController: KGDrawerViewController
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
+        // Handler to open and close the menu drawer, will be passed to navigation controllers
         self.toggleMenuHandler = {() -> Void in
             self.toggleDrawer(.Left, animated: true, complete: { (finished) -> Void in
                 
@@ -42,6 +43,7 @@ class MPMenuContainerViewController: KGDrawerViewController
 
         self.animator.springDamping = 1
 
+        // Menu view controller
         let menuViewController = MPMenuViewController(nibName: "MPMenuViewController", bundle: nil)
         menuViewController.drawerNavigationHandler = {(viewController: UIViewController, animated: Bool) in
             let navigationViewController = MPNavigationController(rootViewController: viewController)
@@ -52,6 +54,8 @@ class MPMenuContainerViewController: KGDrawerViewController
                 
             })
         }
+
+        // Initial view controller
         let initialContentViewController = MPSplashViewController(nibName: "MPSplashViewController", bundle: nil)
         let navigationViewController     = MPNavigationController(rootViewController: initialContentViewController)
         navigationViewController.toggleDrawerHandler = self.toggleMenuHandler
