@@ -15,7 +15,7 @@ public class KGDrawerView: UIView {
     let kKGDefaultViewContainerWidth: CGFloat = 280.0
 
     // MARK: Initialization
-    required public init(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
