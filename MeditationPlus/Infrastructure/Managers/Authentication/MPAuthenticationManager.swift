@@ -44,7 +44,7 @@ class MTAuthenticationManager {
         }
     }
     
-    func logout () -> Void {
+    func logout() -> Void {
         self.loggedInUser = nil
         if self.token != nil {
             do { try self.token?.deleteFromSecureStore() } catch {}
