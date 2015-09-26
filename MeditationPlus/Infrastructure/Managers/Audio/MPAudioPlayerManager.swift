@@ -39,6 +39,8 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
         self.audioPlayer.prepareToPlay()
     }
 
+    // MARK: MPMeditationTimerDelegate
+
     func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
     {
         if state == MPMeditationState.Meditation {

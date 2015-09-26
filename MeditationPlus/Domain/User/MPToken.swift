@@ -24,3 +24,30 @@
 // THE SOFTWARE.
 
 import Foundation
+import Locksmith
+import ObjectMapper
+
+struct MPToken:
+    ReadableSecureStorable,
+    CreateableSecureStorable,
+    DeleteableSecureStorable,
+    GenericPasswordSecureStorable,
+    Mappable
+{
+    var token: String?
+    
+    let service = "MeditationPlus"
+    let account = "AccountToken"
+    
+    var data: [String: AnyObject] {
+        return ["token": token != nil ? token! : ""]
+    }
+    
+    init?(_ map: Map) {
+        mapping(map)
+    }
+    
+    mutating func mapping(map: Map) {
+        token <- map["login_token"]
+    }
+}

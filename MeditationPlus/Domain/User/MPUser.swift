@@ -25,17 +25,31 @@
 
 import Foundation
 import ObjectMapper
+import Locksmith
 
-class MPUser: Mappable
+struct MPUser:
+    ReadableSecureStorable,
+    CreateableSecureStorable,
+    DeleteableSecureStorable,
+    GenericPasswordSecureStorable
 {
     var username: String?
-    private (set) var token: String?
+    var password: String?
     
-    required init?(_ map: Map) {
-        self.mapping(map)
-    }
+    let service = "MeditationPlus"
+    let account = "UserAccount"
     
-    func mapping(map: Map) {
-        self.token <- map["login_token"]
+    var data: [String: AnyObject] {
+        var dict: [String: AnyObject] = [String: AnyObject]()
+        
+        if username != nil {
+            dict["username"] = username!
+        }
+        
+        if password != nil {
+            dict["password"] = password!
+        }
+        
+        return dict
     }
 }

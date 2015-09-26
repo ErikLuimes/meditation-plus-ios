@@ -24,8 +24,21 @@ class MPSplashViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.view.clipsToBounds = true
         
-        self.splashScreenView.usernameField.text = self.authenticationManager.username
-        self.splashScreenView.passwordField.text = self.authenticationManager.password
+        let loadedUser = MPUser()
+//        let result =
+        
+//         ReadableSecureStorable lets us read the account from the keychain
+//        let result = account.readFromSecureStore()
+        
+//        print("iOS app: \(result!), ****** \(result?.data)")
+        
+        if let username = loadedUser.readFromSecureStore()?.data?["username"] as? String {
+            self.splashScreenView.usernameField.text = username
+        }
+        
+        if let password = loadedUser.readFromSecureStore()?.data?["password"] as? String {
+            self.splashScreenView.passwordField.text = password
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -46,6 +59,7 @@ class MPSplashViewController: UIViewController {
             guard let username = self.splashScreenView.usernameField.text, password = self.splashScreenView.passwordField.text else {
                 return
             }
+            
             
             self.authenticationManager.loginWithUsername(username, password: password, failure: { (error) -> Void in
                 if let errorResponse = error {
