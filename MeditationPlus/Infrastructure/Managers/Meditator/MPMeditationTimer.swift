@@ -62,7 +62,7 @@ class MPMeditationTimer: NSObject
     static let sharedInstance: MPMeditationTimer = MPMeditationTimer()
     internal var delegate: MPMeditationTimerDelegate?
 
-    private var state: MPMeditationState = .Stopped {
+    private(set) var state: MPMeditationState = .Stopped {
         didSet {
             if (oldValue != self.state) { self.stateChangeHandlerFromState(oldValue, toState: self.state) }
         }
@@ -158,6 +158,5 @@ class MPMeditationTimer: NSObject
             }
         }
     }
-
 }
 

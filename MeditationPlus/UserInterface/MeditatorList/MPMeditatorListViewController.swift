@@ -25,8 +25,6 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     override func viewDidLoad() {
         super.viewDidLoad()
 
-
-//        self.timer.delegate = self
         self.timer.addDelegate(self)
 
         self.meditatorView.tableView.delegate   = self
@@ -36,12 +34,12 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         self.meditatorView.meditationPickerView.dataSource = self
         self.meditatorView.meditationPickerView.delegate   = self
 
-        self.meditatorManager.meditatorList({ (error) -> Void in
-            NSLog("error: \(error)")
-        }) { (meditators) -> Void in
-            self.meditatorDataSource.updateMeditators(meditators)
-            self.meditatorView.tableView.reloadData()
-        }
+//        self.meditatorManager.meditatorList({ (error) -> Void in
+//            NSLog("error: \(error)")
+//        }) { (meditators) -> Void in
+//            self.meditatorDataSource.updateMeditators(meditators)
+//            self.meditatorView.tableView.reloadData()
+//        }
 
         for i in 0...1440 {
             if i < 120 && i % 5 == 0 {
@@ -70,18 +68,63 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     // MARK: Actions
     
     func refreshMeditators(refreshControl: UIRefreshControl) {
-        self.meditatorManager.meditatorList({ (error) -> Void in
-            NSLog("error: \(error)")
-            refreshControl.endRefreshing()
-        }) { (meditators) -> Void in
-            self.meditatorDataSource.updateMeditators(meditators)
-            self.meditatorView.tableView.reloadData()
-            refreshControl.endRefreshing()
-        }
+//        self.meditatorManager.meditatorList({ (error) -> Void in
+//            NSLog("error: \(error)")
+//            refreshControl.endRefreshing()
+//        }) { (meditators) -> Void in
+//            self.meditatorDataSource.updateMeditators(meditators)
+//            self.meditatorView.tableView.reloadData()
+//            refreshControl.endRefreshing()
+//        }
     }
 
     @IBAction func didPressStartMeditationButton(sender: UIButton) {
-        self.timer.startTimer(30, preparationTime: 10)
+        if self.timer.state == .Stopped {
+            let selectedWalkingMeditationTime = self.meditatorView.meditationPickerView.selectedRowInComponent(0)
+            let selectedSittingMeditationTime = self.meditatorView.meditationPickerView.selectedRowInComponent(2)
+            var totalTime = 0
+
+            self.walkingTimeInMinutes = nil
+            self.sittingTimeInMinutes = nil
+
+            if selectedSittingMeditationTime > 0 {
+                self.sittingTimeInMinutes = self.times[selectedSittingMeditationTime]
+                totalTime += self.sittingTimeInMinutes!
+            }
+
+            if selectedWalkingMeditationTime > 0 {
+                self.walkingTimeInMinutes = self.times[selectedWalkingMeditationTime]
+                totalTime += self.walkingTimeInMinutes!
+            }
+
+            if totalTime != 0 {
+//                self.meditatorManager.startMeditation(self.sittingTimeInMinutes, walkingTimeInMinutes: self.walkingTimeInMinutes, completion: { () -> Void in
+//                    //
+//                    NSLog("Did start")
+//                }, failure: { (error) -> Void in
+//                    NSLog("Start meditation failed")
+//                    //
+//                })
+
+                self.meditatorView.setSelectionViewHidden(true, animated: true)
+
+                self.timer.startTimer(Double(totalTime), preparationTime: 10)
+            }
+            
+        } else {
+//            self.meditatorManager.cancelMeditation(self.sittingTimeInMinutes, walkingTimeInMinutes: self.walkingTimeInMinutes, completion: { () -> Void in
+//                //
+//                NSLog("Did cancel")
+//            }, failure: { (error) -> Void in
+//                NSLog("Cancel meditation failed")
+//                //
+//            })
+
+            self.sittingTimeInMinutes = nil
+            self.walkingTimeInMinutes = nil
+
+            self.meditatorView.setSelectionViewHidden(false, animated: true)
+        }
     }
 //    @IBAction func didPressStartMeditationButton(sender: UIButton) {
 //        self.meditationTimer?.invalidate()
@@ -143,22 +186,27 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
 
     // returns the number of 'columns' to display.
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
-        return 2
+        return 4
     }
     
     // returns the # of rows in each component..
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.times.count
+        
+        if component == 1 || component == 3 {
+            return 1
+        } else {
+            return self.times.count
+        }
     }
     
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         var title = ""
         
-        if row == 0 {
-            title = component == 0 ? "Walking" : "Sitting"
+        if row == 0 && (component == 1 || component == 3) {
+            title = component == 1 ? "Walking" : "Sitting"
         } else {
-            var hours   = times[row] / 60
-            var minutes = times[row] % 60
+            let hours   = times[row] / 60
+            let minutes = times[row] % 60
             title = String(format: "%d:%2.2d" , hours ,minutes)
         }
         
@@ -180,11 +228,23 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
     {
         NSLog("progress state: \(state.title), progress: \(progress), timeLeft: \(timeLeft)")
+        
+        if state == MPMeditationState.Meditation {
+            let seconds = timeLeft % 60;
+            let hours   = timeLeft / 3600
+            let minutes = timeLeft / 60 % 60
+            self.meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d" , Int(hours) , Int(minutes), Int(seconds))
+        }
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
     {
         NSLog("stop state: \(state.title)")
+        
+        if state == MPMeditationState.Meditation {
+            self.meditatorView.meditationTimerLabel.text = "00:00:00"
+            self.meditatorView.setSelectionViewHidden(false, animated: true)
+        }
     }
 
 //    private func updateRemainingTimeLabel() {
