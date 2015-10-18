@@ -31,28 +31,43 @@
                                 <constraint firstAttribute="width" secondItem="RGv-5p-IDW" secondAttribute="height" multiplier="1:1" id="MW0-N3-zXc"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="27" translatesAutoresizingMaskIntoConstraints="NO" id="ZFq-S9-nFp">
-                            <rect key="frame" x="173" y="72" width="170" height="64.5"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="27" translatesAutoresizingMaskIntoConstraints="NO" id="ZFq-S9-nFp">
+                            <rect key="frame" x="173" y="85" width="170" height="39"/>
                             <animations/>
-                            <fontDescription key="fontDescription" type="system" weight="black" pointSize="54"/>
+                            <fontDescription key="fontDescription" type="system" weight="black" pointSize="32"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="1" translatesAutoresizingMaskIntoConstraints="NO" id="XLh-Jh-mOR" userLabel="Preparation Progress View">
+                            <rect key="frame" x="173" y="124" width="170" height="2"/>
+                            <animations/>
+                            <color key="progressTintColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                            <color key="trackTintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </progressView>
                     </subviews>
                     <animations/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="XLh-Jh-mOR" firstAttribute="centerY" secondItem="ZFq-S9-nFp" secondAttribute="centerY" id="4Sq-pN-SMP"/>
                         <constraint firstItem="ZFq-S9-nFp" firstAttribute="leading" secondItem="RGv-5p-IDW" secondAttribute="trailing" constant="32" id="66h-72-dLq"/>
                         <constraint firstAttribute="trailing" secondItem="ZFq-S9-nFp" secondAttribute="trailing" constant="32" id="BRs-g9-112"/>
+                        <constraint firstItem="XLh-Jh-mOR" firstAttribute="top" secondItem="ZFq-S9-nFp" secondAttribute="bottom" id="EU9-ez-tzH"/>
                         <constraint firstAttribute="width" secondItem="cxL-y1-pQn" secondAttribute="height" multiplier="375:227" constant="72.687224669603552" id="GiA-Uz-PKa"/>
+                        <constraint firstItem="XLh-Jh-mOR" firstAttribute="leading" secondItem="ZFq-S9-nFp" secondAttribute="leading" id="YLd-Fu-VTh"/>
                         <constraint firstAttribute="bottom" secondItem="RGv-5p-IDW" secondAttribute="bottom" constant="15" id="frd-hw-r5n"/>
                         <constraint firstItem="RGv-5p-IDW" firstAttribute="top" secondItem="cxL-y1-pQn" secondAttribute="top" constant="42" id="hfq-oG-KJ5"/>
+                        <constraint firstItem="XLh-Jh-mOR" firstAttribute="width" secondItem="ZFq-S9-nFp" secondAttribute="width" id="vXb-h6-aTl"/>
                         <constraint firstItem="RGv-5p-IDW" firstAttribute="leading" secondItem="cxL-y1-pQn" secondAttribute="leading" constant="15" id="yAL-jh-cHN"/>
                         <constraint firstItem="RGv-5p-IDW" firstAttribute="centerY" secondItem="ZFq-S9-nFp" secondAttribute="centerY" constant="0.5" id="yaP-Dp-Si0"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="4Sq-pN-SMP"/>
+                        </mask>
+                    </variation>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rN1-Eg-Kgg" userLabel="Selection View">
-                    <rect key="frame" x="0.0" y="-300" width="375" height="203"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="203"/>
                     <subviews>
                         <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PE3-mm-smu" userLabel="Picker Effect View">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="171"/>
@@ -83,13 +98,13 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h8-iZ-Fyz">
-                                        <rect key="frame" x="166" y="-1" width="43" height="34"/>
+                                        <rect key="frame" x="119" y="-1" width="138" height="34"/>
                                         <animations/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="80" id="keA-m7-JD4"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                        <state key="normal" title="Start">
+                                        <state key="normal" title="Start meditation">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -138,7 +153,7 @@
                 <constraint firstAttribute="trailing" secondItem="eyu-oc-l3Q" secondAttribute="trailing" id="gJw-oC-NQI"/>
                 <constraint firstItem="eyu-oc-l3Q" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hI6-hU-vHF"/>
                 <constraint firstItem="rN1-Eg-Kgg" firstAttribute="width" secondItem="cxL-y1-pQn" secondAttribute="width" id="oMS-eo-rR4"/>
-                <constraint firstItem="rN1-Eg-Kgg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="-300" id="rE3-WZ-0SI"/>
+                <constraint firstItem="rN1-Eg-Kgg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="rE3-WZ-0SI"/>
                 <constraint firstItem="rN1-Eg-Kgg" firstAttribute="height" secondItem="cxL-y1-pQn" secondAttribute="height" constant="20" id="wHd-jd-KNE"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
@@ -147,6 +162,7 @@
                 <outlet property="confirmationEffectView" destination="xL0-gE-v15" id="bVt-cO-JOc"/>
                 <outlet property="meditationPickerView" destination="agf-8b-wyP" id="qNA-aF-Cof"/>
                 <outlet property="meditationTimerLabel" destination="ZFq-S9-nFp" id="5sv-Jw-N0m"/>
+                <outlet property="preparationProgressView" destination="XLh-Jh-mOR" id="Buj-dn-SzS"/>
                 <outlet property="profileImageView" destination="RGv-5p-IDW" id="rii-IG-TYW"/>
                 <outlet property="selectionView" destination="rN1-Eg-Kgg" id="XjF-Iw-RKn"/>
                 <outlet property="selectionViewTopConstraint" destination="rE3-WZ-0SI" id="aCW-LN-LbR"/>
