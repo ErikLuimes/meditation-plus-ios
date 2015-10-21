@@ -4,12 +4,36 @@
 //
 
 import Foundation
-import AFNetworking
+import Alamofire
 
 class MPMeditatorManager {
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
-    func meditatorList(failure: ((NSError?) -> Void)? = nil, completion: ([MPMeditator]) -> Void) {
+    func meditatorList()
+    {
+        let endpoint   = "http://meditation.sirimangalo.org/post.php"
+        let parameters = ["username": username, "password": password, "submit": "Login"]
+        
+        Alamofire.request(.POST, endpoint, parameters: parameters).responseObject { (response: MPToken?, error: ErrorType?) in
+            if let _ = response?.token {
+                self.loggedInUser = MPUser(username: username, password: password)
+                do {
+                    try self.loggedInUser?.deleteFromSecureStore()
+                    try self.loggedInUser?.createInSecureStore()
+                    self.token = response!
+                    completion(self.loggedInUser!)
+                } catch {
+                    self.loggedInUser = nil
+                    self.token        = nil
+                    failure?(nil)
+                }
+            } else {
+                if let unwrappedError = error {
+                    NSLog("error: \(unwrappedError)")
+                }
+                failure?(nil)
+            }
+        }
     }
     
     func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: () -> Void, failure: ((NSError?) -> Void)? = nil) {
@@ -22,7 +46,7 @@ class MPMeditatorManager {
     
 //    func meditatorList(failure: ((NSError?) -> Void)? = nil, completion: ([MPMeditator]) -> Void) {
 //        if let username = self.authenticationManager.loggedInUser?.username, token = self.authenticationManager.token {
-//            let parameters = [
+//            let parameters: Dictionary = [
 //                    "username": username,
 //                    "token":    token,
 //            ]
