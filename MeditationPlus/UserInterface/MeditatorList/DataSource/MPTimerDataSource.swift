@@ -1,8 +1,8 @@
 //
-//  MPAudioPlayerManager.swift
+//  MPTimerDataSource.swift
 //  MeditationPlus
 //
-//  Created by Erik Luimes on 19/09/15
+//  Created by Erik Luimes on 18/10/15
 //  Copyright (c) 2015 Maya Interactive
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,41 +24,39 @@
 // THE SOFTWARE.
 
 import Foundation
-import AVFoundation
 
-class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
+class MPTimerDataSource:  NSObject, UIPickerViewDataSource
 {
-    static let sharedInstance = MPAudioPlayerManager()
+    lazy private(set) var times: [Int] = {
+        var times = [Int]()
 
-    private var audioPlayer: AVAudioPlayer!
+        for i in 0...1440 {
+            if i < 120 && i % 5 == 0 {
+                times.append(i)
+            } else if i >= 120 && i < 240 && i % 15 == 0{
+                times.append(i)
+            } else if i >= 240 && i < 480 && i % 30 == 0{
+                times.append(i)
+            } else if i >= 480 && i % 60 == 0{
+                times.append(i)
+            }
+        }
 
-    private let sampleUrl = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
+        return times
+    }()
 
-    private override init() {
-        self.audioPlayer = try? AVAudioPlayer(contentsOfURL: self.sampleUrl)
-        self.audioPlayer.prepareToPlay()
+    func numberOfComponentsInPickerView(pickerView: UIPickerView!) -> Int
+    {
+        return 4
     }
 
-    // MARK: MPMeditationTimerDelegate
-
-    func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
+    func pickerView(pickerView: UIPickerView!, numberOfRowsInComponent component: Int) -> Int
     {
-        if state == MPMeditationState.Meditation {
-            self.audioPlayer.play()
+        if component == 1 || component == 3 {
+            return 1
+        } else {
+            return times.count
         }
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
-    {}
-    
-    func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
-    {}
-
-    func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
-    {
-        if state == MPMeditationState.Meditation {
-            self.audioPlayer.play()
-        }
-    }
 }
-

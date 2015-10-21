@@ -30,6 +30,8 @@ protocol MPMeditationTimerDelegate: NSObjectProtocol {
     func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
     func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
+    
+    func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
 }
 
 enum MPMeditationState: Int {
@@ -60,42 +62,40 @@ enum MPMeditationState: Int {
 class MPMeditationTimer: NSObject
 {
     static let sharedInstance: MPMeditationTimer = MPMeditationTimer()
+    
     internal var delegate: MPMeditationTimerDelegate?
 
-    private var state: MPMeditationState = .Stopped {
-        didSet {
-            if (oldValue != self.state) { self.stateChangeHandlerFromState(oldValue, toState: self.state) }
-        }
-    }
+    private(set) var state: MPMeditationState = .Stopped
 
-    private let timeInterval:            NSTimeInterval = 1
-    private var meditationTimer:         NSTimer?
+    private let timeInterval: NSTimeInterval = 1
+    
+    private var meditationTimer: NSTimer?
 
     // MARK: Meditation time
-    private var totalMeditationTime:      NSTimeInterval = 0 {
+    private var totalMeditationTime: NSTimeInterval = 0 {
         didSet {
-            self.remainingMeditationTime = self.totalMeditationTime
+            remainingMeditationTime = totalMeditationTime
         }
     }
 
     private var remainingMeditationTime: NSTimeInterval = 0
 
     private var meditationProgress: Double {
-        return self.calculateProgress(self.totalMeditationTime, remaining: self.remainingMeditationTime)
+        return calculateProgress(totalMeditationTime, remaining: remainingMeditationTime)
     }
 
 
     // MARK: Preparation time
     private var totalPreparationTime: NSTimeInterval = 0 {
         didSet {
-            self.remainingPreparationTime = self.totalPreparationTime
+            remainingPreparationTime = totalPreparationTime
         }
     }
 
     private var remainingPreparationTime: NSTimeInterval = 0
 
     private var preparationProgress: Double {
-        return self.calculateProgress(totalPreparationTime, remaining: remainingPreparationTime)
+        return calculateProgress(totalPreparationTime, remaining: remainingPreparationTime)
     }
     
     private func calculateProgress(total: NSTimeInterval, remaining: NSTimeInterval) -> Double
@@ -112,52 +112,70 @@ class MPMeditationTimer: NSObject
     // MARK: Timer functions
 
     func startTimer(meditationTime: NSTimeInterval, preparationTime: NSTimeInterval = 0) {
-        self.totalPreparationTime = preparationTime
-        self.totalMeditationTime  = meditationTime
+        totalPreparationTime = preparationTime
+        totalMeditationTime  = meditationTime
 
-        self.meditationTimer = NSTimer.scheduledTimerWithTimeInterval(self.timeInterval, target: self, selector: "meditationTimerTick", userInfo: nil, repeats: true)
+        meditationTimer = NSTimer.scheduledTimerWithTimeInterval(timeInterval, target: self, selector: "meditationTimerTick", userInfo: nil, repeats: true)
+        meditationTimerTick()
+    }
+    
+    func startTimer(mditationTimeInMinutes meditationTime: Double, preparationTime: NSTimeInterval = 0) {
+        startTimer(meditationTime * 60.0, preparationTime: preparationTime)
     }
 
-    func stopTimer() {
-        self.meditationTimer?.invalidate()
-
-        self.remainingPreparationTime = 0
-        self.remainingMeditationTime  = 0
+    private func stopTimer() {
+        meditationTimer?.invalidate()
+        
+        state                    = .Stopped
+        remainingPreparationTime = 0
+        remainingMeditationTime  = 0
+    }
+    
+    func cancelTimer() {
+        stopTimer()
+        delegate?.meditationTimerWasCancelled(self)
     }
 
     func meditationTimerTick()
     {
-        self.state = MPMeditationState(remainingMeditationTime: self.remainingMeditationTime, remainingPreparationTime: self.remainingPreparationTime)
+        let oldState = self.state
+        let newState = MPMeditationState(remainingMeditationTime: remainingMeditationTime, remainingPreparationTime: remainingPreparationTime)
+        
+        if oldState != newState {
+            notifyStateChangeFromState(oldState, toState: newState)
+        }
+        
+        state = newState
 
-        switch self.state {
+        switch state {
             case .Preparation:
-                self.remainingPreparationTime -= self.timeInterval
-                self.delegate?.meditationTimer(self, didProgress: self.preparationProgress, withState: self.state, timeLeft: self.remainingPreparationTime)
+                remainingPreparationTime -= timeInterval
+                delegate?.meditationTimer(self, didProgress: preparationProgress, withState: state, timeLeft: remainingPreparationTime)
             case .Meditation:
-                self.remainingMeditationTime -= self.timeInterval
-                self.delegate?.meditationTimer(self, didProgress: self.meditationProgress, withState: self.state, timeLeft: self.remainingMeditationTime)
+                remainingMeditationTime -= timeInterval
+                delegate?.meditationTimer(self, didProgress: meditationProgress, withState: state, timeLeft: remainingMeditationTime)
             default:
-                self.stopTimer()
+                stopTimer()
         }
     }
     
     // MARK State change notifications 
-    func stateChangeHandlerFromState(fromState: MPMeditationState, toState: MPMeditationState) -> Void
+    
+    func notifyStateChangeFromState(fromState: MPMeditationState, toState: MPMeditationState) -> Void
     {
         if toState == .Stopped {
-            self.delegate?.meditationTimer(self, didStopWithState: fromState)
+            delegate?.meditationTimer(self, didStopWithState: fromState)
         } else {
             switch fromState {
                 case .Stopped:
-                    self.delegate?.meditationTimer(self, didStartWithState: toState)
+                    delegate?.meditationTimer(self, didStartWithState: toState)
                 case .Preparation:
-                    self.delegate?.meditationTimer(self, didStopWithState: fromState)
-                    self.delegate?.meditationTimer(self, didStartWithState: toState)
+                    delegate?.meditationTimer(self, didStopWithState: fromState)
+                    delegate?.meditationTimer(self, didStartWithState: toState)
                 default:
                     break
             }
         }
     }
-
 }
 
