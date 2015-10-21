@@ -41,6 +41,10 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        meditatorManager.meditatorList { (meditators) -> Void in
+            self.meditatorDataSource.updateMeditators(meditators)
+            self.meditatorView.tableView.reloadData()
+        }
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

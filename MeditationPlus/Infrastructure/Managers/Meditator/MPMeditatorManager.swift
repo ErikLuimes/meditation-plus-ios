@@ -9,29 +9,16 @@ import Alamofire
 class MPMeditatorManager {
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
-    func meditatorList()
+    func meditatorList(completion: ([MPMeditator] -> Void)?)
     {
-        let endpoint   = "http://meditation.sirimangalo.org/post.php"
-        let parameters = ["username": username, "password": password, "submit": "Login"]
-        
-        Alamofire.request(.POST, endpoint, parameters: parameters).responseObject { (response: MPToken?, error: ErrorType?) in
-            if let _ = response?.token {
-                self.loggedInUser = MPUser(username: username, password: password)
-                do {
-                    try self.loggedInUser?.deleteFromSecureStore()
-                    try self.loggedInUser?.createInSecureStore()
-                    self.token = response!
-                    completion(self.loggedInUser!)
-                } catch {
-                    self.loggedInUser = nil
-                    self.token        = nil
-                    failure?(nil)
+        if let username: String = self.authenticationManager.loggedInUser?.username, token: String = self.authenticationManager.token?.token {
+            let endpoint                    = "http://meditation.sirimangalo.org/db.php"
+            let parameters: [String:String] = ["username": username, "token": token]
+            
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPMeditatorList?, error: ErrorType?) in
+                if let meditators = response?.meditators {
+                    completion?(meditators)
                 }
-            } else {
-                if let unwrappedError = error {
-                    NSLog("error: \(unwrappedError)")
-                }
-                failure?(nil)
             }
         }
     }
