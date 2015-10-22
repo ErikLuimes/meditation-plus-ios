@@ -52,7 +52,8 @@ class MPMeditatorView: UIView {
         super.awakeFromNib()
         
         tableView.registerNib(UINib(nibName: "MPMeditatorCell", bundle: nil), forCellReuseIdentifier: MPMeditatorDataSource.MPMeditatorCellIdentifier)
-        tableView.contentInset = UIEdgeInsetsMake(CGRectGetMaxY(actionView.frame) + 20, 0.0, 15.0, 0.0)
+        tableView.contentInset = UIEdgeInsetsMake(CGRectGetMaxY(actionView.frame), 0.0, 15.0, 0.0)
+        tableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetMaxY(actionView.frame), 0.0, 0, 0.0)
         
 //        profileImageView.setImageWithURL(NSURL(string: "http://3.bp.blogspot.com/_HtW_SPtpj0c/TLFVC8kb3yI/AAAAAAAAAGM/AAzGYbO6gP4/s1600/Buddha%5B1%5D.jpg")!)
         profileImageView.sd_setImageWithURL(NSURL(string: "http://www.crystalinks.com/BuddhaSitting.jpg")!)
@@ -68,8 +69,8 @@ class MPMeditatorView: UIView {
 
     func setSelectionViewHidden(hidden: Bool, animated: Bool) {
         selectionViewHidden = hidden
-        
-        startButton.setTitle(hidden ? "Stop meditation" : "Start meditation", forState: UIControlState.Normal)
+        // stop start
+        startButton.setTitle(hidden ? "STOP" : "START", forState: UIControlState.Normal)
         
         if hidden {
             meditationTimerLabel.text = "00:00:00"

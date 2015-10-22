@@ -47,6 +47,14 @@ class MPMeditatorListViewController: UIViewController {
         }
     }
     
+    func refreshMeditators(refreshControl: UIRefreshControl) {
+        meditatorManager.meditatorList { (meditators) -> Void in
+            refreshControl.endRefreshing()
+            self.meditatorDataSource.updateMeditators(meditators)
+            self.meditatorView.tableView.reloadData()
+        }
+    }
+    
 //    override func viewWillAppear(animated: Bool) {
 //        super.viewWillAppear(animated)
 //        
