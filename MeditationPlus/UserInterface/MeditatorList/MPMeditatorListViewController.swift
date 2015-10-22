@@ -7,7 +7,7 @@
 //
 
 import UIKit
-class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPickerViewDelegate, MPMeditationTimerDelegate {
+class MPMeditatorListViewController: UIViewController {
     private var meditatorView: MPMeditatorView { return view as! MPMeditatorView }
 
     private let timer = MPMeditationTimer.sharedInstance
@@ -16,6 +16,8 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
     private let meditatorDataSource = MPMeditatorDataSource()
 
     private let timerDataSource = MPTimerDataSource()
+    
+    private var meditationProgressUpdateTimer: NSTimer?
 
 
     // Current meditation times
@@ -27,7 +29,7 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         super.viewDidLoad()
 
         timer.addDelegate(self)
-
+        
         meditatorView.tableView.delegate   = self
         meditatorView.tableView.dataSource = meditatorDataSource
         meditatorView.refreshControl.addTarget(self, action: "refreshMeditators:", forControlEvents: UIControlEvents.ValueChanged)
@@ -36,10 +38,8 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         meditatorView.meditationPickerView.delegate   = self
 
         meditatorView.setSelectionViewHidden(false, animated: true)
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+        
+        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
         
         meditatorManager.meditatorList { (meditators) -> Void in
             self.meditatorDataSource.updateMeditators(meditators)
@@ -47,8 +47,31 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         }
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 80
+//    override func viewWillAppear(animated: Bool) {
+//        super.viewWillAppear(animated)
+//        
+//        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
+//
+//        meditatorManager.meditatorList { (meditators) -> Void in
+//            self.meditatorDataSource.updateMeditators(meditators)
+//            self.meditatorView.tableView.reloadData()
+//        }
+//    }
+//    
+//    override func viewWillDisappear(animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        
+//        meditationProgressUpdateTimer?.invalidate()
+//        meditationProgressUpdateTimer = nil
+//    }
+    
+    func meditationProgressTimerTick()
+    {
+        NSLog("tick")
+        for cell in meditatorView.tableView.visibleCells where cell is MPMeditatorCell
+        {
+            (cell as! MPMeditatorCell).updateProgressIndicatorIfNeeded()
+        }
     }
     
     // MARK: Actions
@@ -81,6 +104,33 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         }
     }
 
+
+    func toggleSelectionView() {
+        meditatorView.setSelectionViewHidden(!meditatorView.isSelectionViewHidden, animated: true)
+    }
+
+}
+
+extension MPMeditatorListViewController: UITableViewDelegate
+{
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 80
+    }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        let headerView = view as! UITableViewHeaderFooterView
+        headerView.textLabel?.text          = meditatorDataSource.meditatorSections[section].title.uppercaseString
+        headerView.textLabel?.textColor     = UIColor.whiteColor()
+        headerView.tintColor = UIColor.orangeColor()
+    }
+}
+
+extension MPMeditatorListViewController: UIPickerViewDelegate
+{
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         var title = ""
         
@@ -94,11 +144,10 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
         
         return title
     }
+}
 
-    func toggleSelectionView() {
-        meditatorView.setSelectionViewHidden(!meditatorView.isSelectionViewHidden, animated: true)
-    }
-
+extension MPMeditatorListViewController: MPMeditationTimerDelegate
+{
     // MARK: MPMeditationTimerDelegate: NSObjectProtocol {
 
 
@@ -157,4 +206,5 @@ class MPMeditatorListViewController: UIViewController, UITableViewDelegate, UIPi
 //                //
 //            })
     }
+    
 }
