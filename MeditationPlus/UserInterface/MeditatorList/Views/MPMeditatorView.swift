@@ -67,7 +67,7 @@ class MPMeditatorView: UIView {
         selectionViewHidden = hidden
         startButton.setTitle(hidden ? "Stop" : "Start", forState: UIControlState.Normal)
         
-        if hidden {
+        if !hidden {
             meditationTimerLabel.text = "00:00:00"
             preparationProgressView.setProgress(1.0, animated: true)
         }
