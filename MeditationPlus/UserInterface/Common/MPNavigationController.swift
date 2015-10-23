@@ -38,8 +38,9 @@ class MPNavigationController: UINavigationController, UINavigationControllerDele
     {
         super.init(rootViewController: rootViewController)
 
-        self.navigationBar.tintColor = UIColor.lightGrayColor()
-        self.delegate                = self;
+        self.navigationBar.tintColor   = UIColor.orangeColor()
+        self.navigationBar.translucent = false
+        self.delegate                  = self;
     }
 
     required init?(coder aDecoder: NSCoder) {

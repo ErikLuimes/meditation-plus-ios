@@ -42,7 +42,6 @@ class MPTabBarController: UITabBarController
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         

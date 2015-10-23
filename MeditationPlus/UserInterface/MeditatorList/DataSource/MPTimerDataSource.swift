@@ -29,7 +29,7 @@ class MPTimerDataSource:  NSObject, UIPickerViewDataSource
 {
     lazy private(set) var times: [Int] = {
         var times = [Int]()
-
+        
         for i in 0...1440 {
             if i < 120 && i % 5 == 0 {
                 times.append(i)
@@ -41,22 +41,16 @@ class MPTimerDataSource:  NSObject, UIPickerViewDataSource
                 times.append(i)
             }
         }
-
+        
         return times
     }()
-
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
-    {
+    
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 4
     }
-
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
-    {
-        if component == 1 || component == 3 {
-            return 1
-        } else {
-            return times.count
-        }
+    
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return (component == 0 || component == 2) ? times.count : 1
     }
-
+    
 }
