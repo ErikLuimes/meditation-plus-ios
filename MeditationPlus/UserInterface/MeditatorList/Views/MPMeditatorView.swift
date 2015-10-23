@@ -9,11 +9,7 @@
 import UIKit
 
 class MPMeditatorView: UIView {
-//    private var confirmationEffectViewHeight: CGFloat = 32
-    
     private var selectionViewHidden = true
-    
-    private let selectionViewMargin: CGFloat = 20
     
     @IBOutlet weak var tableView: UITableView!
 
@@ -33,18 +29,14 @@ class MPMeditatorView: UIView {
     
     @IBOutlet weak var preparationProgressView: UIProgressView!
     
-    @IBOutlet weak var selectionViewTopConstraint: NSLayoutConstraint! {
-        didSet {
-            originalSelectionViewTopConstant    = -selectionView.frame.size.height + confirmationEffectView.frame.size.height - selectionViewMargin
-            selectionViewTopConstraint.constant = originalSelectionViewTopConstant
-        }
-    }
+    @IBOutlet weak var selectionViewTopConstraint: NSLayoutConstraint!
     
     var isSelectionViewHidden: Bool {
         return selectionViewHidden
     }
     
-    var originalSelectionViewTopConstant: CGFloat = 0
+    var visibleSelectionViewTopConstant: CGFloat = 0
+    var hiddenSelectionViewTopConstant: CGFloat = 0
     
     var refreshControl: UIRefreshControl!
 
@@ -52,8 +44,8 @@ class MPMeditatorView: UIView {
         super.awakeFromNib()
         
         tableView.registerNib(UINib(nibName: "MPMeditatorCell", bundle: nil), forCellReuseIdentifier: MPMeditatorDataSource.MPMeditatorCellIdentifier)
-        tableView.contentInset = UIEdgeInsetsMake(CGRectGetMaxY(actionView.frame), 0.0, 15.0, 0.0)
-        tableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetMaxY(actionView.frame), 0.0, 0, 0.0)
+        tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 0.0, 0.0)
+        tableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 0, 0.0)
         
 //        profileImageView.setImageWithURL(NSURL(string: "http://3.bp.blogspot.com/_HtW_SPtpj0c/TLFVC8kb3yI/AAAAAAAAAGM/AAzGYbO6gP4/s1600/Buddha%5B1%5D.jpg")!)
         profileImageView.sd_setImageWithURL(NSURL(string: "http://www.crystalinks.com/BuddhaSitting.jpg")!)
@@ -62,15 +54,18 @@ class MPMeditatorView: UIView {
         profileImageView.layer.borderWidth   = 5
         profileImageView.layer.masksToBounds = true
 
+        startButton.layer.borderColor = UIColor.orangeColor().CGColor
         
         refreshControl = UIRefreshControl()
         tableView.addSubview(refreshControl)
+        
+        visibleSelectionViewTopConstant = selectionViewTopConstraint.constant
+        hiddenSelectionViewTopConstant  = -CGRectGetMinY(confirmationEffectView.frame)
     }
 
     func setSelectionViewHidden(hidden: Bool, animated: Bool) {
         selectionViewHidden = hidden
-        // stop start
-        startButton.setTitle(hidden ? "STOP" : "START", forState: UIControlState.Normal)
+        startButton.setTitle(hidden ? "Stop" : "Start", forState: UIControlState.Normal)
         
         if hidden {
             meditationTimerLabel.text = "00:00:00"
@@ -78,9 +73,8 @@ class MPMeditatorView: UIView {
         }
         
         let duration: NSTimeInterval = animated ? 0.5 : 0.0
-        let downedConstant: CGFloat  = -selectionViewMargin
         
-        selectionViewTopConstraint.constant = hidden ? originalSelectionViewTopConstant : downedConstant
+        selectionViewTopConstraint.constant = hidden ? hiddenSelectionViewTopConstant : visibleSelectionViewTopConstant
         
         UIView.animateWithDuration(duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 9.8, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
             self.layoutIfNeeded()

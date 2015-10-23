@@ -28,10 +28,7 @@ class MPMeditatorListViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        tabBarItem = UITabBarItem(title: "Meditate", image: nil, tag: 0)
-        
-        automaticallyAdjustsScrollViewInsets = false
-        edgesForExtendedLayout = .None
+        tabBarItem = UITabBarItem(title: "Meditate", image: UIImage(named: "BuddhaIcon"), tag: 0)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -145,9 +142,9 @@ extension MPMeditatorListViewController: UITableViewDelegate
     
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
-        headerView.textLabel?.text          = meditatorDataSource.meditatorSections[section].title.uppercaseString
-        headerView.textLabel?.textColor     = UIColor.whiteColor()
-        headerView.tintColor = UIColor.orangeColor()
+        headerView.textLabel?.text          = meditatorDataSource.meditatorSections[section].title
+        headerView.textLabel?.textColor     = UIColor.darkGrayColor()
+        headerView.tintColor                = UIColor.whiteColor()
     }
 }
 

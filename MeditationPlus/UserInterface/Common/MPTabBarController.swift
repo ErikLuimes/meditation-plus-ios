@@ -35,6 +35,8 @@ class MPTabBarController: UITabBarController
         
         self.viewControllers = viewControllers
         
+        UITabBar.appearance().tintColor = UIColor.orangeColor()
+        
         title = "Meditation+"
     }
 
