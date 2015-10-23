@@ -32,13 +32,12 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool
     {
+        window                     = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window!.rootViewController = MPMenuContainerViewController()
+        window!.backgroundColor    = UIColor.whiteColor()
+        window!.makeKeyAndVisible()
 
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        self.window!.rootViewController = MPMenuContainerViewController()
-        self.window!.backgroundColor = UIColor.whiteColor()
-        self.window!.makeKeyAndVisible()
-
-        self.setupMeditationTimer();
+        setupMeditationTimer();
 
         return true
     }

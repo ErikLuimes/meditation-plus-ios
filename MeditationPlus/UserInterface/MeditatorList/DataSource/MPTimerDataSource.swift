@@ -45,12 +45,12 @@ class MPTimerDataSource:  NSObject, UIPickerViewDataSource
         return times
     }()
 
-    func numberOfComponentsInPickerView(pickerView: UIPickerView!) -> Int
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
     {
         return 4
     }
 
-    func pickerView(pickerView: UIPickerView!, numberOfRowsInComponent component: Int) -> Int
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
     {
         if component == 1 || component == 3 {
             return 1

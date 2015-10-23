@@ -4,12 +4,23 @@
 //
 
 import Foundation
-import AFNetworking
+import Alamofire
 
 class MPMeditatorManager {
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
-    func meditatorList(failure: ((NSError?) -> Void)? = nil, completion: ([MPMeditator]) -> Void) {
+    func meditatorList(completion: ([MPMeditator] -> Void)?)
+    {
+        if let username: String = self.authenticationManager.loggedInUser?.username, token: String = self.authenticationManager.token?.token {
+            let endpoint                    = "http://meditation.sirimangalo.org/db.php"
+            let parameters: [String:String] = ["username": username, "token": token]
+            
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPMeditatorList?, error: ErrorType?) in
+                if let meditators = response?.meditators {
+                    completion?(meditators)
+                }
+            }
+        }
     }
     
     func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: () -> Void, failure: ((NSError?) -> Void)? = nil) {
@@ -22,7 +33,7 @@ class MPMeditatorManager {
     
 //    func meditatorList(failure: ((NSError?) -> Void)? = nil, completion: ([MPMeditator]) -> Void) {
 //        if let username = self.authenticationManager.loggedInUser?.username, token = self.authenticationManager.token {
-//            let parameters = [
+//            let parameters: Dictionary = [
 //                    "username": username,
 //                    "token":    token,
 //            ]

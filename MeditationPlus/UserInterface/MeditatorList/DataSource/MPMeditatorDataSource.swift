@@ -25,17 +25,71 @@
 
 import Foundation
 
+struct MPMeditatorsResultsCache {
+    var sections: [[MPMeditator]] = Array(count: MPMeditatorSectionData.numberOfSections, repeatedValue: [])
+    
+    init(initialMeditators: [MPMeditator]) {
+        for meditator in initialMeditators {
+            sections[sectionIndexForMeditator(meditator)].append(meditator)
+        }
+    }
+    
+    private func sectionIndexForMeditator(meditator: MPMeditator) -> Int {
+        return MPMeditatorSectionData(progress: meditator.normalizedProgress).rawValue
+    }
+}
+
+enum MPMeditatorSectionData: Int {
+    case Meditating
+    case Finished
+    
+    init(progress: Double) {
+        self = progress < 1.0 ? .Meditating : .Finished
+    }
+    
+    var title: String {
+        switch self {
+        case .Meditating: return "Currently meditating"
+        case .Finished: return "Finished meditating"
+        }
+    }
+    
+    static var numberOfSections: Int {
+        return 2
+    }
+}
+
+struct MPMeditatorSection
+{
+    let title: String
+    let items: [MPMeditator]
+}
+
 class MPMeditatorDataSource: NSObject, UITableViewDataSource {
-    var meditators = [MPMeditator]()
+    var cache: MPMeditatorsResultsCache
+    
+    var meditatorSections: [MPMeditatorSection] {
+        return cache.sections.enumerate().map { index, meditators in
+            return MPMeditatorSection(
+                title: MPMeditatorSectionData(rawValue: index)!.title,
+                items: meditators
+            )
+        }
+    }
 
     static let MPMeditatorCellIdentifier: String = "MPMeditatorCellIdentifier"
 
+    override init() {
+        cache = MPMeditatorsResultsCache(initialMeditators: [])
+        super.init()
+    }
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.meditators.count == 0 ? 0 : 1
+        return self.meditatorSections.count
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? self.meditators.count : 0;
+        return meditatorSections[section].items.count
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -49,19 +103,10 @@ class MPMeditatorDataSource: NSObject, UITableViewDataSource {
     }
 
     func meditatorForIndexPath(indexPath: NSIndexPath) -> MPMeditator? {
-        var meditator: MPMeditator?
-
-        if indexPath.row < meditators.count {
-            meditator = meditators[indexPath.row]
-        }
-
-        return meditator
+        return meditatorSections[indexPath.section].items[indexPath.row]
     }
 
     func updateMeditators(meditators: [MPMeditator]) {
-        self.meditators.removeAll()
-
-        self.meditators += meditators
+        cache = MPMeditatorsResultsCache(initialMeditators: meditators)
     }
-
 }

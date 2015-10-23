@@ -116,6 +116,7 @@ class MPMeditationTimer: NSObject
         totalMeditationTime  = meditationTime
 
         meditationTimer = NSTimer.scheduledTimerWithTimeInterval(timeInterval, target: self, selector: "meditationTimerTick", userInfo: nil, repeats: true)
+        NSRunLoop.mainRunLoop().addTimer(meditationTimer!, forMode:NSRunLoopCommonModes)
         meditationTimerTick()
     }
     

@@ -25,16 +25,10 @@ class MTAuthenticationManager {
         Alamofire.request(.POST, endpoint, parameters: parameters).responseObject { (response: MPToken?, error: ErrorType?) in
             if let _ = response?.token {
                 self.loggedInUser = MPUser(username: username, password: password)
-                do {
-                    try self.loggedInUser?.deleteFromSecureStore()
-                    try self.loggedInUser?.createInSecureStore()
-                    self.token = response!
-                    completion(self.loggedInUser!)
-                } catch {
-                    self.loggedInUser = nil
-                    self.token        = nil
-                    failure?(nil)
-                }
+                try! self.loggedInUser?.deleteFromSecureStore()
+                try! self.loggedInUser?.createInSecureStore()
+                self.token = response!
+                completion(self.loggedInUser!)
             } else {
                 if let unwrappedError = error {
                     NSLog("error: \(unwrappedError)")
