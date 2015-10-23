@@ -69,7 +69,8 @@ class MPSplashViewController: UIViewController {
             }, completion: { (user) -> Void in
                 sender.enabled = true
                 NSLog("Logged in")
-                self.navigationController?.setViewControllers([MPHomeViewController(nibName: "MPHomeViewController", bundle: nil)], animated: true)
+                self.navigatoToMainViewController()
+//                self.navigationController?.setViewControllers([MPHomeViewController(nibName: "MPHomeViewController", bundle: nil)], animated: true)
             })
             
         } else {
@@ -78,6 +79,12 @@ class MPSplashViewController: UIViewController {
             self.splashScreenView.shake()
             
         }
+    }
+    
+    func navigatoToMainViewController()
+    {
+        let tabBarController = MPTabBarController()
+        self.navigationController?.setViewControllers([tabBarController], animated: true)
     }
     
     func validate() -> Bool {

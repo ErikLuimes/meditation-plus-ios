@@ -25,6 +25,16 @@ class MPMeditatorListViewController: UIViewController {
     
     private var walkingTimeInMinutes: Int?
     
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        
+        tabBarItem = UITabBarItem(title: "Sangha", image: nil, tag: 0)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -40,6 +50,7 @@ class MPMeditatorListViewController: UIViewController {
         meditatorView.setSelectionViewHidden(false, animated: true)
         
         meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
+        NSRunLoop.mainRunLoop().addTimer(meditationProgressUpdateTimer!, forMode:NSRunLoopCommonModes)
         
         meditatorManager.meditatorList { (meditators) -> Void in
             self.meditatorDataSource.updateMeditators(meditators)
@@ -156,7 +167,7 @@ extension MPMeditatorListViewController: UIPickerViewDelegate
 
 extension MPMeditatorListViewController: MPMeditationTimerDelegate
 {
-    // MARK: MPMeditationTimerDelegate: NSObjectProtocol {
+    // MARK: MPMeditationTimerDelegate
 
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
