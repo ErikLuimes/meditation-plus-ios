@@ -49,8 +49,9 @@ class MPMeditatorListViewController: UIViewController {
 
         meditatorView.setSelectionViewHidden(false, animated: true)
         
-        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
-        NSRunLoop.mainRunLoop().addTimer(meditationProgressUpdateTimer!, forMode:NSRunLoopCommonModes)
+        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(30, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
+        // Maybe better not on other run loop, just let it wait when main thread is busy
+//        NSRunLoop.mainRunLoop().addTimer(meditationProgressUpdateTimer!, forMode:NSRunLoopCommonModes)
         
         meditatorManager.meditatorList { (meditators) -> Void in
             self.meditatorDataSource.updateMeditators(meditators)

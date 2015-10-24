@@ -96,7 +96,7 @@ class MPMeditatorDataSource: NSObject, UITableViewDataSource {
         let cell: UITableViewCell = tableView.dequeueReusableCellWithIdentifier(MPMeditatorDataSource.MPMeditatorCellIdentifier)!
 
         if let meditator = self.meditatorForIndexPath(indexPath), meditatorCell = cell as? MPMeditatorCell {
-            meditatorCell.configureWithMeditator(meditator)
+            meditatorCell.configureWithMeditator(meditator, displayProgress: indexPath.section == 0)
         }
 
         return cell

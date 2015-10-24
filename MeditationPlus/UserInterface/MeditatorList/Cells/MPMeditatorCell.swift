@@ -13,6 +13,8 @@ import SDWebImage
 class MPMeditatorCell: UITableViewCell {
     private var meditator: MPMeditator?
     
+    private var displayProgress: Bool = false
+    
     @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var avatarImageView: UIImageView!
@@ -34,6 +36,7 @@ class MPMeditatorCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        circlePathTrackLayer.hidden      = true
         circlePathTrackLayer.frame       = avatarImageView.bounds
         circlePathTrackLayer.lineWidth   = 12
         circlePathTrackLayer.strokeColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
@@ -42,6 +45,7 @@ class MPMeditatorCell: UITableViewCell {
         circlePathTrackLayer.strokeEnd   = 1
         avatarImageView.layer.addSublayer(circlePathTrackLayer)
 
+        circlePathLayer.hidden      = true
         circlePathLayer.frame       = avatarImageView.bounds
         circlePathLayer.lineWidth   = 10
         circlePathLayer.strokeColor = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
@@ -59,11 +63,19 @@ class MPMeditatorCell: UITableViewCell {
     }
     
     override func prepareForReuse() {
-        self.meditator = nil
+        meditator       = nil
+        displayProgress = false
+        
+        circlePathTrackLayer.hidden = true
+        circlePathLayer.hidden      = true
     }
     
-    func configureWithMeditator(meditator: MPMeditator){
-        self.meditator = meditator
+    func configureWithMeditator(meditator: MPMeditator, displayProgress: Bool){
+        self.displayProgress = displayProgress
+        self.meditator       = meditator
+        
+        circlePathTrackLayer.hidden = !displayProgress
+        circlePathLayer.hidden      = !displayProgress
         
         if let imageUrl = meditator.avatar {
             avatarImageView.sd_setImageWithURL(imageUrl)
@@ -74,14 +86,16 @@ class MPMeditatorCell: UITableViewCell {
             avatarImageView.layer.cornerRadius  = avatarImageView.bounds.size.height / 2.0
         }
 
-        let strokeAnim            = CABasicAnimation(keyPath:"strokeEnd")
-        strokeAnim.duration       = 0.75
-        strokeAnim.fromValue      = circlePathLayer.strokeEnd
-        strokeAnim.toValue        = meditator.normalizedProgress
-        strokeAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        
-        circlePathLayer.addAnimation(strokeAnim, forKey: "strokeEnd")
-        circlePathLayer.strokeEnd = CGFloat(meditator.normalizedProgress)
+        if displayProgress {
+            let strokeAnim            = CABasicAnimation(keyPath:"strokeEnd")
+            strokeAnim.duration       = 0.75
+            strokeAnim.fromValue      = circlePathLayer.strokeEnd
+            strokeAnim.toValue        = meditator.normalizedProgress
+            strokeAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            
+            circlePathLayer.addAnimation(strokeAnim, forKey: "strokeEnd")
+            circlePathLayer.strokeEnd = CGFloat(meditator.normalizedProgress)
+        }
 
         nameLabel?.text = meditator.username
         
@@ -104,7 +118,9 @@ class MPMeditatorCell: UITableViewCell {
     
     func updateProgressIndicatorIfNeeded()
     {
-        circlePathLayer.strokeEnd = CGFloat(meditator?.normalizedProgress ?? 0.0)
+        if displayProgress {
+            circlePathLayer.strokeEnd = CGFloat(meditator?.normalizedProgress ?? 0.0)
+        }
     }
     
     override func layoutSubviews() {
