@@ -30,8 +30,12 @@ class MPTabBarController: UITabBarController
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
         var viewControllers: [UIViewController] = []
+        
         let meditatorController : MPMeditatorListViewController = MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil)
         viewControllers.append(meditatorController)
+        
+        let quoteViewController : MPQuoteViewController = MPQuoteViewController(nibName: "MPQuoteViewController", bundle: nil)
+        viewControllers.append(quoteViewController)
         
         self.viewControllers = viewControllers
         
