@@ -25,12 +25,19 @@
 
 import UIKit
 
-class MPSplashView: UIView {
+protocol MPSplashViewDelegate: NSObjectProtocol {
+    func splashViewPerformLogin(splashView: MPSplashView)
+}
+
+class MPSplashView: UIView, UITextFieldDelegate {
+    weak var delegate: MPSplashViewDelegate?
 
     @IBOutlet weak var backgroundImageView: UIImageView!
     
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var usernameField: UITextField!
+    @IBOutlet weak var rememberPasswordSwitch: UISwitch!
 
     @IBOutlet weak var loginView: UIView!
 
@@ -50,7 +57,8 @@ class MPSplashView: UIView {
         passwordImageView.image       = UIImage(named: "pass_icon")
         passwordImageView.contentMode = .Center
         passwordField.leftView        = passwordImageView
-            
+        
+        passwordField.delegate = self
         
         self.usernameField.attributedPlaceholder = NSAttributedString(string:self.usernameField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.6)])
         self.usernameField.layer.borderColor = UIColor.whiteColor().colorWithAlphaComponent(0.6).CGColor
@@ -61,6 +69,8 @@ class MPSplashView: UIView {
         usernameImageView.image       = UIImage(named: "user_icon")
         usernameImageView.contentMode = .Center
         usernameField.leftView        = usernameImageView
+        
+        usernameField.delegate = self
     }
     
     func transitionToBlurredBackground() {
@@ -92,4 +102,15 @@ class MPSplashView: UIView {
         
     }
     
+    // MARK: UITextFieldDelegate
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField == usernameField {
+            passwordField.becomeFirstResponder()
+        } else if textField == passwordField {
+            delegate?.splashViewPerformLogin(self)
+        }
+        
+        return false
+    }
 }

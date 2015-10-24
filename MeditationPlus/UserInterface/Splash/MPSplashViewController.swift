@@ -12,10 +12,31 @@ import AVFoundation
 class MPSplashViewController: UIViewController {
     private var splashScreenView: MPSplashView { return self.view as! MPSplashView }
     
+    @IBAction func didSwitchRememberPassword(sender: UISwitch) {
+        self.authenticationManager.rememberPassword = sender.on
+    }
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
+    @IBAction func didPressRegisterAccount(sender: UIButton) {
+        let websiteURL = NSURL(string: "http://meditation.sirimangalo.org")!
+        if UIApplication.sharedApplication().canOpenURL(websiteURL) {
+            UIApplication.sharedApplication().openURL(websiteURL)
+        }
+    }
+    @IBAction func didTapContentView(sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+    }
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
+    }
+    
+    private func attachObservers() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    private func detachObservers() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     override func viewDidLoad() {
@@ -25,20 +46,24 @@ class MPSplashViewController: UIViewController {
         self.view.clipsToBounds = true
         
         let loadedUser = MPUser()
-//        let result =
-        
-//         ReadableSecureStorable lets us read the account from the keychain
-//        let result = account.readFromSecureStore()
-        
-//        print("iOS app: \(result!), ****** \(result?.data)")
-        
         if let username = loadedUser.readFromSecureStore()?.data?["username"] as? String {
             self.splashScreenView.usernameField.text = username
         }
         
         if let password = loadedUser.readFromSecureStore()?.data?["password"] as? String {
-            self.splashScreenView.passwordField.text = password
+            if authenticationManager.rememberPassword {
+                self.splashScreenView.passwordField.text = password
+            }
         }
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        attachObservers()
+        
+        splashScreenView.rememberPasswordSwitch.setOn(authenticationManager.rememberPassword, animated: true)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -50,8 +75,47 @@ class MPSplashViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
+        detachObservers()
+        view.endEditing(true)
     }
+    
+    // MARK: Keyboard handling
 
+    func keyboardWillShow(notification: NSNotification) {
+        let userInfo              = notification.userInfo!
+        let keyboardFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        let animationCurve        = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
+        let duration              = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
+
+        let centerY: CGFloat = (CGRectGetHeight(UIScreen.mainScreen().bounds) - CGRectGetHeight(keyboardFrame)) / 2.0
+        let offset: CGFloat  = self.splashScreenView.passwordField.center.y - centerY
+        
+        var contentInset = UIEdgeInsetsZero
+        if offset < 0 {
+            contentInset = UIEdgeInsetsMake(0, 0 ,abs(offset) ,0)
+        } else if offset > 0 {
+            contentInset = UIEdgeInsetsMake(offset, 0 ,0 ,0)
+        }
+        
+        NSLog("contentInset \(contentInset)")
+        
+        UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: { () -> Void in
+            self.splashScreenView.scrollView.contentOffset = CGPointMake(0, offset)
+        }, completion: nil)
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        let userInfo              = notification.userInfo!
+        let animationCurve        = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
+        let duration              = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
+
+        UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: { () -> Void in
+            self.splashScreenView.scrollView.contentOffset = CGPointZero
+        }, completion: nil)
+    }
+    
+    // MARK: Actions
+    
     @IBAction func didPressLoginButton(sender: UIButton) {
         sender.enabled = false
         

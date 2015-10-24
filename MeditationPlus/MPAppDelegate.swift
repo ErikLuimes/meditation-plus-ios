@@ -37,14 +37,22 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
         window!.backgroundColor    = UIColor.whiteColor()
         window!.makeKeyAndVisible()
 
-        setupMeditationTimer();
+        setupDefaults()
+        setupMeditationTimer()
 
         return true
+    }
+    
+    func setupDefaults() {
+        NSUserDefaults.standardUserDefaults().registerDefaults([
+            "rememberPassword": false
+        ])
     }
 
     func setupMeditationTimer() {
         MPMeditationTimer.sharedInstance.addDelegate(MPAudioPlayerManager.sharedInstance)
     }
+    
 }
 
 
