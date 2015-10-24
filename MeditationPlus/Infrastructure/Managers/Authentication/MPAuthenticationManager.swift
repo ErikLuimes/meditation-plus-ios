@@ -15,6 +15,15 @@ class MTAuthenticationManager {
     
     var token: MPToken?
     
+    var rememberPassword: Bool {
+        get {
+            return NSUserDefaults.standardUserDefaults().boolForKey("rememberPassword")
+        }
+        set {
+            return NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: "rememberPassword")
+        }
+    }
+    
     var isLoggedIn: Bool { return self.loggedInUser != nil }
     
     func loginWithUsername(username: String, password: String,failure: ((NSError?) -> Void)? = nil, completion: (MPUser) -> Void)
@@ -24,8 +33,8 @@ class MTAuthenticationManager {
         
         Alamofire.request(.POST, endpoint, parameters: parameters).responseObject { (response: MPToken?, error: ErrorType?) in
             if let _ = response?.token {
-                self.loggedInUser = MPUser(username: username, password: password)
-                try? self.loggedInUser?.deleteFromSecureStore()
+                self.loggedInUser = MPUser(username: username, password: self.rememberPassword ? password : nil)
+                try! self.loggedInUser?.deleteFromSecureStore()
                 try! self.loggedInUser?.createInSecureStore()
                 self.token = response!
                 completion(self.loggedInUser!)

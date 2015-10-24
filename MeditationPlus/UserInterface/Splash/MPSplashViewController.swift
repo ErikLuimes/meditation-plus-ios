@@ -13,6 +13,7 @@ class MPSplashViewController: UIViewController {
     private var splashScreenView: MPSplashView { return self.view as! MPSplashView }
     
     @IBAction func didSwitchRememberPassword(sender: UISwitch) {
+        self.authenticationManager.rememberPassword = sender.on
     }
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
@@ -50,14 +51,19 @@ class MPSplashViewController: UIViewController {
         }
         
         if let password = loadedUser.readFromSecureStore()?.data?["password"] as? String {
-            self.splashScreenView.passwordField.text = password
+            if authenticationManager.rememberPassword {
+                self.splashScreenView.passwordField.text = password
+            }
         }
+        
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         attachObservers()
+        
+        splashScreenView.rememberPasswordSwitch.setOn(authenticationManager.rememberPassword, animated: true)
     }
     
     override func viewDidAppear(animated: Bool) {

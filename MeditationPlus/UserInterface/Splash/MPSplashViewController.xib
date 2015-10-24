@@ -77,7 +77,7 @@
                                         <action selector="didPressRegisterAccount:" destination="-1" eventType="touchUpInside" id="5U3-Eo-2aJ"/>
                                     </connections>
                                 </button>
-                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="auZ-im-fSh">
+                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="auZ-im-fSh">
                                     <rect key="frame" x="55" y="278" width="51" height="31"/>
                                     <animations/>
                                     <color key="onTintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
