@@ -62,6 +62,7 @@
                             </subviews>
                             <animations/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <gestureRecognizers/>
                             <constraints>
                                 <constraint firstItem="JZ3-FJ-Jvk" firstAttribute="centerX" secondItem="Ogy-ai-Efb" secondAttribute="centerX" id="B01-3M-upm"/>
                                 <constraint firstItem="cBF-Dk-Wws" firstAttribute="width" secondItem="xZC-ar-pyD" secondAttribute="width" id="Do4-7s-yTG"/>
@@ -80,6 +81,9 @@
                                     <exclude reference="B01-3M-upm"/>
                                 </mask>
                             </variation>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="kv4-IB-QCK" appends="YES" id="ApN-6d-pIu"/>
+                            </connections>
                         </view>
                     </subviews>
                     <animations/>
@@ -117,6 +121,11 @@
                 <outlet property="usernameField" destination="xZC-ar-pyD" id="33V-Ch-hc0"/>
             </connections>
         </view>
+        <tapGestureRecognizer id="kv4-IB-QCK">
+            <connections>
+                <action selector="didTapContentView:" destination="-1" id="rzQ-PA-KVQ"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="background" width="640" height="426"/>

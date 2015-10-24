@@ -14,6 +14,9 @@ class MPSplashViewController: UIViewController {
     
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
+    @IBAction func didTapContentView(sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
+    }
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
     }
