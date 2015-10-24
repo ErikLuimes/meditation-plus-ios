@@ -60,7 +60,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B1g-QI-HVg">
-                                    <rect key="frame" x="142.5" y="577.5" width="50" height="29.5"/>
+                                    <rect key="frame" x="142" y="577" width="50" height="29.5"/>
                                     <animations/>
                                     <state key="normal">
                                         <attributedString key="attributedTitle">
@@ -77,21 +77,41 @@
                                         <action selector="didPressRegisterAccount:" destination="-1" eventType="touchUpInside" id="5U3-Eo-2aJ"/>
                                     </connections>
                                 </button>
+                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="auZ-im-fSh">
+                                    <rect key="frame" x="55" y="278" width="51" height="31"/>
+                                    <animations/>
+                                    <color key="onTintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <connections>
+                                        <action selector="didSwitchRememberPassword:" destination="-1" eventType="valueChanged" id="2CS-n5-aOk"/>
+                                    </connections>
+                                </switch>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remember password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OYu-gh-ugf">
+                                    <rect key="frame" x="112" y="283" width="136.5" height="18"/>
+                                    <animations/>
+                                    <fontDescription key="fontDescription" type="italicSystem" pointSize="14"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                    <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </label>
                             </subviews>
                             <animations/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                             <constraints>
+                                <constraint firstItem="auZ-im-fSh" firstAttribute="top" secondItem="JZ3-FJ-Jvk" secondAttribute="bottom" constant="8" id="2yj-nF-w78"/>
                                 <constraint firstAttribute="trailing" secondItem="B1g-QI-HVg" secondAttribute="trailing" constant="8" id="59I-5C-MR3"/>
+                                <constraint firstItem="OYu-gh-ugf" firstAttribute="top" secondItem="JZ3-FJ-Jvk" secondAttribute="bottom" constant="13" id="5oQ-kA-aIY"/>
                                 <constraint firstItem="B1g-QI-HVg" firstAttribute="centerX" secondItem="Ogy-ai-Efb" secondAttribute="centerX" id="7sr-OC-tsz"/>
                                 <constraint firstAttribute="bottom" secondItem="B1g-QI-HVg" secondAttribute="bottom" constant="20" id="96V-r1-Xas"/>
                                 <constraint firstItem="JZ3-FJ-Jvk" firstAttribute="centerX" secondItem="Ogy-ai-Efb" secondAttribute="centerX" id="B01-3M-upm"/>
                                 <constraint firstItem="cBF-Dk-Wws" firstAttribute="width" secondItem="xZC-ar-pyD" secondAttribute="width" id="Do4-7s-yTG"/>
                                 <constraint firstItem="cBF-Dk-Wws" firstAttribute="top" secondItem="xZC-ar-pyD" secondAttribute="bottom" constant="8" id="E2j-h9-OzE"/>
                                 <constraint firstItem="xZC-ar-pyD" firstAttribute="top" secondItem="Ogy-ai-Efb" secondAttribute="top" constant="160" id="ElZ-yb-JGr"/>
+                                <constraint firstItem="auZ-im-fSh" firstAttribute="leading" secondItem="JZ3-FJ-Jvk" secondAttribute="leading" id="JHw-tb-VhK"/>
                                 <constraint firstItem="JZ3-FJ-Jvk" firstAttribute="width" secondItem="cBF-Dk-Wws" secondAttribute="width" id="N8G-gi-CTi"/>
                                 <constraint firstAttribute="width" constant="330" id="OwG-sA-Dky"/>
                                 <constraint firstAttribute="bottom" secondItem="B1g-QI-HVg" secondAttribute="bottom" constant="8" id="T2d-0w-ZiY"/>
+                                <constraint firstItem="OYu-gh-ugf" firstAttribute="leading" secondItem="auZ-im-fSh" secondAttribute="trailing" constant="8" id="VCO-4q-s6P"/>
                                 <constraint firstItem="cBF-Dk-Wws" firstAttribute="centerX" secondItem="Ogy-ai-Efb" secondAttribute="centerX" id="mCX-Iy-ffp"/>
                                 <constraint firstItem="xZC-ar-pyD" firstAttribute="centerX" secondItem="Ogy-ai-Efb" secondAttribute="centerX" id="nx2-2M-Heo"/>
                                 <constraint firstItem="JZ3-FJ-Jvk" firstAttribute="top" secondItem="cBF-Dk-Wws" secondAttribute="bottom" constant="8" id="oIA-mE-eXC"/>
@@ -143,6 +163,7 @@
                 <outlet property="backgroundImageView" destination="qsL-dz-6iq" id="wUe-ER-7eS"/>
                 <outlet property="loginView" destination="Ogy-ai-Efb" id="dDo-YL-O19"/>
                 <outlet property="passwordField" destination="cBF-Dk-Wws" id="bNq-2C-KMW"/>
+                <outlet property="rememberPasswordSwitch" destination="auZ-im-fSh" id="UuP-QM-eZU"/>
                 <outlet property="scrollView" destination="2BC-q7-4n0" id="aHt-Kt-ili"/>
                 <outlet property="usernameField" destination="xZC-ar-pyD" id="33V-Ch-hc0"/>
             </connections>

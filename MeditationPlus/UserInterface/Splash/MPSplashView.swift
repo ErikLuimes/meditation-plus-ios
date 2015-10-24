@@ -37,6 +37,7 @@ class MPSplashView: UIView, UITextFieldDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var usernameField: UITextField!
+    @IBOutlet weak var rememberPasswordSwitch: UISwitch!
 
     @IBOutlet weak var loginView: UIView!
 

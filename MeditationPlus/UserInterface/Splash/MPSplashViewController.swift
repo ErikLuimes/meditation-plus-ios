@@ -12,6 +12,8 @@ import AVFoundation
 class MPSplashViewController: UIViewController {
     private var splashScreenView: MPSplashView { return self.view as! MPSplashView }
     
+    @IBAction func didSwitchRememberPassword(sender: UISwitch) {
+    }
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
     @IBAction func didPressRegisterAccount(sender: UIButton) {
