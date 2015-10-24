@@ -18,6 +18,15 @@ class MPSplashViewController: UIViewController {
         return .LightContent
     }
     
+    private func attachObservers() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    private func detachObservers() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -25,13 +34,6 @@ class MPSplashViewController: UIViewController {
         self.view.clipsToBounds = true
         
         let loadedUser = MPUser()
-//        let result =
-        
-//         ReadableSecureStorable lets us read the account from the keychain
-//        let result = account.readFromSecureStore()
-        
-//        print("iOS app: \(result!), ****** \(result?.data)")
-        
         if let username = loadedUser.readFromSecureStore()?.data?["username"] as? String {
             self.splashScreenView.usernameField.text = username
         }
@@ -39,6 +41,12 @@ class MPSplashViewController: UIViewController {
         if let password = loadedUser.readFromSecureStore()?.data?["password"] as? String {
             self.splashScreenView.passwordField.text = password
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        attachObservers()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -50,8 +58,47 @@ class MPSplashViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
+        detachObservers()
+        view.endEditing(true)
     }
+    
+    // MARK: Keyboard handling
 
+    func keyboardWillShow(notification: NSNotification) {
+        let userInfo              = notification.userInfo!
+        let keyboardFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        let animationCurve        = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
+        let duration              = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
+
+        let centerY: CGFloat = (CGRectGetHeight(UIScreen.mainScreen().bounds) - CGRectGetHeight(keyboardFrame)) / 2.0
+        let offset: CGFloat  = self.splashScreenView.passwordField.center.y - centerY
+        
+        var contentInset = UIEdgeInsetsZero
+        if offset < 0 {
+            contentInset = UIEdgeInsetsMake(0, 0 ,abs(offset) ,0)
+        } else if offset > 0 {
+            contentInset = UIEdgeInsetsMake(offset, 0 ,0 ,0)
+        }
+        
+        NSLog("contentInset \(contentInset)")
+        
+        UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: { () -> Void in
+            self.splashScreenView.scrollView.contentOffset = CGPointMake(0, offset)
+        }, completion: nil)
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        let userInfo              = notification.userInfo!
+        let animationCurve        = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
+        let duration              = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
+
+        UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: { () -> Void in
+            self.splashScreenView.scrollView.contentOffset = CGPointZero
+        }, completion: nil)
+    }
+    
+    // MARK: Actions
+    
     @IBAction func didPressLoginButton(sender: UIButton) {
         sender.enabled = false
         

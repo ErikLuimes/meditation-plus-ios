@@ -29,6 +29,7 @@ class MPSplashView: UIView {
 
     @IBOutlet weak var backgroundImageView: UIImageView!
     
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var usernameField: UITextField!
 
