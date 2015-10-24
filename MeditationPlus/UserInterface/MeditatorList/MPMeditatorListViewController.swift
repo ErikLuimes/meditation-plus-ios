@@ -28,7 +28,7 @@ class MPMeditatorListViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        tabBarItem = UITabBarItem(title: "Sangha", image: nil, tag: 0)
+        tabBarItem = UITabBarItem(title: "Meditate", image: UIImage(named: "BuddhaIcon"), tag: 0)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -49,8 +49,9 @@ class MPMeditatorListViewController: UIViewController {
 
         meditatorView.setSelectionViewHidden(false, animated: true)
         
-        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
-        NSRunLoop.mainRunLoop().addTimer(meditationProgressUpdateTimer!, forMode:NSRunLoopCommonModes)
+        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(30, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
+        // Maybe better not on other run loop, just let it wait when main thread is busy
+//        NSRunLoop.mainRunLoop().addTimer(meditationProgressUpdateTimer!, forMode:NSRunLoopCommonModes)
         
         meditatorManager.meditatorList { (meditators) -> Void in
             self.meditatorDataSource.updateMeditators(meditators)
@@ -142,27 +143,53 @@ extension MPMeditatorListViewController: UITableViewDelegate
     
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
-        headerView.textLabel?.text          = meditatorDataSource.meditatorSections[section].title.uppercaseString
-        headerView.textLabel?.textColor     = UIColor.whiteColor()
-        headerView.tintColor = UIColor.orangeColor()
+        headerView.textLabel?.text          = meditatorDataSource.meditatorSections[section].title
+        headerView.textLabel?.textColor     = UIColor.darkGrayColor()
+        headerView.tintColor                = UIColor.whiteColor()
     }
 }
 
 extension MPMeditatorListViewController: UIPickerViewDelegate
 {
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
+        var label: UILabel!
         var title = ""
         
-        if row == 0 && (component == 1 || component == 3) {
-            title = component == 1 ? "Walking" : "Sitting"
+        if view is UILabel {
+            label = view as! UILabel
         } else {
-            let hours   = timerDataSource.times[row] / 60
-            let minutes = timerDataSource.times[row] % 60
-            title = String(format: "%d:%2.2d" , hours ,minutes)
+            label               = UILabel()
+            label.textAlignment = .Left
         }
         
-        return title
+        if component == 0 || component == 2 {
+            let hours   = timerDataSource.times[row] / 60
+            let minutes = timerDataSource.times[row] % 60
+            title       = String(format: "%d:%2.2d" , hours ,minutes)
+        } else if component == 1 {
+            title = "Walking"
+        } else if component == 3 {
+            title = "Sitting"
+        }
+        
+        
+        label.text = title
+        
+        return label
     }
+    
+    func pickerView(pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        var width: CGFloat = 0
+        
+        if component == 0 || component == 2 {
+            width = 40
+        } else {
+            width = 70
+        }
+        
+        return width
+    }
+    
 }
 
 extension MPMeditatorListViewController: MPMeditationTimerDelegate
