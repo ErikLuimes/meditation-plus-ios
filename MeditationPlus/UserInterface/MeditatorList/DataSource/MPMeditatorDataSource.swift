@@ -33,6 +33,35 @@ struct MPMeditatorsResultsCache {
             sections[sectionIndexForMeditator(meditator)].append(meditator)
         }
     }
+
+    mutating func insertMeditator(meditator: MPMeditator) -> NSIndexPath {
+        let sectionIndex = sectionIndexForMeditator(meditator)
+//        let insertionIndex = sections[sectionIndex].indexOf { task in
+//            let otherTaskDate = task.dueDate
+//            return insertedTaskDate.compare(otherTaskDate) == .OrderedAscending
+//        } ?? sections[sectionIndex].count
+        sections[sectionIndex].insert(meditator, atIndex: 0)
+
+        return NSIndexPath(forRow: 0, inSection: sectionIndex)
+    }
+
+    mutating func deleteMeditator(meditator: MPMeditator) -> NSIndexPath? {
+//        let sectionIndex = sectionIndexForMeditator(meditator)
+        if let deletedTaskIndex = (sections[0] as [MPMeditator]).indexOf(meditator) {
+            sections[0].removeAtIndex(deletedTaskIndex)
+            return NSIndexPath(forRow: deletedTaskIndex, inSection: 0)
+        }
+
+        return nil
+    }
+    
+//    func indexPathForMeditator(meditator: MPMeditator) -> NSIndexPath
+//    {
+//        let sectionIndex   = sectionIndexForMeditator(meditator)
+//        let insertionIndex = sections[sectionIndex].indexOf(meditator)
+//        
+//        return NSIndexPath(forRow: insertionIndex!, inSection: sectionIndex)
+//    }
     
     private func sectionIndexForMeditator(meditator: MPMeditator) -> Int {
         return MPMeditatorSectionData(progress: meditator.normalizedProgress).rawValue
@@ -106,7 +135,68 @@ class MPMeditatorDataSource: NSObject, UITableViewDataSource {
         return meditatorSections[indexPath.section].items[indexPath.row]
     }
 
-    func updateMeditators(meditators: [MPMeditator]) {
+    func updateMeditators(newMeditators: [MPMeditator]) {
+        var meditators: [MPMeditator] = [MPMeditator]()
+        let calendar = NSCalendar.currentCalendar()
+        let futureDate = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 5, toDate: NSDate(), options: [])
+        let pastDate = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: -55, toDate: NSDate(), options: [])
+        
+        let meditator: MPMeditator = MPMeditator()
+        meditator.username = "Henk"
+        meditator.start = pastDate
+        meditator.end   = futureDate
+        meditator.timeDiff = 60
+        meditator.walkingMinutes = 1
+        meditators.append(meditator)
+        
+        let meditator1: MPMeditator = MPMeditator()
+        meditator1.username = "Henk 1"
+        meditator1.start = pastDate
+        meditator1.end   = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 9, toDate: NSDate(), options: [])
+        meditator1.timeDiff = 60
+        meditator1.walkingMinutes = 1
+        meditators.append(meditator1)
+        
+        let meditator2: MPMeditator = MPMeditator()
+        meditator2.username = "Henk 2"
+        meditator2.start = pastDate
+        meditator2.end   = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 6, toDate: NSDate(), options: [])
+        meditator2.timeDiff = 61
+        meditator2.walkingMinutes = 1
+        meditators.append(meditator2)
+        
+        meditators += newMeditators
+        
         cache = MPMeditatorsResultsCache(initialMeditators: meditators)
+    }
+    
+    func checkMeditatorProgress(tableView: UITableView)
+    {
+        var indexPathsToDelete: [NSIndexPath] = [NSIndexPath]()
+        var meditatorsToMove: [MPMeditator]   = [MPMeditator]()
+        var indexPathsToAdd: [NSIndexPath]    = [NSIndexPath]()
+        
+        for (index, currentlyMeditating) in cache.sections[0].enumerate() {
+            if currentlyMeditating.normalizedProgress >= 1.0 {
+                meditatorsToMove.append(currentlyMeditating)
+                indexPathsToDelete.append(NSIndexPath(forRow: index, inSection: 0))
+            }
+        }
+        
+        for finischedMeditator in meditatorsToMove {
+            cache.deleteMeditator(finischedMeditator)
+            cache.insertMeditator(finischedMeditator)
+        }
+        
+        for (index, finishedMeditating) in cache.sections[1].enumerate() {
+            if meditatorsToMove.contains(finishedMeditating) {
+                indexPathsToAdd.append(NSIndexPath(forRow: index, inSection: 1))
+            }
+        }
+        
+        tableView.beginUpdates()
+        tableView.deleteRowsAtIndexPaths(indexPathsToDelete, withRowAnimation: .Automatic)
+        tableView.insertRowsAtIndexPaths(indexPathsToAdd, withRowAnimation: .Automatic)
+        tableView.endUpdates()
     }
 }

@@ -41,7 +41,7 @@ import ObjectMapper
 		"can_edit": "false",
 		"me": "false"
 */
-class MPMeditator: Mappable {
+class MPMeditator: NSObject, Mappable {
     var username:         String = ""
     var avatar:           NSURL?
     var start:            NSDate?
@@ -55,8 +55,12 @@ class MPMeditator: Mappable {
 
     // MARK: Mappable
 
+    override init() {
+       super.init()
+    }
     
     required init?(_ map: Map) {
+        super.init()
         self.mapping(map)
     }
 //    class func newInstance(map: Map) -> Mappable? {

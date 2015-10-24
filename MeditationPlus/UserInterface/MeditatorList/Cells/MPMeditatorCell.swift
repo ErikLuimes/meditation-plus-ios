@@ -68,6 +68,8 @@ class MPMeditatorCell: UITableViewCell {
         
         circlePathTrackLayer.hidden = true
         circlePathLayer.hidden      = true
+        
+        imageView?.image = nil
     }
     
     func configureWithMeditator(meditator: MPMeditator, displayProgress: Bool){
