@@ -23,11 +23,62 @@ class MPMeditatorManager {
         }
     }
     
-    func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: () -> Void, failure: ((NSError?) -> Void)? = nil) {
-    
+    func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: (() -> Void)? = nil, failure: ((NSError?) -> Void)? = nil) {
+        if sittingTimeInMinutes == nil && walkingTimeInMinutes == nil { failure?(nil) }
+        
+        if let username = self.authenticationManager.loggedInUser?.username, token = self.authenticationManager.token?.token {
+            let endpoint   = "http://meditation.sirimangalo.org/db.php"
+            var parameters: [String:String] = [
+                "username": username,
+                "token":    token,
+                "form_id":  "timeform",
+                "source":   "ios"
+            ]
+            
+            parameters["sitting"] = sittingTimeInMinutes == nil ? "" : String(sittingTimeInMinutes!)
+            parameters["walking"] = walkingTimeInMinutes == nil ? "" : String(walkingTimeInMinutes!)
+            
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseString(completionHandler: { (request, response, result) -> Void in
+                if response != nil {
+                    if response!.statusCode >= 200 && response!.statusCode < 300 {
+                        completion?()
+                    } else {
+                        failure?(nil)
+                    }
+                } else {
+                    failure?(nil)
+                }
+            })
+        }
     }
     
-    func cancelMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: () -> Void, failure: ((NSError?) -> Void)? = nil) {
+    func cancelMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: (() -> Void)? = nil, failure: ((NSError?) -> Void)? = nil) {
+        if sittingTimeInMinutes == nil && walkingTimeInMinutes == nil { failure?(nil) }
+        
+        if let username = self.authenticationManager.loggedInUser?.username, token = self.authenticationManager.token?.token {
+            let endpoint   = "http://meditation.sirimangalo.org/db.php"
+            var parameters: [String:String] = [
+                "username": username,
+                "token":    token,
+                "form_id":  "cancelform",
+                "source":   "ios"
+            ]
+            
+            parameters["sitting"] = sittingTimeInMinutes == nil ? "" : String(sittingTimeInMinutes!)
+            parameters["walking"] = walkingTimeInMinutes == nil ? "" : String(walkingTimeInMinutes!)
+            
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseString(completionHandler: { (request, response, result) -> Void in
+                if response != nil {
+                    if response!.statusCode >= 200 && response!.statusCode < 300 {
+                        completion?()
+                    } else {
+                        failure?(nil)
+                    }
+                } else {
+                    failure?(nil)
+                }
+            })
+        }
     
     }
     

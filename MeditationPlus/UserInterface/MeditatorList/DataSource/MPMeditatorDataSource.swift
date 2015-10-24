@@ -136,38 +136,38 @@ class MPMeditatorDataSource: NSObject, UITableViewDataSource {
     }
 
     func updateMeditators(newMeditators: [MPMeditator]) {
-        var meditators: [MPMeditator] = [MPMeditator]()
-        let calendar = NSCalendar.currentCalendar()
-        let futureDate = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 5, toDate: NSDate(), options: [])
-        let pastDate = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: -55, toDate: NSDate(), options: [])
+//        var meditators: [MPMeditator] = [MPMeditator]()
+//        let calendar = NSCalendar.currentCalendar()
+//        let futureDate = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 5, toDate: NSDate(), options: [])
+//        let pastDate = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: -55, toDate: NSDate(), options: [])
+//        
+//        let meditator: MPMeditator = MPMeditator()
+//        meditator.username = "Henk"
+//        meditator.start = pastDate
+//        meditator.end   = futureDate
+//        meditator.timeDiff = 60
+//        meditator.walkingMinutes = 1
+//        meditators.append(meditator)
+//        
+//        let meditator1: MPMeditator = MPMeditator()
+//        meditator1.username = "Henk 1"
+//        meditator1.start = pastDate
+//        meditator1.end   = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 9, toDate: NSDate(), options: [])
+//        meditator1.timeDiff = 60
+//        meditator1.walkingMinutes = 1
+//        meditators.append(meditator1)
+//        
+//        let meditator2: MPMeditator = MPMeditator()
+//        meditator2.username = "Henk 2"
+//        meditator2.start = pastDate
+//        meditator2.end   = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 6, toDate: NSDate(), options: [])
+//        meditator2.timeDiff = 61
+//        meditator2.walkingMinutes = 1
+//        meditators.append(meditator2)
+//        
+//        meditators += newMeditators
         
-        let meditator: MPMeditator = MPMeditator()
-        meditator.username = "Henk"
-        meditator.start = pastDate
-        meditator.end   = futureDate
-        meditator.timeDiff = 60
-        meditator.walkingMinutes = 1
-        meditators.append(meditator)
-        
-        let meditator1: MPMeditator = MPMeditator()
-        meditator1.username = "Henk 1"
-        meditator1.start = pastDate
-        meditator1.end   = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 9, toDate: NSDate(), options: [])
-        meditator1.timeDiff = 60
-        meditator1.walkingMinutes = 1
-        meditators.append(meditator1)
-        
-        let meditator2: MPMeditator = MPMeditator()
-        meditator2.username = "Henk 2"
-        meditator2.start = pastDate
-        meditator2.end   = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 6, toDate: NSDate(), options: [])
-        meditator2.timeDiff = 61
-        meditator2.walkingMinutes = 1
-        meditators.append(meditator2)
-        
-        meditators += newMeditators
-        
-        cache = MPMeditatorsResultsCache(initialMeditators: meditators)
+        cache = MPMeditatorsResultsCache(initialMeditators: newMeditators)
     }
     
     func checkMeditatorProgress(tableView: UITableView)
