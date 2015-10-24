@@ -26,7 +26,7 @@
                             <rect key="frame" x="20" y="20" width="330" height="627"/>
                             <subviews>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Username" adjustsFontSizeToFit="NO" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="xZC-ar-pyD">
-                                    <rect key="frame" x="55.5" y="160" width="224" height="30"/>
+                                    <rect key="frame" x="55" y="160" width="224" height="30"/>
                                     <animations/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
@@ -59,17 +59,39 @@
                                         <action selector="didPressLoginButton:" destination="-1" eventType="touchUpInside" id="HCn-Ne-Qt2"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="B1g-QI-HVg">
+                                    <rect key="frame" x="142.5" y="577.5" width="50" height="29.5"/>
+                                    <animations/>
+                                    <state key="normal">
+                                        <attributedString key="attributedTitle">
+                                            <fragment content="register">
+                                                <attributes>
+                                                    <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <font key="NSFont" size="15" name="HelveticaNeue"/>
+                                                    <integer key="NSUnderline" value="1"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                    </state>
+                                    <connections>
+                                        <action selector="didPressRegisterAccount:" destination="-1" eventType="touchUpInside" id="5U3-Eo-2aJ"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <animations/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <gestureRecognizers/>
                             <constraints>
+                                <constraint firstAttribute="trailing" secondItem="B1g-QI-HVg" secondAttribute="trailing" constant="8" id="59I-5C-MR3"/>
+                                <constraint firstItem="B1g-QI-HVg" firstAttribute="centerX" secondItem="Ogy-ai-Efb" secondAttribute="centerX" id="7sr-OC-tsz"/>
+                                <constraint firstAttribute="bottom" secondItem="B1g-QI-HVg" secondAttribute="bottom" constant="20" id="96V-r1-Xas"/>
                                 <constraint firstItem="JZ3-FJ-Jvk" firstAttribute="centerX" secondItem="Ogy-ai-Efb" secondAttribute="centerX" id="B01-3M-upm"/>
                                 <constraint firstItem="cBF-Dk-Wws" firstAttribute="width" secondItem="xZC-ar-pyD" secondAttribute="width" id="Do4-7s-yTG"/>
                                 <constraint firstItem="cBF-Dk-Wws" firstAttribute="top" secondItem="xZC-ar-pyD" secondAttribute="bottom" constant="8" id="E2j-h9-OzE"/>
                                 <constraint firstItem="xZC-ar-pyD" firstAttribute="top" secondItem="Ogy-ai-Efb" secondAttribute="top" constant="160" id="ElZ-yb-JGr"/>
                                 <constraint firstItem="JZ3-FJ-Jvk" firstAttribute="width" secondItem="cBF-Dk-Wws" secondAttribute="width" id="N8G-gi-CTi"/>
                                 <constraint firstAttribute="width" constant="330" id="OwG-sA-Dky"/>
+                                <constraint firstAttribute="bottom" secondItem="B1g-QI-HVg" secondAttribute="bottom" constant="8" id="T2d-0w-ZiY"/>
                                 <constraint firstItem="cBF-Dk-Wws" firstAttribute="centerX" secondItem="Ogy-ai-Efb" secondAttribute="centerX" id="mCX-Iy-ffp"/>
                                 <constraint firstItem="xZC-ar-pyD" firstAttribute="centerX" secondItem="Ogy-ai-Efb" secondAttribute="centerX" id="nx2-2M-Heo"/>
                                 <constraint firstItem="JZ3-FJ-Jvk" firstAttribute="top" secondItem="cBF-Dk-Wws" secondAttribute="bottom" constant="8" id="oIA-mE-eXC"/>
@@ -79,6 +101,9 @@
                                     <exclude reference="nx2-2M-Heo"/>
                                     <exclude reference="mCX-Iy-ffp"/>
                                     <exclude reference="B01-3M-upm"/>
+                                    <exclude reference="59I-5C-MR3"/>
+                                    <exclude reference="7sr-OC-tsz"/>
+                                    <exclude reference="T2d-0w-ZiY"/>
                                 </mask>
                             </variation>
                             <connections>
@@ -109,6 +134,7 @@
                 <constraint firstItem="qsL-dz-6iq" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="-40" id="pTJ-Ts-w4c"/>
                 <constraint firstAttribute="bottom" secondItem="2BC-q7-4n0" secondAttribute="bottom" id="spO-rj-v0O"/>
                 <constraint firstItem="2BC-q7-4n0" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="t2h-uT-174"/>
+                <constraint firstItem="B1g-QI-HVg" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="vD0-6p-Hcc"/>
                 <constraint firstAttribute="trailing" secondItem="2BC-q7-4n0" secondAttribute="trailing" id="xBu-S8-S5x"/>
                 <constraint firstAttribute="trailing" secondItem="qsL-dz-6iq" secondAttribute="trailing" constant="-40" id="yi5-wt-r6k"/>
             </constraints>

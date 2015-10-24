@@ -14,6 +14,12 @@ class MPSplashViewController: UIViewController {
     
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
+    @IBAction func didPressRegisterAccount(sender: UIButton) {
+        let websiteURL = NSURL(string: "http://meditation.sirimangalo.org")!
+        if UIApplication.sharedApplication().canOpenURL(websiteURL) {
+            UIApplication.sharedApplication().openURL(websiteURL)
+        }
+    }
     @IBAction func didTapContentView(sender: UITapGestureRecognizer) {
         self.view.endEditing(true)
     }
