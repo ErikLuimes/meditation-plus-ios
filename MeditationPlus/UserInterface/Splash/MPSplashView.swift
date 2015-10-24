@@ -45,11 +45,22 @@ class MPSplashView: UIView {
         self.passwordField.layer.borderColor = UIColor.whiteColor().colorWithAlphaComponent(0.6).CGColor
         self.passwordField.layer.borderWidth = 1
         self.passwordField.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
+        passwordField.leftViewMode = .Always
+        let passwordImageView         = UIImageView(frame: CGRectMake(0, 0, 32, CGRectGetHeight(passwordField.frame)))
+        passwordImageView.image       = UIImage(named: "pass_icon")
+        passwordImageView.contentMode = .Center
+        passwordField.leftView        = passwordImageView
+            
         
         self.usernameField.attributedPlaceholder = NSAttributedString(string:self.usernameField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor.whiteColor().colorWithAlphaComponent(0.6)])
         self.usernameField.layer.borderColor = UIColor.whiteColor().colorWithAlphaComponent(0.6).CGColor
         self.usernameField.layer.borderWidth = 1
         self.usernameField.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.3)
+        usernameField.leftViewMode = .Always
+        let usernameImageView         = UIImageView(frame: CGRectMake(0, 0, 32, CGRectGetHeight(usernameField.frame)))
+        usernameImageView.image       = UIImage(named: "user_icon")
+        usernameImageView.contentMode = .Center
+        usernameField.leftView        = usernameImageView
     }
     
     func transitionToBlurredBackground() {
