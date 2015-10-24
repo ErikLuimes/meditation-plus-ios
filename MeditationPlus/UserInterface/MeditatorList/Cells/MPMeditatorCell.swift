@@ -79,13 +79,16 @@ class MPMeditatorCell: UITableViewCell {
         circlePathTrackLayer.hidden = !displayProgress
         circlePathLayer.hidden      = !displayProgress
         
+        avatarImageView.clipsToBounds = true
+        avatarImageView.layer.borderColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
+        avatarImageView.layer.borderWidth = 1
+        avatarImageView.layer.masksToBounds = true
+        avatarImageView.layer.cornerRadius  = avatarImageView.bounds.size.height / 2.0
+        
         if let imageUrl = meditator.avatar {
             avatarImageView.sd_setImageWithURL(imageUrl)
-            avatarImageView.clipsToBounds = true
-            avatarImageView.layer.borderColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
-            avatarImageView.layer.borderWidth = 1
-            avatarImageView.layer.masksToBounds = true
-            avatarImageView.layer.cornerRadius  = avatarImageView.bounds.size.height / 2.0
+        } else {
+            avatarImageView.image = nil
         }
 
         if displayProgress {
