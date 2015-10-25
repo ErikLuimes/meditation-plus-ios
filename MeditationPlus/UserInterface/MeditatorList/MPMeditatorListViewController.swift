@@ -50,8 +50,9 @@ class MPMeditatorListViewController: UIViewController {
         meditatorView.setSelectionViewHidden(false, animated: true)
         
         meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
-        // Maybe better not on other run loop, just let it wait when main thread is busy
-//        NSRunLoop.mainRunLoop().addTimer(meditationProgressUpdateTimer!, forMode:NSRunLoopCommonModes)
+        
+        meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("walkingMeditationTimeId"), inComponent: 0, animated: true)
+        meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("sittingMeditationTimeId"), inComponent: 2, animated: true)
         
         meditatorManager.meditatorList { (meditators) -> Void in
             self.meditatorDataSource.updateMeditators(meditators)
@@ -102,6 +103,9 @@ class MPMeditatorListViewController: UIViewController {
             let selectedWalkingMeditationTime = meditatorView.meditationPickerView.selectedRowInComponent(0)
             let selectedSittingMeditationTime = meditatorView.meditationPickerView.selectedRowInComponent(2)
             var totalTime                     = 0
+            
+            NSUserDefaults.standardUserDefaults().setInteger(selectedWalkingMeditationTime, forKey: "walkingMeditationTimeId")
+            NSUserDefaults.standardUserDefaults().setInteger(selectedSittingMeditationTime, forKey: "sittingMeditationTimeId")
 
             walkingTimeInMinutes = nil
             sittingTimeInMinutes = nil

@@ -45,7 +45,9 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
     
     func setupDefaults() {
         NSUserDefaults.standardUserDefaults().registerDefaults([
-            "rememberPassword": false
+            "rememberPassword":        false,
+            "walkingMeditationTimeId": 0,
+            "sittingMeditationTimeId": 0
         ])
     }
 
