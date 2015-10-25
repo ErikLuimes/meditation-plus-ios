@@ -56,7 +56,9 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
     {}
     
     func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
-    {}
+    {
+        self.audioPlayer.stop()
+    }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
     {

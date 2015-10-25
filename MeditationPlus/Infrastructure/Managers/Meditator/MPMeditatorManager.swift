@@ -57,7 +57,7 @@ class MPMeditatorManager {
 
     func profile(profile: String, completion: (MPProfile -> Void)?)
     {
-        if let _ = self.authenticationManager.loggedInUser?.username, token: String = self.authenticationManager.token?.token {
+        if let _ = self.authenticationManager.loggedInUser?.username {
             let endpoint                    = "http://meditation.sirimangalo.org/profiledb.php"
             let parameters: [String:String] = ["profile": profile]
 

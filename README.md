@@ -5,7 +5,7 @@
 Meditation Plus
 ==========
 
-![Screengrab of application](Images/Screen.jpg)
+![Screengrab of application](Images/ScreenGrab.gif)
 
 Introduction
 -------
