@@ -19,31 +19,31 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wOh-6L-1GJ">
-                    <rect key="frame" x="0.0" y="133" width="375" height="400"/>
+                    <rect key="frame" x="60" y="133" width="335" height="400"/>
                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="MWr-Gf-3G9">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
+                        <rect key="frame" x="0.0" y="0.0" width="335" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mpu-Pv-kSn">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
+                                <rect key="frame" x="0.0" y="0.0" width="335" height="400"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="xfx-Ur-VBg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="335" height="400"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Fhr-85-g8k">
-                                            <rect key="frame" x="8" y="8" width="359" height="384"/>
-                                            <animations/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <color key="tintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="separatorColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </tableView>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="buddha" translatesAutoresizingMaskIntoConstraints="NO" id="x7T-sf-7hr">
-                                            <rect key="frame" x="158.5" y="8" width="333.5" height="384"/>
+                                            <rect key="frame" x="118" y="8" width="333.5" height="384"/>
                                             <animations/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="x7T-sf-7hr" secondAttribute="height" multiplier="277:319" id="Ifx-R6-b2j"/>
                                             </constraints>
                                         </imageView>
+                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Fhr-85-g8k">
+                                            <rect key="frame" x="8" y="8" width="319" height="384"/>
+                                            <animations/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <color key="tintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="separatorColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableView>
                                     </subviews>
                                     <animations/>
                                     <constraints>
@@ -77,8 +77,8 @@
             <animations/>
             <constraints>
                 <constraint firstItem="wOh-6L-1GJ" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="9rM-g5-Fa0"/>
-                <constraint firstAttribute="trailing" secondItem="wOh-6L-1GJ" secondAttribute="trailing" id="DNm-kY-wev"/>
-                <constraint firstItem="wOh-6L-1GJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="gLL-6T-GXX"/>
+                <constraint firstAttribute="trailing" secondItem="wOh-6L-1GJ" secondAttribute="trailing" constant="-20" id="DNm-kY-wev"/>
+                <constraint firstItem="wOh-6L-1GJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="60" id="gLL-6T-GXX"/>
                 <constraint firstItem="wOh-6L-1GJ" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="0.6" id="hqq-pS-b95"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
