@@ -35,13 +35,15 @@ struct MPToken:
     Mappable
 {
     var token: String?
-    
+
     let service = "MeditationPlus"
     let account = "AccountToken"
-    
+
     var data: [String: AnyObject] {
         return ["token": token != nil ? token! : ""]
     }
+
+    // MARK: Mappable
     
     init?(_ map: Map) {
         mapping(map)
