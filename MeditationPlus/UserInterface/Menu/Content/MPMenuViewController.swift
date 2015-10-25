@@ -56,7 +56,7 @@ class MPMenuViewController: UIViewController, UITableViewDelegate
         var sections: [MPTableViewSection<MPMenuItem>] = [MPTableViewSection<MPMenuItem>]()
 
         let toolsSection = MPTableViewSection<MPMenuItem>(title: "Tools", items: [
-                MPMenuItem.Meditators,
+                MPMenuItem.Home,
         ])
 
         let informationSection = MPTableViewSection<MPMenuItem>(title: "Misc", items: [
@@ -75,10 +75,13 @@ class MPMenuViewController: UIViewController, UITableViewDelegate
     {
         if let menuItem = self.menuDataSource.itemForIndexPath(indexPath) {
             switch menuItem {
-                case .Meditators:
-                    self.drawerNavigationHandler?(MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil), true)
+                case .Home:
+                    self.drawerNavigationHandler?(MPTabBarController(), true)
 
                 case .Logout:
+                    if MPMeditationTimer.sharedInstance.state != .Stopped {
+                        MPMeditationTimer.sharedInstance.cancelTimer()
+                    }
                     self.drawerNavigationHandler?(MPSplashViewController(nibName: "MPSplashViewController", bundle: nil), false)
                 default:
                     NSLog("default")

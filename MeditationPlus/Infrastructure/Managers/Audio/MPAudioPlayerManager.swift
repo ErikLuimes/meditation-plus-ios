@@ -25,6 +25,7 @@
 
 import Foundation
 import AVFoundation
+import AudioToolbox
 
 class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
 {
@@ -35,6 +36,9 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
     private let sampleUrl = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
 
     private override init() {
+        try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+        try! AVAudioSession.sharedInstance().setActive(true)
+        
         self.audioPlayer = try? AVAudioPlayer(contentsOfURL: self.sampleUrl)
         self.audioPlayer.prepareToPlay()
     }
@@ -49,6 +53,9 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+    {}
+    
+    func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
     {}
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)

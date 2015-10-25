@@ -3,15 +3,35 @@
 //  MeditationPlus
 //
 //  Created by Erik Luimes on 12/09/15.
-//  Copyright (c) 2015 Maya Interactive. All rights reserved.
+//  Copyright (c) 2015 Maya Interactive.
 //
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
 import UIKit
 import QuartzCore
 import SDWebImage
 
 class MPMeditatorCell: UITableViewCell {
-
+    private var meditator: MPMeditator?
+    
+    private var displayProgress: Bool = false
+    
     @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var avatarImageView: UIImageView!
@@ -33,23 +53,24 @@ class MPMeditatorCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.circlePathTrackLayer.frame       = self.avatarImageView.bounds
-        self.circlePathTrackLayer.lineWidth   = 12
-        self.circlePathTrackLayer.strokeColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
-        self.circlePathTrackLayer.fillColor   = UIColor.clearColor().CGColor
-        self.circlePathTrackLayer.path        = UIBezierPath(ovalInRect: self.avatarImageView.bounds).CGPath
-        self.circlePathTrackLayer.strokeEnd   = 1
-        self.avatarImageView.layer.addSublayer(circlePathTrackLayer)
+        circlePathTrackLayer.hidden      = true
+        circlePathTrackLayer.frame       = avatarImageView.bounds
+        circlePathTrackLayer.lineWidth   = 12
+        circlePathTrackLayer.strokeColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
+        circlePathTrackLayer.fillColor   = UIColor.clearColor().CGColor
+        circlePathTrackLayer.path        = UIBezierPath(ovalInRect: avatarImageView.bounds).CGPath
+        circlePathTrackLayer.strokeEnd   = 1
+        avatarImageView.layer.addSublayer(circlePathTrackLayer)
 
-        var pathRect = CGRectInset(self.avatarImageView.bounds, 4, 4)
-        self.circlePathLayer.frame       = self.avatarImageView.bounds
-        self.circlePathLayer.lineWidth   = 10
-        self.circlePathLayer.strokeColor = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
-        self.circlePathLayer.fillColor   = UIColor.clearColor().CGColor
-        self.circlePathLayer.path        = UIBezierPath(ovalInRect: self.avatarImageView.bounds).CGPath
-        self.circlePathLayer.transform   = CATransform3DMakeRotation(CGFloat(-M_PI_2), 0, 0, 1)
-        self.circlePathLayer.strokeEnd   = 0
-        self.avatarImageView.layer.addSublayer(circlePathLayer)
+        circlePathLayer.hidden      = true
+        circlePathLayer.frame       = avatarImageView.bounds
+        circlePathLayer.lineWidth   = 10
+        circlePathLayer.strokeColor = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
+        circlePathLayer.fillColor   = UIColor.clearColor().CGColor
+        circlePathLayer.path        = UIBezierPath(ovalInRect: avatarImageView.bounds).CGPath
+        circlePathLayer.transform   = CATransform3DMakeRotation(CGFloat(-M_PI_2), 0, 0, 1)
+        circlePathLayer.strokeEnd   = 0
+        avatarImageView.layer.addSublayer(circlePathLayer)
     }
     
     override func setSelected(selected: Bool, animated: Bool) {
@@ -58,26 +79,47 @@ class MPMeditatorCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func configureWithMeditator(meditator: MPMeditator){
+    override func prepareForReuse() {
+        meditator       = nil
+        displayProgress = false
+        
+        circlePathTrackLayer.hidden = true
+        circlePathLayer.hidden      = true
+        
+        imageView?.image = nil
+    }
+    
+    func configureWithMeditator(meditator: MPMeditator, displayProgress: Bool){
+        self.displayProgress = displayProgress
+        self.meditator       = meditator
+        
+        circlePathTrackLayer.hidden = !displayProgress
+        circlePathLayer.hidden      = !displayProgress
+        
+        avatarImageView.clipsToBounds = true
+        avatarImageView.layer.borderColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
+        avatarImageView.layer.borderWidth = 1
+        avatarImageView.layer.masksToBounds = true
+        avatarImageView.layer.cornerRadius  = avatarImageView.bounds.size.height / 2.0
+        
         if let imageUrl = meditator.avatar {
-            self.avatarImageView.sd_setImageWithURL(imageUrl)
-            self.avatarImageView.clipsToBounds = true
-            self.avatarImageView.layer.borderColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
-            self.avatarImageView.layer.borderWidth = 1
-            self.avatarImageView.layer.masksToBounds = true
-            self.avatarImageView.layer.cornerRadius  = self.avatarImageView.bounds.size.height / 2.0
+            avatarImageView.sd_setImageWithURL(imageUrl)
+        } else {
+            avatarImageView.image = nil
         }
 
-        let strokeAnim            = CABasicAnimation(keyPath:"strokeEnd")
-        strokeAnim.duration       = 0.75
-        strokeAnim.fromValue      = self.circlePathLayer.strokeEnd
-        strokeAnim.toValue        = meditator.normalizedProgress
-        strokeAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        
-        self.circlePathLayer.addAnimation(strokeAnim, forKey: "strokeEnd")
-        self.circlePathLayer.strokeEnd = CGFloat(meditator.normalizedProgress)
+        if displayProgress {
+            let strokeAnim            = CABasicAnimation(keyPath:"strokeEnd")
+            strokeAnim.duration       = 0.75
+            strokeAnim.fromValue      = circlePathLayer.strokeEnd
+            strokeAnim.toValue        = meditator.normalizedProgress
+            strokeAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            
+            circlePathLayer.addAnimation(strokeAnim, forKey: "strokeEnd")
+            circlePathLayer.strokeEnd = CGFloat(meditator.normalizedProgress)
+        }
 
-        self.nameLabel?.text = meditator.username
+        nameLabel?.text = meditator.username
         
         var meditations: [String] = [String]()
         
@@ -93,7 +135,14 @@ class MPMeditatorCell: UITableViewCell {
             meditations.append("anumodana \(anumodanaMinutes)m")
         }
         
-        self.meditationDescription.text = meditations.joinWithSeparator(", ")
+        meditationDescription.text = meditations.joinWithSeparator(", ")
+    }
+    
+    func updateProgressIndicatorIfNeeded()
+    {
+        if displayProgress {
+            circlePathLayer.strokeEnd = CGFloat(meditator?.normalizedProgress ?? 0.0)
+        }
     }
     
     override func layoutSubviews() {

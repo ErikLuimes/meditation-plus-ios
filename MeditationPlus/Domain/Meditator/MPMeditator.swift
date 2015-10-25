@@ -26,22 +26,7 @@
 import Foundation
 import ObjectMapper
 
-/*
-		"username": "Tim",
-		"avatar": "http:\/\/www.gravatar.com\/avatar\/10c416f030a8333ed4d149db6a1d1b2c?d=wavatar&s=140",
-		"start": "1442061512",
-		"end": "1442065112",
-		"walking": "30",
-		"sitting": "30",
-		"country": "US",
-		"type": null,
-		"sid": "11898",
-		"anumodana": "0",
-		"anu_me": "0",
-		"can_edit": "false",
-		"me": "false"
-*/
-class MPMeditator: Mappable {
+class MPMeditator: NSObject, Mappable {
     var username:         String = ""
     var avatar:           NSURL?
     var start:            NSDate?
@@ -53,15 +38,17 @@ class MPMeditator: Mappable {
 	var country:          String?
 	var me:               Bool?
 
+
+    override init() {
+       super.init()
+    }
+
     // MARK: Mappable
 
-    
     required init?(_ map: Map) {
+        super.init()
         self.mapping(map)
     }
-//    class func newInstance(map: Map) -> Mappable? {
-//        return MPMeditator()
-//    }
 
 	func mapping(map: Map) {
 		self.username         <- map["username"]

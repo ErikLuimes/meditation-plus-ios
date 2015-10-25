@@ -3,14 +3,29 @@
 //  MeditationPlus
 //
 //  Created by Erik Luimes on 12/09/15.
-//  Copyright (c) 2015 Maya Interactive. All rights reserved.
+//  Copyright (c) 2015 Maya Interactive.
 //
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
 import UIKit
 
 class MPMeditatorView: UIView {
-    private var confirmationEffectViewHeight: CGFloat = 32
-    
     private var selectionViewHidden = true
     
     @IBOutlet weak var tableView: UITableView!
@@ -29,48 +44,55 @@ class MPMeditatorView: UIView {
     
     @IBOutlet weak var meditationTimerLabel: UILabel!
     
-    @IBOutlet weak var selectionViewTopConstraint: NSLayoutConstraint! {
-        didSet {
-            self.originalSelectionViewTopConstant = -self.selectionView.frame.size.height + self.confirmationEffectViewHeight
-            self.selectionViewTopConstraint.constant = self.originalSelectionViewTopConstant
-        }
-    }
+    @IBOutlet weak var preparationProgressView: UIProgressView!
+    
+    @IBOutlet weak var selectionViewTopConstraint: NSLayoutConstraint!
     
     var isSelectionViewHidden: Bool {
-        return self.selectionViewHidden
+        return selectionViewHidden
     }
     
-    var originalSelectionViewTopConstant: CGFloat = 0
+    var visibleSelectionViewTopConstant: CGFloat = 0
+    var hiddenSelectionViewTopConstant: CGFloat = 0
     
     var refreshControl: UIRefreshControl!
 
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        self.tableView.registerNib(UINib(nibName: "MPMeditatorCell", bundle: nil), forCellReuseIdentifier: MPMeditatorDataSource.MPMeditatorCellIdentifier)
-        self.tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(self.actionView.frame), 0.0, 15.0, 0.0)
+        tableView.registerNib(UINib(nibName: "MPMeditatorCell", bundle: nil), forCellReuseIdentifier: MPMeditatorDataSource.MPMeditatorCellIdentifier)
+        tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 50, 0.0)
+        tableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 50, 0.0)
         
-//        self.profileImageView.setImageWithURL(NSURL(string: "http://3.bp.blogspot.com/_HtW_SPtpj0c/TLFVC8kb3yI/AAAAAAAAAGM/AAzGYbO6gP4/s1600/Buddha%5B1%5D.jpg")!)
-        self.profileImageView.setImageWithURL(NSURL(string: "http://www.crystalinks.com/BuddhaSitting.jpg")!)
-        self.profileImageView.clipsToBounds       = true
-        self.profileImageView.layer.borderColor   = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
-        self.profileImageView.layer.borderWidth   = 5
-        self.profileImageView.layer.masksToBounds = true
+//        profileImageView.setImageWithURL(NSURL(string: "http://3.bp.blogspot.com/_HtW_SPtpj0c/TLFVC8kb3yI/AAAAAAAAAGM/AAzGYbO6gP4/s1600/Buddha%5B1%5D.jpg")!)
+        profileImageView.sd_setImageWithURL(NSURL(string: "http://www.gravatar.com/avatar/411e1a8ebe2ec009e6c652ff6d030cfc?d=mm&s=100")!)
+//        profileImageView.sd_setImageWithURL(NSURL(string: "http://www.crystalinks.com/BuddhaSitting.jpg")!)
+        profileImageView.clipsToBounds       = true
+        profileImageView.layer.borderColor   = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
+        profileImageView.layer.borderWidth   = 5
+        profileImageView.layer.masksToBounds = true
 
+        startButton.layer.borderColor = UIColor.orangeColor().CGColor
         
-        self.refreshControl = UIRefreshControl()
-        self.tableView.addSubview(self.refreshControl)
+        refreshControl = UIRefreshControl()
+        tableView.addSubview(refreshControl)
+        
+        visibleSelectionViewTopConstant = selectionViewTopConstraint.constant
+        hiddenSelectionViewTopConstant  = -CGRectGetMinY(confirmationEffectView.frame)
     }
 
     func setSelectionViewHidden(hidden: Bool, animated: Bool) {
-        self.startButton.setTitle(hidden ? "stop" : "start", forState: UIControlState.Normal)
-        self.selectionViewHidden = hidden
+        selectionViewHidden = hidden
+        startButton.setTitle(hidden ? "Stop" : "Start", forState: UIControlState.Normal)
         
-        let duration       = animated ? 0.5 : 0.0
-        let curConstant    = self.selectionViewTopConstraint.constant
-        let downedConstant = self.confirmationEffectViewHeight - 20 - self.confirmationEffectViewHeight
+        if !hidden {
+            meditationTimerLabel.text = "00:00:00"
+            preparationProgressView.setProgress(1.0, animated: true)
+        }
         
-        self.selectionViewTopConstraint.constant = hidden ? self.originalSelectionViewTopConstant : downedConstant
+        let duration: NSTimeInterval = animated ? 0.5 : 0.0
+        
+        selectionViewTopConstraint.constant = hidden ? hiddenSelectionViewTopConstant : visibleSelectionViewTopConstant
         
         UIView.animateWithDuration(duration, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 9.8, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
             self.layoutIfNeeded()
@@ -80,7 +102,6 @@ class MPMeditatorView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.profileImageView.layer.cornerRadius  = self.profileImageView.bounds.size.height / 2.0
+        profileImageView.layer.cornerRadius  = profileImageView.bounds.size.height / 2.0
     }
-    
 }

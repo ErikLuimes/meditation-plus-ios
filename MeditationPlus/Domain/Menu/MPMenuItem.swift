@@ -27,7 +27,7 @@ import Foundation
 
 enum MPMenuItem: Int
 {
-    case Meditators
+    case Home
     case Chat
     case Videos
     case Settings
@@ -36,7 +36,7 @@ enum MPMenuItem: Int
 
     var title: String {
         switch self {
-            case .Meditators: return "Meditators"
+            case .Home:       return "Home"
             case .Chat:       return "Chat"
             case .Videos:     return "Videos"
             case .Settings:   return "Settings"

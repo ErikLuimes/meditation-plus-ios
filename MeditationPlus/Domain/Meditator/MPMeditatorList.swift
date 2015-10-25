@@ -29,6 +29,8 @@ import ObjectMapper
 class MPMeditatorList: Mappable {
     var meditators: [MPMeditator]?
 
+    // MARK: Mappable
+
     required init?(_ map: Map) {
         self.mapping(map)
     }
