@@ -49,15 +49,9 @@ class MPMeditatorListViewController: UIViewController {
 
         meditatorView.setSelectionViewHidden(false, animated: true)
         
-        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
         
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("walkingMeditationTimeId"), inComponent: 0, animated: true)
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("sittingMeditationTimeId"), inComponent: 2, animated: true)
-        
-        meditatorManager.meditatorList { (meditators) -> Void in
-            self.meditatorDataSource.updateMeditators(meditators)
-            self.meditatorView.tableView.reloadData()
-        }
     }
     
     func refreshMeditators(refreshControl: UIRefreshControl) {
@@ -68,23 +62,23 @@ class MPMeditatorListViewController: UIViewController {
         }
     }
     
-//    override func viewWillAppear(animated: Bool) {
-//        super.viewWillAppear(animated)
-//        
-//        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
-//
-//        meditatorManager.meditatorList { (meditators) -> Void in
-//            self.meditatorDataSource.updateMeditators(meditators)
-//            self.meditatorView.tableView.reloadData()
-//        }
-//    }
-//    
-//    override func viewWillDisappear(animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        
-//        meditationProgressUpdateTimer?.invalidate()
-//        meditationProgressUpdateTimer = nil
-//    }
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
+
+        meditatorManager.meditatorList { (meditators) -> Void in
+            self.meditatorDataSource.updateMeditators(meditators)
+            self.meditatorView.tableView.reloadData()
+        }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        meditationProgressUpdateTimer?.invalidate()
+        meditationProgressUpdateTimer = nil
+    }
     
     func meditationProgressTimerTick()
     {
