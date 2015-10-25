@@ -51,7 +51,11 @@ class MTAuthenticationManager {
         let endpoint   = "http://meditation.sirimangalo.org/post.php"
         let parameters = ["username": username, "password": password, "submit": "Login", "source": "ios"]
         
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+
         Alamofire.request(.POST, endpoint, parameters: parameters).responseObject { (response: MPToken?, error: ErrorType?) in
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+
             if let _ = response?.token {
                 self.loggedInUser = MPUser(username: username, password: self.rememberPassword ? password : nil)
                 do {
