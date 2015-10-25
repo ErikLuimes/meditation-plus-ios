@@ -28,9 +28,12 @@ class MPQuoteView: UIView
 
     @IBOutlet weak var cite: UILabel!
     
+    @IBOutlet weak var contentWidth: NSLayoutConstraint!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+    
+        contentWidth.constant = UIScreen.mainScreen().bounds.size.width - 30
         quoteView.alpha = 0
         cite.alpha      = 0
     }

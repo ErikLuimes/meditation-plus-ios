@@ -31,7 +31,7 @@
                                 <constraint firstAttribute="width" secondItem="RGv-5p-IDW" secondAttribute="height" multiplier="1:1" id="MW0-N3-zXc"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="27" translatesAutoresizingMaskIntoConstraints="NO" id="ZFq-S9-nFp">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="ZFq-S9-nFp">
                             <rect key="frame" x="173" y="85.5" width="170" height="37.5"/>
                             <animations/>
                             <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="32"/>
@@ -52,7 +52,7 @@
                         <constraint firstItem="ZFq-S9-nFp" firstAttribute="leading" secondItem="RGv-5p-IDW" secondAttribute="trailing" constant="32" id="66h-72-dLq"/>
                         <constraint firstAttribute="trailing" secondItem="ZFq-S9-nFp" secondAttribute="trailing" constant="32" id="BRs-g9-112"/>
                         <constraint firstItem="XLh-Jh-mOR" firstAttribute="top" secondItem="ZFq-S9-nFp" secondAttribute="bottom" id="EU9-ez-tzH"/>
-                        <constraint firstAttribute="width" secondItem="cxL-y1-pQn" secondAttribute="height" multiplier="375:227" constant="73" id="GiA-Uz-PKa"/>
+                        <constraint firstAttribute="height" constant="183" id="Vxz-s0-aEQ"/>
                         <constraint firstItem="XLh-Jh-mOR" firstAttribute="leading" secondItem="ZFq-S9-nFp" secondAttribute="leading" id="YLd-Fu-VTh"/>
                         <constraint firstAttribute="bottom" secondItem="RGv-5p-IDW" secondAttribute="bottom" constant="15" id="frd-hw-r5n"/>
                         <constraint firstItem="RGv-5p-IDW" firstAttribute="top" secondItem="cxL-y1-pQn" secondAttribute="top" constant="42" id="hfq-oG-KJ5"/>
