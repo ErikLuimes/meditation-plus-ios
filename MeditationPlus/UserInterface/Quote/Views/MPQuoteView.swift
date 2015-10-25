@@ -29,8 +29,17 @@ class MPQuoteView: UIView
     @IBOutlet weak var cite: UILabel!
     
     func configureWithQuote(quote: MPQuote) {
-        quoteView.text = quote.quote
-        cite.text      = quote.cite
+        if let quote = quote.quote {
+            let attributedOptions : [String: AnyObject] = [
+                NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+                NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
+            ]
+            
+            
+            quoteView.attributedText = try? NSAttributedString(data: quote.dataUsingEncoding(NSUTF8StringEncoding)!, options: attributedOptions, documentAttributes: nil)
+        }
+        
+        cite.text = quote.cite
     }
 }
 
