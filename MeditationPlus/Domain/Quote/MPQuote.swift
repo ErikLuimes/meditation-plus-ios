@@ -31,6 +31,8 @@ class MPQuote: Mappable
     var quote: String?
     var cite: String?
 
+    // MARK: Mappable
+
     required init?(_ map: Map) {
         mapping(map)
     }
