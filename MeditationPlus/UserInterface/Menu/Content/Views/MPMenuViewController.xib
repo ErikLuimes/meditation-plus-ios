@@ -17,54 +17,41 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e5s-6J-eYm">
-                    <rect key="frame" x="40" y="133.5" width="350" height="400"/>
+                    <rect key="frame" x="40" y="133" width="350" height="400"/>
                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="2Ub-F3-k3L">
                         <rect key="frame" x="0.0" y="0.0" width="350" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R4r-Ie-Keo">
-                                <rect key="frame" x="-60" y="-133.5" width="995" height="667"/>
+                                <rect key="frame" x="-60" y="-133" width="995" height="667"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="voX-Lk-jzG">
                                     <rect key="frame" x="0.0" y="0.0" width="995" height="667"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ro0-dt-p4Z" userLabel="Menu Content">
-                                            <rect key="frame" x="80" y="192" width="200" height="283"/>
+                                            <rect key="frame" x="80" y="153" width="310" height="360"/>
                                             <subviews>
-                                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3nI-xm-ls8">
-                                                    <rect key="frame" x="-16" y="0.0" width="232" height="283"/>
+                                                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3nI-xm-ls8">
+                                                    <rect key="frame" x="-16" y="0.0" width="232" height="627"/>
                                                     <animations/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <color key="separatorColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                                     <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </tableView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1eD-e6-znF">
-                                                    <rect key="frame" x="58" y="0.0" width="292" height="283"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="buddha" translatesAutoresizingMaskIntoConstraints="NO" id="1eD-e6-znF">
+                                                    <rect key="frame" x="58" y="20" width="277" height="320"/>
                                                     <animations/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="292" id="8Ww-8T-aOw"/>
-                                                    </constraints>
                                                 </imageView>
                                             </subviews>
                                             <animations/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="200" id="0Ay-eJ-D4k"/>
-                                                <constraint firstItem="1eD-e6-znF" firstAttribute="leading" secondItem="ro0-dt-p4Z" secondAttribute="leading" constant="58" id="KdQ-mC-wso"/>
-                                                <constraint firstAttribute="trailing" secondItem="3nI-xm-ls8" secondAttribute="trailing" constant="-16" id="KhD-gJ-HD6"/>
-                                                <constraint firstAttribute="bottom" secondItem="3nI-xm-ls8" secondAttribute="bottom" id="Zbg-CJ-YPn"/>
-                                                <constraint firstItem="3nI-xm-ls8" firstAttribute="leading" secondItem="ro0-dt-p4Z" secondAttribute="leading" constant="-16" id="a7J-oT-gDq"/>
-                                                <constraint firstAttribute="bottom" secondItem="1eD-e6-znF" secondAttribute="bottom" id="gpY-ud-Yrw"/>
-                                                <constraint firstItem="3nI-xm-ls8" firstAttribute="top" secondItem="ro0-dt-p4Z" secondAttribute="top" id="yfd-Nq-vRz"/>
-                                                <constraint firstItem="1eD-e6-znF" firstAttribute="top" secondItem="ro0-dt-p4Z" secondAttribute="top" id="zj5-ST-a2T"/>
+                                                <constraint firstItem="1eD-e6-znF" firstAttribute="top" secondItem="ro0-dt-p4Z" secondAttribute="top" constant="20" id="1K5-0p-wCP"/>
+                                                <constraint firstAttribute="trailing" secondItem="1eD-e6-znF" secondAttribute="trailing" constant="-25" id="4ES-cD-3Qe"/>
+                                                <constraint firstAttribute="bottom" secondItem="1eD-e6-znF" secondAttribute="bottom" constant="20" id="fel-a6-66a"/>
                                             </constraints>
                                         </view>
                                     </subviews>
                                     <animations/>
-                                    <constraints>
-                                        <constraint firstItem="ro0-dt-p4Z" firstAttribute="centerY" secondItem="voX-Lk-jzG" secondAttribute="centerY" id="DJi-ok-lOS"/>
-                                        <constraint firstItem="ro0-dt-p4Z" firstAttribute="top" secondItem="voX-Lk-jzG" secondAttribute="top" constant="192" id="fbi-zL-Rf4"/>
-                                        <constraint firstItem="ro0-dt-p4Z" firstAttribute="leading" secondItem="voX-Lk-jzG" secondAttribute="leading" constant="80" id="ftm-1s-k5c"/>
-                                    </constraints>
                                 </view>
                                 <animations/>
                                 <vibrancyEffect>
@@ -75,6 +62,12 @@
                         <animations/>
                     </view>
                     <animations/>
+                    <constraints>
+                        <constraint firstItem="ro0-dt-p4Z" firstAttribute="top" secondItem="e5s-6J-eYm" secondAttribute="top" constant="20" id="6e6-u9-Pas"/>
+                        <constraint firstItem="ro0-dt-p4Z" firstAttribute="leading" secondItem="e5s-6J-eYm" secondAttribute="leading" constant="20" id="Co4-f2-KFG"/>
+                        <constraint firstAttribute="bottom" secondItem="ro0-dt-p4Z" secondAttribute="bottom" constant="20" id="dD5-I0-XSj"/>
+                        <constraint firstAttribute="trailing" secondItem="ro0-dt-p4Z" secondAttribute="trailing" constant="20" id="sPR-ya-RlM"/>
+                    </constraints>
                     <blurEffect style="light"/>
                 </visualEffectView>
             </subviews>
@@ -93,8 +86,12 @@
             <connections>
                 <outlet property="blurView" destination="e5s-6J-eYm" id="Bwy-jZ-hxK"/>
                 <outlet property="cutoutImageView" destination="1eD-e6-znF" id="P3I-1o-ilc"/>
+                <outlet property="imageViewTrailingMargin" destination="4ES-cD-3Qe" id="KBu-VF-ghF"/>
                 <outlet property="menuTableView" destination="3nI-xm-ls8" id="ZxN-tZ-7zF"/>
             </connections>
         </view>
     </objects>
+    <resources>
+        <image name="buddha" width="277" height="319"/>
+    </resources>
 </document>

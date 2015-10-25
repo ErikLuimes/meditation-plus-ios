@@ -47,23 +47,14 @@ class MPMenuView: UIView
         }
     }
 
+    @IBOutlet weak var imageViewTrailingMargin: NSLayoutConstraint!
     override func awakeFromNib()
     {
         super.awakeFromNib()
 
-        self.menuTableView.tableFooterView = UIView(frame: CGRectZero)
-        self.menuTableView.bounces         = false
-    }
-
-    override func layoutSubviews()
-    {
-        super.layoutSubviews()
-
-        let tableViewHeight        = CGRectGetHeight(self.menuTableView.frame)
-        let tableViewContentHeight = self.menuTableView.contentSize.height
-
-        if tableViewContentHeight < tableViewHeight {
-            self.menuTableView.contentInset = UIEdgeInsetsMake((tableViewHeight - tableViewContentHeight) / 2, 0, 0, 0)
-        }
+        menuTableView.tableFooterView = UIView(frame: CGRectZero)
+        menuTableView.bounces         = false
+        
+        imageViewTrailingMargin.constant = -(CGRectGetWidth(cutoutImageView.frame) / 2.0)
     }
 }
