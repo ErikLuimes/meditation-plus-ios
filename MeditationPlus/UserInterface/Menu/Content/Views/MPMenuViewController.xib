@@ -3,7 +3,8 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MPMenuViewController" customModule="MeditationPlus" customModuleProvider="target">
@@ -16,42 +17,41 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e5s-6J-eYm">
-                    <rect key="frame" x="40" y="133" width="350" height="400"/>
-                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="2Ub-F3-k3L">
-                        <rect key="frame" x="0.0" y="0.0" width="350" height="400"/>
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wOh-6L-1GJ">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="MWr-Gf-3G9">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R4r-Ie-Keo">
-                                <rect key="frame" x="-60" y="-133" width="995" height="667"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="voX-Lk-jzG">
-                                    <rect key="frame" x="0.0" y="0.0" width="995" height="667"/>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mpu-Pv-kSn">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="xfx-Ur-VBg">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ro0-dt-p4Z" userLabel="Menu Content">
-                                            <rect key="frame" x="80" y="153" width="310" height="360"/>
-                                            <subviews>
-                                                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3nI-xm-ls8">
-                                                    <rect key="frame" x="-16" y="0.0" width="232" height="627"/>
-                                                    <animations/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <color key="separatorColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
-                                                    <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                </tableView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="buddha" translatesAutoresizingMaskIntoConstraints="NO" id="1eD-e6-znF">
-                                                    <rect key="frame" x="58" y="20" width="277" height="320"/>
-                                                    <animations/>
-                                                </imageView>
-                                            </subviews>
+                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Fhr-85-g8k">
+                                            <rect key="frame" x="8" y="8" width="359" height="651"/>
+                                            <animations/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="buddha" translatesAutoresizingMaskIntoConstraints="NO" id="x7T-sf-7hr">
+                                            <rect key="frame" x="-73.5" y="8" width="565.5" height="651"/>
                                             <animations/>
                                             <constraints>
-                                                <constraint firstItem="1eD-e6-znF" firstAttribute="top" secondItem="ro0-dt-p4Z" secondAttribute="top" constant="20" id="1K5-0p-wCP"/>
-                                                <constraint firstAttribute="trailing" secondItem="1eD-e6-znF" secondAttribute="trailing" constant="-25" id="4ES-cD-3Qe"/>
-                                                <constraint firstAttribute="bottom" secondItem="1eD-e6-znF" secondAttribute="bottom" constant="20" id="fel-a6-66a"/>
+                                                <constraint firstAttribute="width" secondItem="x7T-sf-7hr" secondAttribute="height" multiplier="277:319" id="Ifx-R6-b2j"/>
                                             </constraints>
-                                        </view>
+                                        </imageView>
                                     </subviews>
                                     <animations/>
+                                    <constraints>
+                                        <constraint firstItem="x7T-sf-7hr" firstAttribute="height" secondItem="Fhr-85-g8k" secondAttribute="height" id="2Om-0R-Q8A"/>
+                                        <constraint firstAttribute="trailing" secondItem="x7T-sf-7hr" secondAttribute="trailing" constant="-117" id="3BN-T9-SdQ"/>
+                                        <constraint firstItem="Fhr-85-g8k" firstAttribute="bottom" secondItem="xfx-Ur-VBg" secondAttribute="bottomMargin" id="8oc-f7-ec7"/>
+                                        <constraint firstItem="Fhr-85-g8k" firstAttribute="leading" secondItem="xfx-Ur-VBg" secondAttribute="leadingMargin" id="GJg-GZ-e9F"/>
+                                        <constraint firstItem="Fhr-85-g8k" firstAttribute="top" secondItem="xfx-Ur-VBg" secondAttribute="topMargin" id="IXe-C0-AeL"/>
+                                        <constraint firstItem="Fhr-85-g8k" firstAttribute="trailing" secondItem="xfx-Ur-VBg" secondAttribute="trailingMargin" id="Zjg-VG-gQa"/>
+                                        <constraint firstItem="x7T-sf-7hr" firstAttribute="centerY" secondItem="Fhr-85-g8k" secondAttribute="centerY" id="wDW-Th-Vng"/>
+                                    </constraints>
                                 </view>
                                 <animations/>
                                 <vibrancyEffect>
@@ -60,34 +60,30 @@
                             </visualEffectView>
                         </subviews>
                         <animations/>
+                        <constraints>
+                            <constraint firstItem="Mpu-Pv-kSn" firstAttribute="leading" secondItem="MWr-Gf-3G9" secondAttribute="leading" id="5xn-0w-A6h"/>
+                            <constraint firstAttribute="trailing" secondItem="Mpu-Pv-kSn" secondAttribute="trailing" id="Ctq-c9-L0d"/>
+                            <constraint firstItem="Mpu-Pv-kSn" firstAttribute="top" secondItem="MWr-Gf-3G9" secondAttribute="top" id="M3x-ID-6AP"/>
+                            <constraint firstAttribute="bottom" secondItem="Mpu-Pv-kSn" secondAttribute="bottom" id="jB1-r3-tFT"/>
+                        </constraints>
                     </view>
                     <animations/>
-                    <constraints>
-                        <constraint firstItem="ro0-dt-p4Z" firstAttribute="top" secondItem="e5s-6J-eYm" secondAttribute="top" constant="20" id="6e6-u9-Pas"/>
-                        <constraint firstItem="ro0-dt-p4Z" firstAttribute="leading" secondItem="e5s-6J-eYm" secondAttribute="leading" constant="20" id="Co4-f2-KFG"/>
-                        <constraint firstAttribute="bottom" secondItem="ro0-dt-p4Z" secondAttribute="bottom" constant="20" id="dD5-I0-XSj"/>
-                        <constraint firstAttribute="trailing" secondItem="ro0-dt-p4Z" secondAttribute="trailing" constant="20" id="sPR-ya-RlM"/>
-                    </constraints>
                     <blurEffect style="light"/>
                 </visualEffectView>
             </subviews>
             <animations/>
             <constraints>
-                <constraint firstItem="R4r-Ie-Keo" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="-20" id="CVO-z8-4qh"/>
-                <constraint firstItem="e5s-6J-eYm" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="FPu-Vm-XcQ"/>
-                <constraint firstAttribute="bottom" secondItem="R4r-Ie-Keo" secondAttribute="bottom" id="R8r-39-sYB"/>
-                <constraint firstItem="e5s-6J-eYm" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="0.6" id="YLT-Ue-qzI"/>
-                <constraint firstAttribute="trailing" secondItem="e5s-6J-eYm" secondAttribute="trailing" constant="-15" id="YlT-7z-glY"/>
-                <constraint firstItem="e5s-6J-eYm" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="40" id="c9w-Ya-hg1"/>
-                <constraint firstAttribute="trailing" secondItem="R4r-Ie-Keo" secondAttribute="trailing" constant="-600" id="tMk-xE-iVg"/>
-                <constraint firstItem="R4r-Ie-Keo" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="xrD-sk-Wwv"/>
+                <constraint firstAttribute="trailing" secondItem="wOh-6L-1GJ" secondAttribute="trailing" id="DNm-kY-wev"/>
+                <constraint firstItem="wOh-6L-1GJ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="NCX-q8-rwB"/>
+                <constraint firstAttribute="bottom" secondItem="wOh-6L-1GJ" secondAttribute="bottom" id="cTe-lh-HMQ"/>
+                <constraint firstItem="wOh-6L-1GJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="gLL-6T-GXX"/>
             </constraints>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
             <connections>
-                <outlet property="blurView" destination="e5s-6J-eYm" id="Bwy-jZ-hxK"/>
-                <outlet property="cutoutImageView" destination="1eD-e6-znF" id="P3I-1o-ilc"/>
-                <outlet property="imageViewTrailingMargin" destination="4ES-cD-3Qe" id="KBu-VF-ghF"/>
-                <outlet property="menuTableView" destination="3nI-xm-ls8" id="ZxN-tZ-7zF"/>
+                <outlet property="blurView" destination="wOh-6L-1GJ" id="f95-gW-tSt"/>
+                <outlet property="cutoutImageView" destination="x7T-sf-7hr" id="PVX-BW-WtG"/>
+                <outlet property="imageViewTrailingMargin" destination="3BN-T9-SdQ" id="vYT-EP-rCX"/>
+                <outlet property="menuTableView" destination="Fhr-85-g8k" id="fn0-K0-2A0"/>
             </connections>
         </view>
     </objects>
