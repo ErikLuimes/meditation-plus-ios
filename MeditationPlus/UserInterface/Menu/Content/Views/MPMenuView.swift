@@ -55,6 +55,6 @@ class MPMenuView: UIView
         menuTableView.tableFooterView = UIView(frame: CGRectZero)
         menuTableView.bounces         = false
         
-//        imageViewTrailingMargin.constant = -(CGRectGetWidth(cutoutImageView.frame) / 2.0)
+        imageViewTrailingMargin.constant = (-CGRectGetWidth(cutoutImageView.frame) / 3.0)
     }
 }

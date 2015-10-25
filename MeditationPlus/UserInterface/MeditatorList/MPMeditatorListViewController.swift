@@ -105,7 +105,6 @@ class MPMeditatorListViewController: UIViewController {
     
     func meditationProgressTimerTick()
     {
-        NSLog("tick")
         meditatorDataSource.checkMeditatorProgress(meditatorView.tableView)
         for cell in meditatorView.tableView.visibleCells where cell is MPMeditatorCell
         {
@@ -220,26 +219,22 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
     {
-        NSLog("start state: \(state.title)")
         if state == MPMeditationState.Preparation {
             meditatorView.setSelectionViewHidden(true, animated: true)
         } else if state == .Meditation {
             meditatorManager.startMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {[weak self] () -> Void in
-                NSLog("Did start")
                 self?.meditatorManager.meditatorList { (meditators) -> Void in
                     self?.meditatorDataSource.updateMeditators(meditators)
                     self?.meditatorView.tableView.reloadData()
                 }
             }, failure: { (error) -> Void in
-                NSLog("Start meditation failed")
+//                NSLog("Start meditation failed")
             })
         }
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
     {
-        NSLog("progress state: \(state.title), progress: \(progress), timeLeft: \(timeLeft)")
-        
         if state == MPMeditationState.Preparation {
             meditatorView.preparationProgressView.setProgress(Float(1.0 - progress), animated: true)
         } else if state == MPMeditationState.Meditation {
@@ -252,8 +247,6 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
     {
-        NSLog("stop state: \(state.title)")
-        
         if state == MPMeditationState.Meditation {
             meditatorView.setSelectionViewHidden(false, animated: true)
         }
@@ -266,13 +259,12 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
         
         meditatorView.setSelectionViewHidden(false, animated: true)
         meditatorManager.cancelMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {[weak self] () -> Void in
-            NSLog("Did cancel")
             self?.meditatorManager.meditatorList { (meditators) -> Void in
                 self?.meditatorDataSource.updateMeditators(meditators)
                 self?.meditatorView.tableView.reloadData()
             }
         }, failure: { (error) -> Void in
-            NSLog("Cancel meditation failed")
+//            NSLog("Cancel meditation failed")
         })
     }
     
