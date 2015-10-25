@@ -1,55 +1,42 @@
 PODS:
-  - Alamofire (2.0.0)
-  - AlamofireObjectMapper (0.9):
-    - Alamofire (= 2.0.0)
+  - Alamofire (2.0.2)
+  - AlamofireObjectMapper (1.0):
+    - Alamofire (~> 2.0.0)
     - ObjectMapper (= 0.17)
   - KGFloatingDrawer (0.2.0)
   - Locksmith (2.0.1)
   - ObjectMapper (0.17)
-  - PageMenu (1.2.8)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
-  - SlackTextViewController (1.7)
   - UIImage+Additions (2.1.0)
 
 DEPENDENCIES:
-  - Alamofire (= 2.0)
-  - AlamofireObjectMapper (= 0.9)
+  - Alamofire (= 2.0.2)
+  - AlamofireObjectMapper (= 1.0)
   - KGFloatingDrawer (from `https://github.com/ErikLuimes/KGFloatingDrawer.git`, tag
     `0.2.0`)
   - Locksmith (= 2.0.1)
-  - ObjectMapper (= 0.17)
-  - PageMenu (from `https://github.com/uacaps/PageMenu.git`, branch `master`)
   - SDWebImage (~> 3.7)
-  - SlackTextViewController (= 1.7)
   - UIImage+Additions (= 2.1.0)
 
 EXTERNAL SOURCES:
   KGFloatingDrawer:
     :git: https://github.com/ErikLuimes/KGFloatingDrawer.git
     :tag: 0.2.0
-  PageMenu:
-    :branch: master
-    :git: https://github.com/uacaps/PageMenu.git
 
 CHECKOUT OPTIONS:
   KGFloatingDrawer:
     :git: https://github.com/ErikLuimes/KGFloatingDrawer.git
     :tag: 0.2.0
-  PageMenu:
-    :commit: 9ed0c136a540ac9f2356a0cc4faddf0987d1af09
-    :git: https://github.com/uacaps/PageMenu.git
 
 SPEC CHECKSUMS:
-  Alamofire: 2f13548b29d25a58ecd91c9225fb51493e2b782b
-  AlamofireObjectMapper: 263915f1960f5a5bf00bdb921ceb5b8673e901d4
+  Alamofire: 8edbab00802a752bb5240cc2abe70e7e881488ad
+  AlamofireObjectMapper: 4f9d766a4742bb69258921723bafc260849f216c
   KGFloatingDrawer: b0c2810954bfb61f4d4dd01b8891d5c23933e368
   Locksmith: 2c7bdc5c3a31a97d748791ad830310b1af4b8549
   ObjectMapper: fa286b7cb5a398f1b0d8d64d0dd33fd1b307022c
-  PageMenu: 703e82e173f54a4626ab88fcdca7703ee52e0cbe
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
-  SlackTextViewController: 57e28248dd38b9753277733544449519842f1ea5
   UIImage+Additions: 6181430b139099649e56171d58a52d6c37d57e42
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0
