@@ -31,18 +31,44 @@ class MPMeditatorManager {
 
     func meditatorList(completion: ([MPMeditator] -> Void)?)
     {
-        if let username: String = self.authenticationManager.loggedInUser?.username, token: String = self.authenticationManager.token?.token {
+        if let username: String = self.authenticationManager.loggedInUser?.username {
             let endpoint                    = "http://meditation.sirimangalo.org/db.php"
-            let parameters: [String:String] = ["username": username, "token": token]
+            let parameters: [String:String] = ["username": username, "last_chat": String(UInt(NSDate().timeIntervalSince1970))]
             
             Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPMeditatorList?, error: ErrorType?) in
                 if let meditators = response?.meditators {
-                    completion?(meditators)
+                    // BG this
+                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+                        for m in meditators {
+                            if let isMe = m.me, avatar = m.avatar where isMe == true {
+                                NSUserDefaults.standardUserDefaults().setURL(avatar, forKey: "avatar")
+                            }
+                        }
+                        
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            completion?(meditators)
+                        })
+                    })
+                    
                 }
             }
         }
     }
-    
+
+    func profile(profile: String, completion: (MPProfile -> Void)?)
+    {
+        if let _ = self.authenticationManager.loggedInUser?.username, token: String = self.authenticationManager.token?.token {
+            let endpoint                    = "http://meditation.sirimangalo.org/profiledb.php"
+            let parameters: [String:String] = ["profile": profile]
+
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPProfile?, error: ErrorType?) in
+                if response != nil {
+                    completion?(response!)
+                }
+            }
+        }
+    }
+
     func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: (() -> Void)? = nil, failure: ((NSError?) -> Void)? = nil) {
         if sittingTimeInMinutes == nil && walkingTimeInMinutes == nil { failure?(nil) }
         
@@ -52,6 +78,7 @@ class MPMeditatorManager {
                 "username": username,
                 "token":    token,
                 "form_id":  "timeform",
+                "last_chat": String(UInt(NSDate().timeIntervalSince1970)),
                 "source":   "ios"
             ]
             
@@ -81,6 +108,7 @@ class MPMeditatorManager {
                 "username": username,
                 "token":    token,
                 "form_id":  "cancelform",
+                "last_chat": String(UInt(NSDate().timeIntervalSince1970)),
                 "source":   "ios"
             ]
             

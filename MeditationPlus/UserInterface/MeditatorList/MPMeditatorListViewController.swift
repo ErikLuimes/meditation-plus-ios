@@ -68,8 +68,7 @@ class MPMeditatorListViewController: UIViewController {
         }
         
         meditatorView.setSelectionViewHidden(false, animated: true)
-        
-        
+
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("walkingMeditationTimeId"), inComponent: 0, animated: true)
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("sittingMeditationTimeId"), inComponent: 2, animated: true)
     }
@@ -87,6 +86,7 @@ class MPMeditatorListViewController: UIViewController {
         
         timer.addDelegate(self)
         meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
+
 
         meditatorManager.meditatorList { (meditators) -> Void in
             self.meditatorDataSource.updateMeditators(meditators)

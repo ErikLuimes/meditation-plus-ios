@@ -39,7 +39,7 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
 
         setupDefaults()
         setupMeditationTimer()
-
+        
         return true
     }
     
@@ -49,6 +49,11 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
             "walkingMeditationTimeId": 0,
             "sittingMeditationTimeId": 0
         ])
+        
+        if (NSUserDefaults.standardUserDefaults().URLForKey("avatar") == nil) {
+            let url = NSURL(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")!
+            NSUserDefaults.standardUserDefaults().setURL(url, forKey: "avatar")
+        }
     }
 
     func setupMeditationTimer() {
