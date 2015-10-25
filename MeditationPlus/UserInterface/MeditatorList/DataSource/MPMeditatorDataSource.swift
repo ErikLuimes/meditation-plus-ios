@@ -36,17 +36,12 @@ struct MPMeditatorsResultsCache {
 
     mutating func insertMeditator(meditator: MPMeditator) -> NSIndexPath {
         let sectionIndex = sectionIndexForMeditator(meditator)
-//        let insertionIndex = sections[sectionIndex].indexOf { task in
-//            let otherTaskDate = task.dueDate
-//            return insertedTaskDate.compare(otherTaskDate) == .OrderedAscending
-//        } ?? sections[sectionIndex].count
         sections[sectionIndex].insert(meditator, atIndex: 0)
 
         return NSIndexPath(forRow: 0, inSection: sectionIndex)
     }
 
     mutating func deleteMeditator(meditator: MPMeditator) -> NSIndexPath? {
-//        let sectionIndex = sectionIndexForMeditator(meditator)
         if let deletedTaskIndex = (sections[0] as [MPMeditator]).indexOf(meditator) {
             sections[0].removeAtIndex(deletedTaskIndex)
             return NSIndexPath(forRow: deletedTaskIndex, inSection: 0)
@@ -54,14 +49,6 @@ struct MPMeditatorsResultsCache {
 
         return nil
     }
-    
-//    func indexPathForMeditator(meditator: MPMeditator) -> NSIndexPath
-//    {
-//        let sectionIndex   = sectionIndexForMeditator(meditator)
-//        let insertionIndex = sections[sectionIndex].indexOf(meditator)
-//        
-//        return NSIndexPath(forRow: insertionIndex!, inSection: sectionIndex)
-//    }
     
     private func sectionIndexForMeditator(meditator: MPMeditator) -> Int {
         return MPMeditatorSectionData(progress: meditator.normalizedProgress).rawValue
