@@ -24,6 +24,8 @@
 // THE SOFTWARE.
 
 import UIKit
+import Fabric
+import Crashlytics
 
 @UIApplicationMain
 class MPAppDelegate: UIResponder, UIApplicationDelegate
@@ -32,6 +34,8 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool
     {
+        Fabric.with([Crashlytics.self])
+
         window                     = UIWindow(frame: UIScreen.mainScreen().bounds)
         window!.rootViewController = MPMenuContainerViewController()
         window!.backgroundColor    = UIColor.whiteColor()
@@ -39,7 +43,7 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
 
         setupDefaults()
         setupMeditationTimer()
-        
+
         return true
     }
     

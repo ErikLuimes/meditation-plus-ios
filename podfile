@@ -9,3 +9,6 @@ pod 'KGFloatingDrawer',        :git => 'https://github.com/ErikLuimes/KGFloating
 pod 'Locksmith',               '2.0.1'
 pod 'UIImage+Additions',       '2.1.0'
 pod 'SDWebImage',              '~>3.7'
+
+pod 'Fabric'
+pod 'Crashlytics'
