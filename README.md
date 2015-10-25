@@ -1,6 +1,6 @@
 
-[License](https://img.shields.io/badge/license-MIT-blue.svg)
-[Platform](https://img.shields.io/badge/platform-iOS-blue.svg)
+![Platform](https://img.shields.io/badge/platform-iOS-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 Meditation Plus
 ==========
