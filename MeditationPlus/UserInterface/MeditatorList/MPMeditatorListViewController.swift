@@ -38,7 +38,6 @@ class MPMeditatorListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        timer.addDelegate(self)
         
         meditatorView.tableView.delegate   = self
         meditatorView.tableView.dataSource = meditatorDataSource
@@ -65,6 +64,7 @@ class MPMeditatorListViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        timer.addDelegate(self)
         meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
 
         meditatorManager.meditatorList { (meditators) -> Void in
@@ -75,6 +75,8 @@ class MPMeditatorListViewController: UIViewController {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        timer.removeDelegate(self)
         
         meditationProgressUpdateTimer?.invalidate()
         meditationProgressUpdateTimer = nil

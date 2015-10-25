@@ -79,6 +79,9 @@ class MPMenuViewController: UIViewController, UITableViewDelegate
                     self.drawerNavigationHandler?(MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil), true)
 
                 case .Logout:
+                    if MPMeditationTimer.sharedInstance.state != .Stopped {
+                        MPMeditationTimer.sharedInstance.cancelTimer()
+                    }
                     self.drawerNavigationHandler?(MPSplashViewController(nibName: "MPSplashViewController", bundle: nil), false)
                 default:
                     NSLog("default")

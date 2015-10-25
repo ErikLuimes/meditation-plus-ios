@@ -1,9 +1,8 @@
 //
-//  MPAppDelegate.swift
+//  MPIdleTimeoutDelegate.swift
 //  MeditationPlus
 //
-//  Created by Erik Luimes on 08/09/15.
-//  Copyright (c) 2015 Maya Interactive
+// Copyright (c) 2015 Maya Interactive
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,36 +22,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import UIKit
+import Foundation
 
-@UIApplicationMain
-class MPAppDelegate: UIResponder, UIApplicationDelegate
-{
-    var window: UIWindow?
-
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool
-    {
-        window                     = UIWindow(frame: UIScreen.mainScreen().bounds)
-        window!.rootViewController = MPMenuContainerViewController()
-        window!.backgroundColor    = UIColor.whiteColor()
-        window!.makeKeyAndVisible()
-
-        setupDefaults()
-        setupMeditationTimer()
-
-        return true
-    }
+class MPIdleTimeoutMeditationTimerDelegate: NSObject, MPMeditationTimerDelegate {
+    static let sharedInstance = MPIdleTimeoutMeditationTimerDelegate()
     
-    func setupDefaults() {
-        NSUserDefaults.standardUserDefaults().registerDefaults([
-            "rememberPassword":        false,
-            "walkingMeditationTimeId": 0,
-            "sittingMeditationTimeId": 0
-        ])
+    // MARK: MPMeditationTimerDelegate
+
+    func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
+    {
+        UIApplication.sharedApplication().idleTimerDisabled = true
     }
 
-    func setupMeditationTimer() {
-        MPMeditationTimer.sharedInstance.addDelegate(MPAudioPlayerManager.sharedInstance)
-        MPMeditationTimer.sharedInstance.addDelegate(MPIdleTimeoutMeditationTimerDelegate.sharedInstance)
+    func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+    {}
+    
+    func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
+    {
+            UIApplication.sharedApplication().idleTimerDisabled = false
+    }
+
+    func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
+    {
+        if state == MPMeditationState.Meditation {
+            UIApplication.sharedApplication().idleTimerDisabled = false
+        }
     }
 }
