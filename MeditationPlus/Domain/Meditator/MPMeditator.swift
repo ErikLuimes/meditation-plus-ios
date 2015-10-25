@@ -68,7 +68,7 @@ class MPMeditator: NSObject, Mappable {
 
     // Meditation progress
     var normalizedProgress: Double {
-        var progress: Double = 0
+        var progress: Double = 1.0
         
         if let meditationTotal = self.timeDiff, meditationEndTime = self.end where meditationTotal > 0 {
             let timeLeft = meditationEndTime.timeIntervalSinceNow
