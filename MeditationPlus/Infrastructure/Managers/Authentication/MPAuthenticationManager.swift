@@ -34,8 +34,18 @@ class MTAuthenticationManager {
         Alamofire.request(.POST, endpoint, parameters: parameters).responseObject { (response: MPToken?, error: ErrorType?) in
             if let _ = response?.token {
                 self.loggedInUser = MPUser(username: username, password: self.rememberPassword ? password : nil)
-                try! self.loggedInUser?.deleteFromSecureStore()
-                try! self.loggedInUser?.createInSecureStore()
+                do {
+                    try self.loggedInUser?.deleteFromSecureStore()
+                } catch {
+                    NSLog("Failed deleting account from secure storage")
+                }
+                
+                do {
+                    try self.loggedInUser?.createInSecureStore()
+                } catch {
+                    NSLog("Failed creating account in secure storage")
+                }
+                
                 self.token = response!
                 completion(self.loggedInUser!)
             } else {

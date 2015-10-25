@@ -46,6 +46,10 @@ class MPMeditatorListViewController: UIViewController {
         meditatorView.meditationPickerView.dataSource = timerDataSource
         meditatorView.meditationPickerView.delegate   = self
 
+        if timer.state != .Stopped {
+            timer.cancelTimer()
+        }
+        
         meditatorView.setSelectionViewHidden(false, animated: true)
         
         
