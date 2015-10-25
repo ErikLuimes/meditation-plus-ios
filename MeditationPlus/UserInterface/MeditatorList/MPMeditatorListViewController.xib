@@ -32,14 +32,14 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="27" translatesAutoresizingMaskIntoConstraints="NO" id="ZFq-S9-nFp">
-                            <rect key="frame" x="173" y="85" width="170" height="38.5"/>
+                            <rect key="frame" x="173" y="85.5" width="170" height="37.5"/>
                             <animations/>
-                            <fontDescription key="fontDescription" type="system" weight="black" pointSize="32"/>
+                            <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="32"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="1" translatesAutoresizingMaskIntoConstraints="NO" id="XLh-Jh-mOR" userLabel="Preparation Progress View">
-                            <rect key="frame" x="173" y="124" width="170" height="2"/>
+                            <rect key="frame" x="173" y="123" width="170" height="2"/>
                             <animations/>
                             <color key="progressTintColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                             <color key="trackTintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -98,7 +98,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h8-iZ-Fyz">
-                                        <rect key="frame" x="150.5" y="5" width="75" height="22"/>
+                                        <rect key="frame" x="150" y="5" width="75" height="22"/>
                                         <animations/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="80" id="keA-m7-JD4"/>
