@@ -28,6 +28,13 @@ class MPQuoteView: UIView
 
     @IBOutlet weak var cite: UILabel!
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        quoteView.alpha = 0
+        cite.alpha      = 0
+    }
+    
     func configureWithQuote(quote: MPQuote) {
         if let quote = quote.quote {
             let attributedOptions : [String: AnyObject] = [
@@ -40,6 +47,11 @@ class MPQuoteView: UIView
         }
         
         cite.text = quote.cite
+        
+        UIView.animateWithDuration(0.3, delay: 0.0, options: .CurveEaseInOut, animations: { () -> Void in
+            self.quoteView.alpha = 1.0
+            self.cite.alpha      = 1.0
+        }, completion: nil)
     }
 }
 
