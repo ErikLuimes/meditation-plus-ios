@@ -3,6 +3,10 @@ PODS:
   - AlamofireObjectMapper (1.0):
     - Alamofire (~> 2.0.0)
     - ObjectMapper (= 0.17)
+  - Crashlytics (3.3.4)
+  - Fabric (1.5.5):
+    - Fabric/Base (= 1.5.5)
+  - Fabric/Base (1.5.5)
   - KGFloatingDrawer (0.2.0)
   - Locksmith (2.0.1)
   - ObjectMapper (0.17)
@@ -14,6 +18,8 @@ PODS:
 DEPENDENCIES:
   - Alamofire (= 2.0.2)
   - AlamofireObjectMapper (= 1.0)
+  - Crashlytics
+  - Fabric
   - KGFloatingDrawer (from `https://github.com/ErikLuimes/KGFloatingDrawer.git`, tag
     `0.2.0`)
   - Locksmith (= 2.0.1)
@@ -33,6 +39,8 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: 8edbab00802a752bb5240cc2abe70e7e881488ad
   AlamofireObjectMapper: 4f9d766a4742bb69258921723bafc260849f216c
+  Crashlytics: 41c082440d2e14da444186fff65e79c0b4b35d4c
+  Fabric: 190bf1a6eb65f7500de1347d027d2e59a7e53db1
   KGFloatingDrawer: b0c2810954bfb61f4d4dd01b8891d5c23933e368
   Locksmith: 2c7bdc5c3a31a97d748791ad830310b1af4b8549
   ObjectMapper: fa286b7cb5a398f1b0d8d64d0dd33fd1b307022c

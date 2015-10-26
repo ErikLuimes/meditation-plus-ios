@@ -43,7 +43,6 @@ class MPMeditatorCell: UITableViewCell {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -71,6 +70,8 @@ class MPMeditatorCell: UITableViewCell {
         circlePathLayer.transform   = CATransform3DMakeRotation(CGFloat(-M_PI_2), 0, 0, 1)
         circlePathLayer.strokeEnd   = 0
         avatarImageView.layer.addSublayer(circlePathLayer)
+        
+        selectionStyle = .None
     }
     
     override func setSelected(selected: Bool, animated: Bool) {

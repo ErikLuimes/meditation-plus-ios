@@ -59,7 +59,7 @@ class MPMeditator: NSObject, Mappable {
         self.country          <- map["country"]
         self.start            <- (map["start"],     MPValueTransform.transformDateEpochString())
         self.end              <- (map["end"],       MPValueTransform.transformDateEpochString())
-        self.me               <- map["me"]
+        self.me               <- (map["me"],        MPValueTransform.transformBoolString())
         
         if let startDate = self.start, endDate: NSDate = self.end {
             self.timeDiff = endDate.timeIntervalSinceDate(startDate)
@@ -68,7 +68,7 @@ class MPMeditator: NSObject, Mappable {
 
     // Meditation progress
     var normalizedProgress: Double {
-        var progress: Double = 0
+        var progress: Double = 1.0
         
         if let meditationTotal = self.timeDiff, meditationEndTime = self.end where meditationTotal > 0 {
             let timeLeft = meditationEndTime.timeIntervalSinceNow

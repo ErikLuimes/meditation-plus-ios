@@ -44,6 +44,30 @@ public class MPValueTransform {
             return nil
         })
     }
+    
+    class public func transformBoolString() -> TransformOf<Bool, String> {
+        return TransformOf<Bool, String>(fromJSON: { (value: String?) -> Bool? in
+            // transform value from String? to Bool?
+            guard let stringValue = value else {
+                return nil
+            }
+            
+            if stringValue == "true" {
+                return true
+            } else if stringValue == "false" {
+                return false
+            } else {
+                return nil
+            }
+        }, toJSON: { (value: Bool?) -> String? in
+            // transform value from Bool? to String?
+            if let someBool: Bool = value {
+                return someBool ? "true" : "false"
+            }
+
+            return ""
+        })
+    }
 
     class public func transformTimeIntervalMinuteString() -> TransformOf<NSTimeInterval, String> {
         return TransformOf<NSTimeInterval, String>(fromJSON: { (value: String?) -> NSTimeInterval? in

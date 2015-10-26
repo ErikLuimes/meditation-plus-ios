@@ -93,6 +93,7 @@
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
             <connections>
                 <outlet property="cite" destination="tYZ-6s-fPa" id="Rf8-f3-vVE"/>
+                <outlet property="contentWidth" destination="Q6w-1j-gLY" id="vb9-qu-Sfc"/>
                 <outlet property="quoteView" destination="Ac2-bz-1af" id="ZfP-D7-2LC"/>
             </connections>
         </view>

@@ -64,9 +64,10 @@ class MPMeditatorView: UIView {
         tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 50, 0.0)
         tableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 50, 0.0)
         
-//        profileImageView.setImageWithURL(NSURL(string: "http://3.bp.blogspot.com/_HtW_SPtpj0c/TLFVC8kb3yI/AAAAAAAAAGM/AAzGYbO6gP4/s1600/Buddha%5B1%5D.jpg")!)
-        profileImageView.sd_setImageWithURL(NSURL(string: "http://www.gravatar.com/avatar/411e1a8ebe2ec009e6c652ff6d030cfc?d=mm&s=100")!)
-//        profileImageView.sd_setImageWithURL(NSURL(string: "http://www.crystalinks.com/BuddhaSitting.jpg")!)
+        if let avatarURL = NSUserDefaults.standardUserDefaults().URLForKey("avatar") {
+            profileImageView.sd_setImageWithURL(avatarURL)
+        }
+        
         profileImageView.clipsToBounds       = true
         profileImageView.layer.borderColor   = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
         profileImageView.layer.borderWidth   = 5

@@ -1,11 +1,11 @@
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)]
-[![Platform](https://img.shields.io/badge/platform-iOS-blue.svg)]
+![Platform](https://img.shields.io/badge/platform-iOS-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 Meditation Plus
 ==========
 
-![Screenshot of Example application](Images/Screen.jpg)
+![Screengrab of application](Images/ScreenGrab.gif)
 
 Introduction
 -------
