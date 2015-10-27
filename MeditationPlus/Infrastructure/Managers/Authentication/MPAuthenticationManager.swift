@@ -46,10 +46,16 @@ class MTAuthenticationManager {
     
     var isLoggedIn: Bool { return self.loggedInUser != nil }
     
-    func loginWithUsername(username: String, password: String,failure: ((NSError?) -> Void)? = nil, completion: (MPUser) -> Void)
+    func loginWithUsername(username: String, password: String,failure: ((error: NSError?, errorString: NSString?) -> Void)? = nil, completion: (MPUser) -> Void)
     {
         let endpoint   = "http://meditation.sirimangalo.org/post.php"
         let parameters = ["username": username, "password": password, "submit": "Login", "source": "ios"]
+        
+        if let cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies {
+            for cookie in cookies {
+                NSHTTPCookieStorage.sharedHTTPCookieStorage().deleteCookie(cookie)
+            }
+        }
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
 
@@ -73,10 +79,12 @@ class MTAuthenticationManager {
                 self.token = response!
                 completion(self.loggedInUser!)
             } else {
-                if let unwrappedError = error {
-                    NSLog("error: \(unwrappedError)")
+                if let errorString = response?.error {
+                    failure?(error: nil, errorString: errorString)
+                    return
                 }
-                failure?(nil)
+                
+                failure?(error: nil, errorString: nil)
             }
         }
     }

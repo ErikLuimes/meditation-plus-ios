@@ -5,3 +5,5 @@
 #import <UIImage_Additions/UIImage+Additions.h>
 
 #import <SDWebImage/SDImageCache.h>
+
+#import <CWStatusBarNotification/CWStatusBarNotification.h>

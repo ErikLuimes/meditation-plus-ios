@@ -1,9 +1,9 @@
 //
-//  MPToken.swift
+//  MPNotificationManager.swift
 //  MeditationPlus
 //
-//  Created by Erik Luimes on 20/09/2015
-//  Copyright (c) 2015 Maya Interactive
+//  Created by Erik Luimes on 28/10/15.
+//  Copyright (c) 2015 Maya Interactive.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,35 +24,16 @@
 // THE SOFTWARE.
 
 import Foundation
-import Locksmith
-import ObjectMapper
+import CWStatusBarNotification
 
-struct MPToken:
-    ReadableSecureStorable,
-    CreateableSecureStorable,
-    DeleteableSecureStorable,
-    GenericPasswordSecureStorable,
-    Mappable
-{
-    var token: String?
-    var error: String?
-    
-    let service = "MeditationPlus"
-    let account = "AccountToken"
-
-    var data: [String: AnyObject] {
-        return ["token": token != nil ? token! : ""]
-    }
-
-    
-    // MARK: Mappable
-    
-    init?(_ map: Map) {
-        mapping(map)
-    }
-    
-    mutating func mapping(map: Map) {
-        token <- map["login_token"]
-        error <- map["error"]
+class MPNotificationManager {
+    class func displayNotification(message: String) {
+        let notification                              = CWStatusBarNotification()
+        notification.notificationStyle                = .NavigationBarNotification
+        notification.notificationLabelBackgroundColor = UIColor.whiteColor()
+        notification.notificationLabelTextColor       = UIColor.blackColor()
+        notification.notificationAnimationInStyle     = .Left
+        notification.notificationAnimationOutStyle    = .Left
+        notification.displayNotificationWithMessage(message, forDuration: 4.0)
     }
 }
