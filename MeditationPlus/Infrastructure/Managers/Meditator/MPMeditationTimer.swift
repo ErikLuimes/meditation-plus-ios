@@ -142,8 +142,8 @@ class MPMeditationTimer: NSObject
 
     // MARK: Timer functions
 
-    func startTimer(meditationTimes: [MPMeditationSession], preparationTime: NSTimeInterval = 0) {
-        self.meditationSessions = meditationTimes.filter({ $0.time > 0})
+    func startTimer(meditationSessions: [MPMeditationSession], preparationTime: NSTimeInterval = 0) {
+        self.meditationSessions = meditationSessions.filter({ $0.time > 0})
         self.totalMeditationTime  = self.meditationSessions!.map({ $0.time }).reduce(0, combine: +)
         self.totalPreparationTime = preparationTime
 
@@ -155,9 +155,11 @@ class MPMeditationTimer: NSObject
     private func stopTimer() {
         meditationTimer?.invalidate()
         
-        state                    = .Stopped
-        remainingPreparationTime = 0
+        state                        = .Stopped
+        remainingPreparationTime     = 0
         totalRemainingMeditationTime = 0
+        currentSession               = nil
+        meditationSessions           = nil
     }
     
     func cancelTimer() {
@@ -181,13 +183,13 @@ class MPMeditationTimer: NSObject
                 remainingPreparationTime -= timeInterval
                 delegate?.meditationTimer(self, didProgress: preparationProgress, withState: state, timeLeft: remainingPreparationTime)
             case .Meditation:
-                totalRemainingMeditationTime -= timeInterval
                 guard let _ = self.currentSession where self.currentSession!.remaining > 0 else {
                     self.startNextSession()
                     break
                 }
                 
                 if self.currentSession != nil {
+                    totalRemainingMeditationTime -= timeInterval
                     self.currentSession!.remaining -= timeInterval
                     delegate?.meditationTimer(self, withState: state, type: currentSession!.type, progress: currentSession!.progress, timeLeft: self.currentSession!.remaining, totalProgress: totalMeditationProgress, totalTimeLeft: totalRemainingMeditationTime)
                 } else {

@@ -129,15 +129,13 @@ class MPMeditatorListViewController: UIViewController {
             var meditationTimes: [MPMeditationSession] = [MPMeditationSession]()
             
             if selectedWalkingMeditationTime > 0 {
-//                walkingTimeInMinutes = timerDataSource.times[selectedWalkingMeditationTime]
-                walkingTimeInMinutes = 1
+                walkingTimeInMinutes = timerDataSource.times[selectedWalkingMeditationTime]
                 totalTime += walkingTimeInMinutes!
                 meditationTimes.append(MPMeditationSession(type: .Walking, time: Double(walkingTimeInMinutes!) * 60.0))
             }
 
             if selectedSittingMeditationTime > 0 {
-//                sittingTimeInMinutes = timerDataSource.times[selectedSittingMeditationTime]
-                sittingTimeInMinutes = 1
+                sittingTimeInMinutes = timerDataSource.times[selectedSittingMeditationTime]
                 totalTime += sittingTimeInMinutes!
                 meditationTimes.append(MPMeditationSession(type: .Sitting, time: Double(sittingTimeInMinutes!) * 60.0))
             }
@@ -227,14 +225,14 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
         if state == MPMeditationState.Preparation {
             meditatorView.setSelectionViewHidden(true, animated: true)
         } else if state == .Meditation {
-//            meditatorManager.startMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {[weak self] () -> Void in
-//                self?.meditatorManager.meditatorList { (meditators) -> Void in
-//                    self?.meditatorDataSource.updateMeditators(meditators)
-//                    self?.meditatorView.tableView.reloadData()
-//                }
-//            }, failure: { (error) -> Void in
-////                NSLog("Start meditation failed")
-//            })
+            meditatorManager.startMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {[weak self] () -> Void in
+                self?.meditatorManager.meditatorList { (meditators) -> Void in
+                    self?.meditatorDataSource.updateMeditators(meditators)
+                    self?.meditatorView.tableView.reloadData()
+                }
+            }, failure: { (error) -> Void in
+//                NSLog("Start meditation failed")
+            })
         }
     }
 
@@ -261,7 +259,7 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
             meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d" , Int(hours) , Int(minutes), Int(seconds))
         }
         
-        NSLog("type: \(type), progress: \(progress), timeLeft: \(timeLeft)")
+//        NSLog("type: \(type), progress: \(progress), timeLeft: \(timeLeft), totalTimeLeft: \(totalTimeLeft)")
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
@@ -282,14 +280,14 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
         walkingTimeInMinutes = nil
         
         meditatorView.setSelectionViewHidden(false, animated: true)
-//        meditatorManager.cancelMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {[weak self] () -> Void in
-//            self?.meditatorManager.meditatorList { (meditators) -> Void in
-//                self?.meditatorDataSource.updateMeditators(meditators)
-//                self?.meditatorView.tableView.reloadData()
-//            }
-//        }, failure: { (error) -> Void in
-////            NSLog("Cancel meditation failed")
-//        })
+        meditatorManager.cancelMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {[weak self] () -> Void in
+            self?.meditatorManager.meditatorList { (meditators) -> Void in
+                self?.meditatorDataSource.updateMeditators(meditators)
+                self?.meditatorView.tableView.reloadData()
+            }
+        }, failure: { (error) -> Void in
+//            NSLog("Cancel meditation failed")
+        })
     }
     
 }
