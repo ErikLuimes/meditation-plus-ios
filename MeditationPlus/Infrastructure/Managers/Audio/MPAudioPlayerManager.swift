@@ -33,14 +33,15 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
 
     private var audioPlayer: AVAudioPlayer!
 
-    private let sampleUrl = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
+    private let bell  = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
+    
+    private let bowl = NSURL(string: NSBundle.mainBundle().pathForResource("bowl", ofType: "mp3")!)!
+    
+    private let gong = NSURL(string: NSBundle.mainBundle().pathForResource("gong", ofType: "mp3")!)!
 
     private override init() {
         try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
         try! AVAudioSession.sharedInstance().setActive(true)
-        
-        self.audioPlayer = try? AVAudioPlayer(contentsOfURL: self.sampleUrl)
-        self.audioPlayer.prepareToPlay()
     }
 
     // MARK: MPMeditationTimerDelegate
@@ -48,22 +49,34 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
     func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
     {
         if state == MPMeditationState.Meditation {
-            self.audioPlayer.play()
+            audioPlayer = try? AVAudioPlayer(contentsOfURL: bell)
+            audioPlayer.play()
         }
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
     {}
     
+    func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
+    {}
+    
+    func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
+    {
+        audioPlayer = try? AVAudioPlayer(contentsOfURL: bowl)
+        audioPlayer.play()
+    }
+    
     func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
     {
-        self.audioPlayer.stop()
+        audioPlayer = try? AVAudioPlayer(contentsOfURL: gong)
+        audioPlayer.play()
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
     {
         if state == MPMeditationState.Meditation {
-            self.audioPlayer.play()
+            audioPlayer = try? AVAudioPlayer(contentsOfURL: bell)
+            audioPlayer.play()
         }
     }
 }
