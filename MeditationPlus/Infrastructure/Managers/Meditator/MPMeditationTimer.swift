@@ -29,8 +29,11 @@ import AVFoundation
 protocol MPMeditationTimerDelegate: NSObjectProtocol {
     func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
     func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+    func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
-    
+
+    func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
+
     func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
 }
 
@@ -59,6 +62,30 @@ enum MPMeditationState: Int {
     }
 }
 
+enum MPMeditationType {
+    case Sitting
+    case Walking
+}
+
+struct MPMeditationSession
+{
+    let type: MPMeditationType
+    let time: NSTimeInterval
+    var remaining: NSTimeInterval
+    let endDateTime: NSDate
+    var progress: Double {
+        return time > 0 ? (time - remaining) / time : 0.0
+    }
+
+    init(type: MPMeditationType, time: NSTimeInterval) {
+        self.type = type
+        self.time = time
+
+        remaining = time
+        endDateTime = NSDate().dateByAddingTimeInterval(time)
+    }
+}
+
 class MPMeditationTimer: NSObject
 {
     static let sharedInstance: MPMeditationTimer = MPMeditationTimer()
@@ -72,16 +99,20 @@ class MPMeditationTimer: NSObject
     private var meditationTimer: NSTimer?
 
     // MARK: Meditation time
+    private var meditationSessions: [MPMeditationSession]? = [MPMeditationSession]()
+
+    private var currentSession: MPMeditationSession?
+
     private var totalMeditationTime: NSTimeInterval = 0 {
         didSet {
-            remainingMeditationTime = totalMeditationTime
+            totalRemainingMeditationTime = totalMeditationTime
         }
     }
 
-    private var remainingMeditationTime: NSTimeInterval = 0
+    private var totalRemainingMeditationTime: NSTimeInterval = 0
 
-    private var meditationProgress: Double {
-        return calculateProgress(totalMeditationTime, remaining: remainingMeditationTime)
+    private var totalMeditationProgress: Double {
+        return calculateProgress(totalMeditationTime, remaining: totalRemainingMeditationTime)
     }
 
 
@@ -111,17 +142,14 @@ class MPMeditationTimer: NSObject
 
     // MARK: Timer functions
 
-    func startTimer(meditationTime: NSTimeInterval, preparationTime: NSTimeInterval = 0) {
-        totalPreparationTime = preparationTime
-        totalMeditationTime  = meditationTime
+    func startTimer(meditationTimes: [MPMeditationSession], preparationTime: NSTimeInterval = 0) {
+        self.meditationSessions = meditationTimes.filter({ $0.time > 0})
+        self.totalMeditationTime  = self.meditationSessions!.map({ $0.time }).reduce(0, combine: +)
+        self.totalPreparationTime = preparationTime
 
-        meditationTimer = NSTimer.scheduledTimerWithTimeInterval(timeInterval, target: self, selector: "meditationTimerTick", userInfo: nil, repeats: true)
+        meditationTimer = NSTimer.scheduledTimerWithTimeInterval(timeInterval, target: self, selector: "meditationTimerCompoundTick", userInfo: nil, repeats: true)
         NSRunLoop.mainRunLoop().addTimer(meditationTimer!, forMode:NSRunLoopCommonModes)
-        meditationTimerTick()
-    }
-    
-    func startTimer(mditationTimeInMinutes meditationTime: Double, preparationTime: NSTimeInterval = 0) {
-        startTimer(meditationTime * 60.0, preparationTime: preparationTime)
+        meditationTimerCompoundTick()
     }
 
     private func stopTimer() {
@@ -129,7 +157,7 @@ class MPMeditationTimer: NSObject
         
         state                    = .Stopped
         remainingPreparationTime = 0
-        remainingMeditationTime  = 0
+        totalRemainingMeditationTime = 0
     }
     
     func cancelTimer() {
@@ -137,10 +165,10 @@ class MPMeditationTimer: NSObject
         delegate?.meditationTimerWasCancelled(self)
     }
 
-    func meditationTimerTick()
+    func meditationTimerCompoundTick()
     {
         let oldState = self.state
-        let newState = MPMeditationState(remainingMeditationTime: remainingMeditationTime, remainingPreparationTime: remainingPreparationTime)
+        let newState = MPMeditationState(remainingMeditationTime: totalRemainingMeditationTime, remainingPreparationTime: remainingPreparationTime)
         
         if oldState != newState {
             notifyStateChangeFromState(oldState, toState: newState)
@@ -153,13 +181,39 @@ class MPMeditationTimer: NSObject
                 remainingPreparationTime -= timeInterval
                 delegate?.meditationTimer(self, didProgress: preparationProgress, withState: state, timeLeft: remainingPreparationTime)
             case .Meditation:
-                remainingMeditationTime -= timeInterval
-                delegate?.meditationTimer(self, didProgress: meditationProgress, withState: state, timeLeft: remainingMeditationTime)
+                totalRemainingMeditationTime -= timeInterval
+                guard let _ = self.currentSession where self.currentSession!.remaining > 0 else {
+                    self.startNextSession()
+                    break
+                }
+                
+                if self.currentSession != nil {
+                    self.currentSession!.remaining -= timeInterval
+                    delegate?.meditationTimer(self, withState: state, type: currentSession!.type, progress: currentSession!.progress, timeLeft: self.currentSession!.remaining, totalProgress: totalMeditationProgress, totalTimeLeft: totalRemainingMeditationTime)
+                } else {
+                    totalRemainingMeditationTime = 0
+                }
             default:
                 stopTimer()
         }
     }
-    
+
+    // MARK Session functions
+
+    func startNextSession() {
+        guard let _ = self.meditationSessions where self.meditationSessions!.count > 0 else {
+            return
+        }
+
+        let previousSession = self.currentSession
+        self.currentSession = self.meditationSessions![0]
+        self.meditationSessions!.removeAtIndex(0)
+        
+        if previousSession != nil {
+            self.delegate?.meditationTimer(self, didChangeMeditationFromType: previousSession!.type, toType: currentSession!.type)
+        }
+    }
+
     // MARK State change notifications 
     
     func notifyStateChangeFromState(fromState: MPMeditationState, toState: MPMeditationState) -> Void

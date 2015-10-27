@@ -43,12 +43,22 @@ class MPCompoundMeditationTimerDelegate: NSObject, MPMeditationTimerDelegate
     {
         _ = self.delegates.map({$0.meditationTimer(meditationTimer, didProgress:progress, withState:state, timeLeft:timeLeft)})
     }
+    
+    func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
+    {
+        _ = self.delegates.map({$0.meditationTimer(meditationTimer, withState: state, type: type, progress: progress, timeLeft: timeLeft, totalProgress: totalProgress, totalTimeLeft: totalTimeLeft)})
+    }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
     {
         _ = self.delegates.map({$0.meditationTimer(meditationTimer, didStopWithState:state)})
     }
-    
+
+    func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
+    {
+        _ = self.delegates.map({$0.meditationTimer(meditationTimer, didChangeMeditationFromType: fromType, toType: toType)})
+    }
+
     func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
     {
         _ = self.delegates.map({$0.meditationTimerWasCancelled(meditationTimer)})
