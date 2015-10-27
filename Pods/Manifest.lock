@@ -4,6 +4,7 @@ PODS:
     - Alamofire (~> 2.0.0)
     - ObjectMapper (= 0.17)
   - Crashlytics (3.3.4)
+  - CWStatusBarNotification (2.3.3)
   - Fabric (1.5.5):
     - Fabric/Base (= 1.5.5)
   - Fabric/Base (1.5.5)
@@ -19,6 +20,7 @@ DEPENDENCIES:
   - Alamofire (= 2.0.2)
   - AlamofireObjectMapper (= 1.0)
   - Crashlytics
+  - CWStatusBarNotification (~> 2.3.3)
   - Fabric
   - KGFloatingDrawer (from `https://github.com/ErikLuimes/KGFloatingDrawer.git`, tag
     `0.2.0`)
@@ -40,6 +42,7 @@ SPEC CHECKSUMS:
   Alamofire: 8edbab00802a752bb5240cc2abe70e7e881488ad
   AlamofireObjectMapper: 4f9d766a4742bb69258921723bafc260849f216c
   Crashlytics: 41c082440d2e14da444186fff65e79c0b4b35d4c
+  CWStatusBarNotification: 2349142e97c9f16fb8247ed3c00308cd355d334b
   Fabric: 190bf1a6eb65f7500de1347d027d2e59a7e53db1
   KGFloatingDrawer: b0c2810954bfb61f4d4dd01b8891d5c23933e368
   Locksmith: 2c7bdc5c3a31a97d748791ad830310b1af4b8549

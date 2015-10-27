@@ -12,3 +12,6 @@ pod 'SDWebImage',              '~>3.7'
 
 pod 'Fabric'
 pod 'Crashlytics'
+
+pod 'CWStatusBarNotification', '~> 2.3.3'
+

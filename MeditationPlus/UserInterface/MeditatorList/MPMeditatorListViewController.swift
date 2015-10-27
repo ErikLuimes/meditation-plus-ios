@@ -141,7 +141,7 @@ class MPMeditatorListViewController: UIViewController {
             }
             
             if meditationTimes.count > 0 {
-                timer.startTimer(meditationTimes, preparationTime: 1)
+                timer.startTimer(meditationTimes, preparationTime: 15)
             }
         } else {
             timer.cancelTimer()

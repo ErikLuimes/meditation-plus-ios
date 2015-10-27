@@ -25,6 +25,7 @@
 
 import UIKit
 import AVFoundation
+import CWStatusBarNotification
 
 class MPSplashViewController: UIViewController {
     private var splashScreenView: MPSplashView { return self.view as! MPSplashView }
@@ -107,13 +108,6 @@ class MPSplashViewController: UIViewController {
         let centerY: CGFloat = (CGRectGetHeight(UIScreen.mainScreen().bounds) - CGRectGetHeight(keyboardFrame)) / 2.0
         let offset: CGFloat  = self.splashScreenView.passwordField.center.y - centerY
         
-        var contentInset = UIEdgeInsetsZero
-        if offset < 0 {
-            contentInset = UIEdgeInsetsMake(0, 0 ,abs(offset) ,0)
-        } else if offset > 0 {
-            contentInset = UIEdgeInsetsMake(offset, 0 ,0 ,0)
-        }
-        
         UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: { () -> Void in
             self.splashScreenView.scrollView.contentOffset = CGPointMake(0, offset)
         }, completion: nil)
@@ -133,28 +127,27 @@ class MPSplashViewController: UIViewController {
     
     @IBAction func didPressLoginButton(sender: UIButton) {
         sender.enabled = false
-        
+
         if (self.validate()) {
             guard let username = self.splashScreenView.usernameField.text, password = self.splashScreenView.passwordField.text else {
                 return
             }
-            
-            
-            self.authenticationManager.loginWithUsername(username, password: password, failure: { (error) -> Void in
-                if let errorResponse = error {
-                    NSLog("Login error description: \(errorResponse.localizedDescription)")
-                }
+
+
+            self.authenticationManager.loginWithUsername(username, password: password, failure: { (error, errorString) -> Void in
+                 MPNotificationManager.displayNotification((errorString ?? "Some error occured, Please try again later.") as String)
+                
                 sender.enabled = true
             }, completion: { (user) -> Void in
                 sender.enabled = true
                 self.navigatoToMainViewController()
             })
-            
+
         } else {
             sender.enabled = true
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
             self.splashScreenView.shake()
-            
+
         }
     }
     
