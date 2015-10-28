@@ -40,13 +40,15 @@ class MPQuoteView: UIView
     
     func configureWithQuote(quote: MPQuote) {
         if let quote = quote.quote {
-            let attributedOptions : [String: AnyObject] = [
-                NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
-                NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
-            ]
+            let font = UIFont.systemFontOfSize(16)
+            let modifiedFont = NSString(format:"<span style=\"font-family: \(font.fontName); font-size: \(font.pointSize)\">%@</span>", quote) as String
             
+            var attrStr = try? NSAttributedString(
+                data: modifiedFont.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: true)!,
+                options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding],
+                documentAttributes: nil)
             
-            quoteView.attributedText = try? NSAttributedString(data: quote.dataUsingEncoding(NSUTF8StringEncoding)!, options: attributedOptions, documentAttributes: nil)
+            quoteView.attributedText = attrStr
         }
         
         cite.text = quote.cite
