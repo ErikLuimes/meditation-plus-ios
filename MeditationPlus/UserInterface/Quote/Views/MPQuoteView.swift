@@ -43,7 +43,7 @@ class MPQuoteView: UIView
             let font = UIFont.systemFontOfSize(16)
             let modifiedFont = NSString(format:"<span style=\"font-family: \(font.fontName); font-size: \(font.pointSize)\">%@</span>", quote) as String
             
-            var attrStr = try? NSAttributedString(
+            let attrStr = try? NSAttributedString(
                 data: modifiedFont.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: true)!,
                 options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding],
                 documentAttributes: nil)
