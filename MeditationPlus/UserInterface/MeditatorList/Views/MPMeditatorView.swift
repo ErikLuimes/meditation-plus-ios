@@ -73,7 +73,7 @@ class MPMeditatorView: UIView {
         profileImageView.layer.borderWidth   = 5
         profileImageView.layer.masksToBounds = true
 
-        startButton.layer.borderColor = UIColor.orangeColor().CGColor
+        startButton.layer.borderColor = startButton.titleColorForState(.Normal)?.CGColor
         
         refreshControl = UIRefreshControl()
         tableView.addSubview(refreshControl)

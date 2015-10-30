@@ -117,6 +117,10 @@ class MPMeditatorDataSource: NSObject, UITableViewDataSource {
 
         return cell
     }
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return meditatorSections[section].title
+    }
 
     func meditatorForIndexPath(indexPath: NSIndexPath) -> MPMeditator? {
         return meditatorSections[indexPath.section].items[indexPath.row]

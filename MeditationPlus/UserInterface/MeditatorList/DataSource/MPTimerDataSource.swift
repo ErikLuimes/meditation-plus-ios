@@ -30,14 +30,12 @@ class MPTimerDataSource:  NSObject, UIPickerViewDataSource
     lazy private(set) var times: [Int] = {
         var times = [Int]()
         
-        for i in 0...1440 {
+        for i in 0...480 {
             if i < 120 && i % 5 == 0 {
                 times.append(i)
             } else if i >= 120 && i < 240 && i % 15 == 0{
                 times.append(i)
-            } else if i >= 240 && i < 480 && i % 30 == 0{
-                times.append(i)
-            } else if i >= 480 && i % 60 == 0{
+            } else if i >= 240 && i <= 480 && i % 30 == 0{
                 times.append(i)
             }
         }

@@ -147,20 +147,18 @@ class MPMeditatorListViewController: UIViewController {
             
             if selectedWalkingMeditationTime > 0 {
                 walkingTimeInMinutes = timerDataSource.times[selectedWalkingMeditationTime]
-//                walkingTimeInMinutes = 1
                 totalTime += walkingTimeInMinutes!
                 meditationTimes.append(MPMeditationSession(type: .Walking, time: Double(walkingTimeInMinutes!) * 60.0))
             }
 
             if selectedSittingMeditationTime > 0 {
                 sittingTimeInMinutes = timerDataSource.times[selectedSittingMeditationTime]
-//                sittingTimeInMinutes = 1
                 totalTime += sittingTimeInMinutes!
                 meditationTimes.append(MPMeditationSession(type: .Sitting, time: Double(sittingTimeInMinutes!) * 60.0))
             }
             
             if meditationTimes.count > 0 {
-                try! timer.startTimer(meditationTimes, preparationTime: 15)
+                try! timer.startTimer(meditationTimes, preparationTime: 5)
             }
         } else {
             timer.cancelTimer()
@@ -192,14 +190,19 @@ extension MPMeditatorListViewController: UITableViewDelegate
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+        return meditatorDataSource.meditatorSections[section].items.count > 0 ? 40 : 0
     }
     
-    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        let headerView = view as! UITableViewHeaderFooterView
-        headerView.textLabel?.text          = meditatorDataSource.meditatorSections[section].title
-        headerView.textLabel?.textColor     = UIColor.darkGrayColor()
-        headerView.tintColor                = UIColor.whiteColor()
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0
+    }
+    
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UITableViewHeaderFooterView()
+        view.contentView.backgroundColor = UIColor.whiteColor()
+        view.textLabel?.textColor        = UIColor.darkGrayColor()
+        return view
     }
 }
 
