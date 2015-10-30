@@ -147,20 +147,18 @@ class MPMeditatorListViewController: UIViewController {
             
             if selectedWalkingMeditationTime > 0 {
                 walkingTimeInMinutes = timerDataSource.times[selectedWalkingMeditationTime]
-//                walkingTimeInMinutes = 1
                 totalTime += walkingTimeInMinutes!
                 meditationTimes.append(MPMeditationSession(type: .Walking, time: Double(walkingTimeInMinutes!) * 60.0))
             }
 
             if selectedSittingMeditationTime > 0 {
                 sittingTimeInMinutes = timerDataSource.times[selectedSittingMeditationTime]
-//                sittingTimeInMinutes = 1
                 totalTime += sittingTimeInMinutes!
                 meditationTimes.append(MPMeditationSession(type: .Sitting, time: Double(sittingTimeInMinutes!) * 60.0))
             }
             
             if meditationTimes.count > 0 {
-                try! timer.startTimer(meditationTimes, preparationTime: 15)
+                try! timer.startTimer(meditationTimes, preparationTime: 5)
             }
         } else {
             timer.cancelTimer()
