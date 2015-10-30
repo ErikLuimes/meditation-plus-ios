@@ -48,7 +48,7 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
     {
-        if state == MPMeditationState.Meditation {
+        if state == MPMeditationState.Meditation && UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
             audioPlayer = try? AVAudioPlayer(contentsOfURL: bell)
             audioPlayer.play()
         }
