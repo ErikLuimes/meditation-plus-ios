@@ -62,19 +62,23 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
     
     func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
     {
-        audioPlayer = try? AVAudioPlayer(contentsOfURL: bowl)
-        audioPlayer.play()
+        if UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
+            audioPlayer = try? AVAudioPlayer(contentsOfURL: bowl)
+            audioPlayer.play()
+        }
     }
     
     func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
     {
-        audioPlayer = try? AVAudioPlayer(contentsOfURL: gong)
-        audioPlayer.play()
+        if UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
+            audioPlayer = try? AVAudioPlayer(contentsOfURL: gong)
+            audioPlayer.play()
+        }
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
     {
-        if state == MPMeditationState.Meditation {
+        if state == MPMeditationState.Meditation && UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
             audioPlayer = try? AVAudioPlayer(contentsOfURL: bell)
             audioPlayer.play()
         }

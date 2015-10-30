@@ -35,6 +35,8 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool
     {
         Fabric.with([Crashlytics.self])
+        
+        application.cancelAllLocalNotifications()
 
         window                     = UIWindow(frame: UIScreen.mainScreen().bounds)
         window!.rootViewController = MPMenuContainerViewController()
@@ -64,4 +66,25 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
         MPMeditationTimer.sharedInstance.addDelegate(MPAudioPlayerManager.sharedInstance)
         MPMeditationTimer.sharedInstance.addDelegate(MPIdleTimeoutMeditationTimerDelegate.sharedInstance)
     }
+    
+    func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+        NSLog("did receive local notification")
+    }
+    
+    func applicationWillEnterForeground(application: UIApplication) {
+        // FG
+        MPMeditationTimer.sharedInstance.applicationWillEnterForeground()
+        NSLog("will enter fg")
+    }
+    
+    func applicationDidEnterBackground(application: UIApplication) {
+        MPMeditationTimer.sharedInstance.applicationDidEnterBackground()
+        NSLog("did enter bg")
+    }
+    
+    func applicationWillTerminate(application: UIApplication) {
+        NSLog("Terminate")
+        application.cancelAllLocalNotifications()
+    }
+    
 }

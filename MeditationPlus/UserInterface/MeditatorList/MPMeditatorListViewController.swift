@@ -46,10 +46,16 @@ class MPMeditatorListViewController: UIViewController {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
         tabBarItem = UITabBarItem(title: "Meditate", image: UIImage(named: "BuddhaIcon"), tag: 0)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     override func viewDidLoad() {
@@ -84,7 +90,18 @@ class MPMeditatorListViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        UIApplication.sharedApplication().registerUserNotificationSettings(UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound], categories: nil))
+        
         timer.addDelegate(self)
+        
+        if timer.state == .Meditation {
+            meditatorView.setSelectionViewHidden(true, animated: true)
+        } else if timer.state == .Preparation {
+            meditatorView.setSelectionViewHidden(true, animated: true)
+        } else {
+            meditatorView.setSelectionViewHidden(false, animated: true)
+        }
+        
         meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
 
 
@@ -130,18 +147,20 @@ class MPMeditatorListViewController: UIViewController {
             
             if selectedWalkingMeditationTime > 0 {
                 walkingTimeInMinutes = timerDataSource.times[selectedWalkingMeditationTime]
+//                walkingTimeInMinutes = 1
                 totalTime += walkingTimeInMinutes!
                 meditationTimes.append(MPMeditationSession(type: .Walking, time: Double(walkingTimeInMinutes!) * 60.0))
             }
 
             if selectedSittingMeditationTime > 0 {
                 sittingTimeInMinutes = timerDataSource.times[selectedSittingMeditationTime]
+//                sittingTimeInMinutes = 1
                 totalTime += sittingTimeInMinutes!
                 meditationTimes.append(MPMeditationSession(type: .Sitting, time: Double(sittingTimeInMinutes!) * 60.0))
             }
             
             if meditationTimes.count > 0 {
-                timer.startTimer(meditationTimes, preparationTime: 15)
+                try! timer.startTimer(meditationTimes, preparationTime: 15)
             }
         } else {
             timer.cancelTimer()
@@ -153,6 +172,17 @@ class MPMeditatorListViewController: UIViewController {
         meditatorView.setSelectionViewHidden(!meditatorView.isSelectionViewHidden, animated: true)
     }
 
+    // MARK: Notifications
+    
+    func willEnterForeground(notification: NSNotification) {
+        if timer.state == .Meditation {
+            meditatorView.setSelectionViewHidden(true, animated: true)
+        } else if timer.state == .Preparation {
+            meditatorView.setSelectionViewHidden(true, animated: true)
+        } else {
+            meditatorView.setSelectionViewHidden(false, animated: true)
+        }
+    }
 }
 
 extension MPMeditatorListViewController: UITableViewDelegate
@@ -224,7 +254,7 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
     {
         if state == MPMeditationState.Preparation {
             meditatorView.setSelectionViewHidden(true, animated: true)
-        } else if state == .Meditation {
+        } else if state == MPMeditationState.Meditation {
             meditatorManager.startMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {[weak self] () -> Void in
                 self?.meditatorManager.meditatorList { (meditators) -> Void in
                     self?.meditatorDataSource.updateMeditators(meditators)
@@ -241,6 +271,7 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
         if state == MPMeditationState.Preparation {
             meditatorView.preparationProgressView.setProgress(Float(1.0 - progress), animated: true)
         } else if state == MPMeditationState.Meditation {
+            meditatorView.preparationProgressView.setProgress(0.0, animated: false)
             let seconds = timeLeft % 60;
             let hours   = timeLeft / 3600
             let minutes = timeLeft / 60 % 60
@@ -253,6 +284,7 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
         if state == MPMeditationState.Preparation {
             meditatorView.preparationProgressView.setProgress(Float(1.0 - totalProgress), animated: true)
         } else if state == MPMeditationState.Meditation {
+            meditatorView.preparationProgressView.setProgress(0.0, animated: false)
             let seconds = totalTimeLeft % 60;
             let hours   = totalTimeLeft / 3600
             let minutes = totalTimeLeft / 60 % 60
@@ -264,7 +296,7 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
     {
-        NSLog("didChange meditation type")
+//        NSLog("didChange meditation type")
     }
     
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
