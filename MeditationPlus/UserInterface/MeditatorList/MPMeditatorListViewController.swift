@@ -190,14 +190,19 @@ extension MPMeditatorListViewController: UITableViewDelegate
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+        return meditatorDataSource.meditatorSections[section].items.count > 0 ? 40 : 0
     }
     
-    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        let headerView = view as! UITableViewHeaderFooterView
-        headerView.textLabel?.text          = meditatorDataSource.meditatorSections[section].title
-        headerView.textLabel?.textColor     = UIColor.darkGrayColor()
-        headerView.tintColor                = UIColor.whiteColor()
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0
+    }
+    
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UITableViewHeaderFooterView()
+        view.contentView.backgroundColor = UIColor.whiteColor()
+        view.textLabel?.textColor        = UIColor.darkGrayColor()
+        return view
     }
 }
 
