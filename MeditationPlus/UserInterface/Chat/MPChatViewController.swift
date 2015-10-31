@@ -17,7 +17,7 @@ class MPChatViewController: SLKTextViewController {
     init() {
         super.init(collectionViewLayout: SLKMessageViewLayout())
 
-        tabBarItem = UITabBarItem(title: "Chat", image: nil, tag: 0)
+        tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "chat-icon"), tag: 0)
 
 //        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
@@ -56,7 +56,7 @@ class MPChatViewController: SLKTextViewController {
         self.collectionView!.registerClass(SLKMessageViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
         self.collectionView!.backgroundColor = UIColor.whiteColor()
         
-        self.chatManager.chatList(failure: { (error) -> Void in
+        self.chatManager.chatList({ (error) -> Void in
             // refreshControl.endRefreshing()
             }) { (chats) -> Void in
                 //self.meditatorDataSource.updateMeditators(meditators)
@@ -88,7 +88,7 @@ class MPChatViewController: SLKTextViewController {
 
         let message = self.textView.text.copy() as! NSString
 
-        let chatItem = MPChatItem(username: MTAuthenticationManager.sharedInstance.loggedInUser!.username, message: message as String)
+        let chatItem = MPChatItem(username: MTAuthenticationManager.sharedInstance.loggedInUser!.username!, message: message as String)
 //        self.messages.insertObject(message, atIndex: 0)
         self.chats.insert(chatItem, atIndex: 0)
         
@@ -139,7 +139,7 @@ class MPChatViewController: SLKTextViewController {
 
         var attributes: NSDictionary = [NSFontAttributeName: UIFont.systemFontOfSize(17.0), NSParagraphStyleAttributeName: paragraphStyle]
 
-        let bounds: CGRect = message.boundingRectWithSize(CGSizeMake(width, 0.0), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: attributes as [NSObject : AnyObject], context: nil)
+        let bounds: CGRect = message.boundingRectWithSize(CGSizeMake(width, 0.0), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: attributes as! [String : AnyObject], context: nil)
 
         if (message.length == 0) {
             return 0.0;
@@ -183,7 +183,7 @@ class _MPChatViewController: SLKTextViewController {
 //        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: self.chatCellIdentifier)
 //        self.tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: self.chatCellIdentifier)
         self.tableView.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: self.chatCellIdentifier)
-        self.chatManager.chatList(failure: { (error) -> Void in
+        self.chatManager.chatList({ (error) -> Void in
             // refreshControl.endRefreshing()
         }) { (chats) -> Void in
             //self.meditatorDataSource.updateMeditators(meditators)
