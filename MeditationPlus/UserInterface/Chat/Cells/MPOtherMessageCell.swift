@@ -27,17 +27,17 @@ class MPOtherMessageCell: UITableViewCell {
     }
     
     func configureWithChatItem(chatItem: MPChatItem) {
-        var dateFormatter       = NSDateFormatter()
-        dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
+        let dateFormatter       = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.LongStyle
             
         self.messageLabel.text = chatItem.message
         self.authorLabel.text  = chatItem.username
         
         if chatItem.time != nil {
-            self.dateLabel.text    = dateFormatter.stringFromDate(chatItem.time!)
+            self.dateLabel.text = dateFormatter.stringFromDate(chatItem.time!)
         }
         
-        self.avatarImageView.setImageWithURL(NSURL(string: "http://randomimage.setgetgo.com/get.php?height=400&width=400")!)
+        self.avatarImageView.sd_setImageWithURL(NSURL(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")!)
         
         self.setNeedsLayout()
     }
