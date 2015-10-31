@@ -15,3 +15,4 @@ pod 'Crashlytics'
 
 pod 'CWStatusBarNotification', '~> 2.3.3'
 
+pod 'SlackTextViewController'

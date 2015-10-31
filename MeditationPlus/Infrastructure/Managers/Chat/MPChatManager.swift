@@ -4,43 +4,21 @@
 //
 
 import Foundation
-import AFNetworking
+import Alamofire
 
 class MPChatManager {
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
     func chatList(failure: ((NSError?) -> Void)? = nil, completion: ([MPChatItem]) -> Void) {
-        if let username = self.authenticationManager.loggedInUser, token = self.authenticationManager.token {
-            let parameters = [
-                    "username": username,
-                    "token":    token,
-            ]
-
-            let manager    = AFHTTPRequestOperationManager()
-            let endpoint   = "http://meditation.sirimangalo.org/db.php"
-
-            var jsonResponseSerializer : AFJSONResponseSerializer = MPResponseObjectSerializer<MPChatList>()
-            var acceptableContentTypes = NSMutableSet(set: jsonResponseSerializer.acceptableContentTypes!)
-            acceptableContentTypes.addObject("text/html")
-
-            jsonResponseSerializer.acceptableContentTypes = acceptableContentTypes as Set
-            manager.responseSerializer = jsonResponseSerializer
-
-            manager.POST(
-                endpoint,
-                parameters: parameters,
-                success: { (operation: AFHTTPRequestOperation!, responseObject: AnyObject?) in
-                    if let chatList = responseObject as? MPChatList where chatList.chats != nil {
-                        completion(chatList.chats!)
-                    } else {
-                        failure?(nil)
-                    }
-
-                },
-                failure: { (operation: AFHTTPRequestOperation!, error: NSError!) in
-                    failure?(nil)
+        if let username: String = self.authenticationManager.loggedInUser?.username {
+            let endpoint                    = "http://meditation.sirimangalo.org/db.php"
+            let parameters: [String:String] = ["username": username, "last_chat": "0"]
+            
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPChatList?, error: ErrorType?) in
+                if let chats = response?.chats {
+                    completion(chats)
                 }
-            )
+            }
         }
     }
 }

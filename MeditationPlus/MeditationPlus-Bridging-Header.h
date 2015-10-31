@@ -7,3 +7,5 @@
 #import <SDWebImage/SDImageCache.h>
 
 #import <CWStatusBarNotification/CWStatusBarNotification.h>
+
+#import <SlackTextViewController/SLKTextViewController.h>

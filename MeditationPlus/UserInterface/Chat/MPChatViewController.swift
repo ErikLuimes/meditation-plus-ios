@@ -16,6 +16,10 @@ class MPChatViewController: SLKTextViewController {
 
     init() {
         super.init(collectionViewLayout: SLKMessageViewLayout())
+
+        tabBarItem = UITabBarItem(title: "Chat", image: nil, tag: 0)
+
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
     
     required init!(coder decoder: NSCoder!) {
