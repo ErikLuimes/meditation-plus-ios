@@ -171,6 +171,9 @@ class MPChatViewController: SLKTextViewController {
         super.init(tableViewStyle: UITableViewStyle.Plain)
         
         tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "chat-icon"), tag: 0)
+        
+        edgesForExtendedLayout   = .None
+        tableView.separatorStyle = .None
     }
 
     required init!(coder decoder: NSCoder!) {
@@ -188,6 +191,8 @@ class MPChatViewController: SLKTextViewController {
         self.shakeToClearEnabled = true
         self.keyboardPanningEnabled = true
         self.inverted = false
+        
+        self.shouldScrollToBottomAfterKeyboardShows = true
 
         self.textView.placeholder = "Message"
         self.textView.placeholderColor = UIColor.lightGrayColor()
@@ -202,7 +207,7 @@ class MPChatViewController: SLKTextViewController {
 
         self.typingIndicatorView.canResignByTouch = true
         
-        self.tableView.transform = CGAffineTransformIdentity
+//        self.tableView.transform = CGAffineTransformIdentity
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 100.0
         self.tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: self.chatCellIdentifier)
@@ -212,11 +217,24 @@ class MPChatViewController: SLKTextViewController {
             self.chats += chats
 
             self.tableView.reloadData()
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.view.setNeedsLayout()
+                self.textInputbar.setNeedsLayout()
+                self.view.layoutIfNeeded()
+                let path : NSIndexPath = NSIndexPath(forRow: self.tableView.numberOfRowsInSection(0) - 1, inSection: 0)
+                //Basically maintain your logic to get the indexpath
+                self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: false)
+                
+            })
         }
         self.view.backgroundColor = UIColor.whiteColor()
         
-        self.tableView.slk_scrollToBottomAnimated(false)
+//        self.tableView.slk_scrollToBottomAnimated(false)
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
     }
 
     // MARK: UITableViewDataSource
@@ -273,9 +291,7 @@ class MPChatViewController: SLKTextViewController {
         let chatItem = MPChatItem(username: MTAuthenticationManager.sharedInstance.loggedInUser!.username!, message: message as String)
         self.chats.insert(chatItem, atIndex: 0)
         
-
         let idxPath : NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
-//        self.tableView.insertItemsAtIndexPaths([idxPath])
         self.tableView.insertRowsAtIndexPaths([idxPath], withRowAnimation: .Automatic)
 
         self.tableView.slk_scrollToBottomAnimated(true)
