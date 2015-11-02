@@ -16,7 +16,9 @@ class MPChatViewController: SLKTextViewController {
 
     private let chatCellIdentifier = "chatCellIdentifier"
     
-    private var emojis: [String]!
+    private var autocompletionVisible: Bool = false
+    
+    private var emojis: [String] = Array<String>(MPTextManager.sharedInstance.emoticons.keys)
     
     init() {
         super.init(tableViewStyle: UITableViewStyle.Plain)
@@ -44,15 +46,12 @@ class MPChatViewController: SLKTextViewController {
         self.inverted               = false
         
         
-        self.emojis = ["m", "man", "machine", "block-a", "block-b", "bowtie", "boar", "boat", "book", "bookmark", "neckbeard", "metal", "fu", "feelsgood"];
-        
         self.autoCompletionView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "autocompletion")
         self.registerPrefixesForAutoCompletion([":"])
-//        registerPrefixesForAutoCompletion = [":"]
         
         self.shouldScrollToBottomAfterKeyboardShows = false
 
-        self.textView.placeholder = "Message"
+        self.textView.placeholder      = "Message"
         self.textView.placeholderColor = UIColor.lightGrayColor()
 
         self.leftButton.setImage(UIImage(named: "icn_upload"), forState: UIControlState.Normal)
@@ -60,15 +59,16 @@ class MPChatViewController: SLKTextViewController {
         self.rightButton.setTitle("Send", forState: UIControlState.Normal)
 
         self.textInputbar.autoHideRightButton = true
-        self.textInputbar.maxCharCount = 140
-        self.textInputbar.counterStyle = SLKCounterStyle.Split
+        self.textInputbar.maxCharCount        = 140
+        self.textInputbar.counterStyle        = SLKCounterStyle.Split
 
         self.typingIndicatorView.canResignByTouch = true
         
-        self.tableView.rowHeight = UITableViewAutomaticDimension
-        self.tableView.scrollsToTop = false
+        self.tableView.rowHeight          = UITableViewAutomaticDimension
+        self.tableView.scrollsToTop       = false
         self.tableView.estimatedRowHeight = 100.0
         self.tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: self.chatCellIdentifier)
+        
         self.chatManager.chatList({ (error) -> Void in
         }) { (chats) -> Void in
             self.chats.removeAll()
@@ -80,6 +80,7 @@ class MPChatViewController: SLKTextViewController {
                 self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
             })
         }
+        
         self.view.backgroundColor = UIColor.whiteColor()
     }
     
@@ -124,16 +125,24 @@ class MPChatViewController: SLKTextViewController {
             }
         } else {
             cell = tableView.dequeueReusableCellWithIdentifier("autocompletion", forIndexPath: indexPath)
-            cell.textLabel?.text = self.emojis[indexPath.row]
+            cell.textLabel?.text  = self.emojis[indexPath.row]
+            cell.imageView?.image = UIImage(named: MPTextManager.sharedInstance.emoticons[self.emojis[indexPath.row]]!)
         }
         
         return cell
     }
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if tableView == self.autoCompletionView {
+            acceptAutoCompletionWithString(self.emojis[indexPath.row])
+        }
+    }
+    
     // MARK: - SLKTextViewController
 
     override func didPressLeftButton(sender: AnyObject!) {
-        self.showAutoCompletionView(true)
+        autocompletionVisible = !autocompletionVisible
+        self.showAutoCompletionView(autocompletionVisible)
     }
 
     override func didPressRightButton(sender: AnyObject!) {
@@ -158,6 +167,6 @@ class MPChatViewController: SLKTextViewController {
     }
     
     override func heightForAutoCompletionView() -> CGFloat {
-        return 200
+        return 300
     }
 }
