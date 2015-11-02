@@ -16,12 +16,14 @@ PODS:
     - DTFoundation/Core
   - DTFoundation/UIKit (1.7.8):
     - DTFoundation/Core
+  - DZNEmptyDataSet (1.7.2)
   - Fabric (1.5.5):
     - Fabric/Base (= 1.5.5)
   - Fabric/Base (1.5.5)
   - KGFloatingDrawer (0.2.0)
   - Locksmith (2.0.1)
   - ObjectMapper (0.17)
+  - PDTSimpleCalendar (0.9.1)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
@@ -34,10 +36,12 @@ DEPENDENCIES:
   - Crashlytics
   - CWStatusBarNotification (~> 2.3.3)
   - DTCoreText
+  - DZNEmptyDataSet
   - Fabric
   - KGFloatingDrawer (from `https://github.com/ErikLuimes/KGFloatingDrawer.git`, tag
     `0.2.0`)
   - Locksmith (= 2.0.1)
+  - PDTSimpleCalendar
   - SDWebImage (~> 3.7)
   - SlackTextViewController
   - UIImage+Additions (= 2.1.0)
@@ -59,10 +63,12 @@ SPEC CHECKSUMS:
   CWStatusBarNotification: 2349142e97c9f16fb8247ed3c00308cd355d334b
   DTCoreText: 934a16fe9ffdd169c96261721b39dc312b75713d
   DTFoundation: 46e2b2fafe78d67febfd8d1f85fe9845a093f00e
+  DZNEmptyDataSet: 0ec00bfc230d7450997b60c127afdd0b9f24f3b6
   Fabric: 190bf1a6eb65f7500de1347d027d2e59a7e53db1
   KGFloatingDrawer: b0c2810954bfb61f4d4dd01b8891d5c23933e368
   Locksmith: 2c7bdc5c3a31a97d748791ad830310b1af4b8549
   ObjectMapper: fa286b7cb5a398f1b0d8d64d0dd33fd1b307022c
+  PDTSimpleCalendar: d1c03387678422715dc021aa1a85d70f4d1014f2
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   SlackTextViewController: 139ffc5b09276ff5ac1609ac78eafab702fc974e
   UIImage+Additions: 6181430b139099649e56171d58a52d6c37d57e42

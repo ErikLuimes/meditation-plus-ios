@@ -9,163 +9,14 @@
 import UIKit
 import SlackTextViewController
 
-//class MPChatViewController: SLKTextViewController {
-//    private let chatManager = MPChatManager()
-//
-//    private var chats: [MPChatItem] = [MPChatItem]()
-//
-//    init() {
-////        super.init(collectionViewLayout: SLKMessageViewLayout())
-//        super.init(tableViewStyle: UITableViewStyle.Plain)
-//
-//        tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "chat-icon"), tag: 0)
-//
-////        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
-//    }
-//    
-//    required init!(coder decoder: NSCoder!) {
-//        super.init(coder: decoder)
-//    }
-//    
-//    override class func collectionViewLayoutForCoder(decoder: NSCoder) -> UICollectionViewLayout {
-//        let layout = SLKMessageViewLayout();
-//        return layout
-//    }
-//
-//    override func viewDidLoad() {
-//
-//        super.viewDidLoad()
-//
-//        self.bounces = true
-//        self.shakeToClearEnabled = true
-//        self.keyboardPanningEnabled = true
-//        self.inverted = false
-//
-//        self.textView.placeholder = "Message"
-//        self.textView.placeholderColor = UIColor.lightGrayColor()
-//
-//        self.leftButton.setImage(UIImage(named: "icn_upload"), forState: UIControlState.Normal)
-//        self.leftButton.tintColor = UIColor.grayColor()
-//        self.rightButton.setTitle("Send", forState: UIControlState.Normal)
-//
-//        self.textInputbar.autoHideRightButton = true
-//        self.textInputbar.maxCharCount = 140
-//        self.textInputbar.counterStyle = SLKCounterStyle.Split
-//
-//        self.typingIndicatorView.canResignByTouch = true
-//
-////        self.collectionView!.registerNib(UINib(nibName: "MPOtherMessageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CollectionViewCell")
-////        self.collectionView!.registerClass(SLKMessageViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
-////        self.collectionView!.backgroundColor = UIColor.whiteColor()
-//        
-//        self.chatManager.chatList({ (error) -> Void in
-//            // refreshControl.endRefreshing()
-//            }) { (chats) -> Void in
-//                //self.meditatorDataSource.updateMeditators(meditators)
-//                //self.meditatorView.tableView.reloadData()
-//                //refreshControl.endRefreshing()
-//                self.chats.removeAll()
-//                self.chats += chats
-//                
-//                self.tableView.reloadData()
-//                
-////                self.collectionView.reloadData()
-//        }
-//
-////        for index in 0...101 {
-////            let message:NSString = "blaaat ertresdfg sdfgdisdf sdf sdf asdl ajsdlfj asldfk jasdlf kjasdfl kjasdfl kjasdfl kjasdf  f dfgsd fsdfg "
-////            self.messages.addObject(message)
-////        }
-//    }
-//    
-//    
-//
-//    // MARK: - SLKTextViewController
-//
-//    override func didPressLeftButton(sender: AnyObject!) {
-//
-//    }
-//
-//    override func didPressRightButton(sender: AnyObject!) {
-//
-//        self.textView.refreshFirstResponder()
-//
-//        let message = self.textView.text.copy() as! NSString
-//
-//        let chatItem = MPChatItem(username: MTAuthenticationManager.sharedInstance.loggedInUser!.username!, message: message as String)
-////        self.messages.insertObject(message, atIndex: 0)
-//        self.chats.insert(chatItem, atIndex: 0)
-//        
-//
-//        let idxPath : NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
-//        self.collectionView.insertItemsAtIndexPaths([idxPath])
-//
-//        self.collectionView.slk_scrollToBottomAnimated(true)
-//
-//        super.didPressRightButton(sender)
-//    }
-//
-//    // MARK: - UICollectionViewDataSource
-//
-//    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-//        return 1
-//    }
-//
-//    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return self.chats.count
-//    }
-//
-//    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-//
-//        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CollectionViewCell", forIndexPath: indexPath) as! MPOtherMessageCollectionViewCell
-////        let message = self.messages.objectAtIndex(indexPath.row) as! NSString
-//        
-//        if indexPath.section == 0 && indexPath.row < self.chats.count {
-//            let chatItem = self.chats[indexPath.row]
-//            cell.titleLabel.text = chatItem.username
-//            cell.textLabel.text = chatItem.message
-//            cell.imageView.sd_setImageWithURL(NSURL(string: "http://randomimage.setgetgo.com/get.php?height=400&width=400")!)
-//        }
-//
-////        cell.titleLabel.text = message as String
-//
-//        return cell
-//    }
-//
-////    func collectionView(collectionView: UICollectionView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-////        let minHeight: CGFloat = 40.0
-////
-////        let message = self.chats[indexPath.row].message! as NSString
-////        let width: CGFloat = CGRectGetWidth(collectionView.frame)
-////
-////        var paragraphStyle = NSMutableParagraphStyle()
-////        paragraphStyle.lineBreakMode = NSLineBreakMode.ByWordWrapping
-////        paragraphStyle.alignment = NSTextAlignment.Left
-////
-////        var attributes: NSDictionary = [NSFontAttributeName: UIFont.systemFontOfSize(17.0), NSParagraphStyleAttributeName: paragraphStyle]
-////
-////        let bounds: CGRect = message.boundingRectWithSize(CGSizeMake(width, 0.0), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: attributes as! [String : AnyObject], context: nil)
-////
-////        if (message.length == 0) {
-////            return 0.0;
-////        }
-////
-////        return max(CGRectGetHeight(bounds), minHeight)
-////    }
-//
-//    // MARK: - UICollectionViewDataSource
-//
-//    override func didReceiveMemoryWarning() {
-//        super.didReceiveMemoryWarning()
-//    }
-//}
-
 class MPChatViewController: SLKTextViewController {
     private let chatManager = MPChatManager()
 
     private var chats: [MPChatItem] = [MPChatItem]()
 
     private let chatCellIdentifier = "chatCellIdentifier"
+    
+    private var emojis: [String]!
     
     init() {
         super.init(tableViewStyle: UITableViewStyle.Plain)
@@ -187,12 +38,19 @@ class MPChatViewController: SLKTextViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.bounces = true
-        self.shakeToClearEnabled = true
+        self.bounces                = true
+        self.shakeToClearEnabled    = true
         self.keyboardPanningEnabled = true
-        self.inverted = false
+        self.inverted               = false
         
-        self.shouldScrollToBottomAfterKeyboardShows = true
+        
+        self.emojis = ["m", "man", "machine", "block-a", "block-b", "bowtie", "boar", "boat", "book", "bookmark", "neckbeard", "metal", "fu", "feelsgood"];
+        
+        self.autoCompletionView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "autocompletion")
+        self.registerPrefixesForAutoCompletion([":"])
+//        registerPrefixesForAutoCompletion = [":"]
+        
+        self.shouldScrollToBottomAfterKeyboardShows = false
 
         self.textView.placeholder = "Message"
         self.textView.placeholderColor = UIColor.lightGrayColor()
@@ -207,8 +65,8 @@ class MPChatViewController: SLKTextViewController {
 
         self.typingIndicatorView.canResignByTouch = true
         
-//        self.tableView.transform = CGAffineTransformIdentity
         self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.scrollsToTop = false
         self.tableView.estimatedRowHeight = 100.0
         self.tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: self.chatCellIdentifier)
         self.chatManager.chatList({ (error) -> Void in
@@ -218,19 +76,11 @@ class MPChatViewController: SLKTextViewController {
 
             self.tableView.reloadData()
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-//                self.view.setNeedsLayout()
-//                self.textInputbar.setNeedsLayout()
-//                self.view.layoutIfNeeded()
-                
                 let path : NSIndexPath = NSIndexPath(forRow: self.tableView.numberOfRowsInSection(0) - 1, inSection: 0)
                 self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
-                
             })
         }
         self.view.backgroundColor = UIColor.whiteColor()
-        
-//        self.tableView.slk_scrollToBottomAnimated(false)
-        // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -247,7 +97,7 @@ class MPChatViewController: SLKTextViewController {
         var numRows = 0
         
         if tableView == self.autoCompletionView {
-            numRows = 0
+            numRows = self.emojis.count
         } else if section == 0 {
             numRows = self.chats.count
         }
@@ -258,11 +108,12 @@ class MPChatViewController: SLKTextViewController {
     // MARK: UITableViewDataSource
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.chatCellIdentifier, forIndexPath: indexPath)
+        var cell: UITableViewCell!
         
         if tableView == self.tableView {
+            cell = tableView.dequeueReusableCellWithIdentifier(self.chatCellIdentifier, forIndexPath: indexPath)
             if indexPath.section == 0 && indexPath.row < self.chats.count {
-                var chatItem = self.chats[indexPath.row]
+                let chatItem = self.chats[indexPath.row]
                 if cell is MPOtherMessageCell {
                     (cell as? MPOtherMessageCell)?.configureWithChatItem(chatItem)
                     
@@ -271,6 +122,9 @@ class MPChatViewController: SLKTextViewController {
                     cell.detailTextLabel?.text = chatItem.message
                 }
             }
+        } else {
+            cell = tableView.dequeueReusableCellWithIdentifier("autocompletion", forIndexPath: indexPath)
+            cell.textLabel?.text = self.emojis[indexPath.row]
         }
         
         return cell
@@ -279,7 +133,7 @@ class MPChatViewController: SLKTextViewController {
     // MARK: - SLKTextViewController
 
     override func didPressLeftButton(sender: AnyObject!) {
-
+        self.showAutoCompletionView(true)
     }
 
     override func didPressRightButton(sender: AnyObject!) {
@@ -288,14 +142,22 @@ class MPChatViewController: SLKTextViewController {
 
         let message = self.textView.text.copy() as! NSString
 
-        let chatItem = MPChatItem(username: MTAuthenticationManager.sharedInstance.loggedInUser!.username!, message: message as String)
-        self.chats.insert(chatItem, atIndex: 0)
+        let chatItem    = MPChatItem(username: MTAuthenticationManager.sharedInstance.loggedInUser!.username!, message: message as String)
+        chatItem.createAttributedText()
         
-        let idxPath : NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
+        let insertIndex = self.chats.count
+        self.chats.append(chatItem)
+        
+        let idxPath : NSIndexPath = NSIndexPath(forItem: insertIndex, inSection: 0)
         self.tableView.insertRowsAtIndexPaths([idxPath], withRowAnimation: .Automatic)
 
-        self.tableView.slk_scrollToBottomAnimated(true)
+//        self.tableView.slk_scrollToBottomAnimated(true)
+        self.tableView.scrollToRowAtIndexPath(idxPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
 
         super.didPressRightButton(sender)
+    }
+    
+    override func heightForAutoCompletionView() -> CGFloat {
+        return 200
     }
 }

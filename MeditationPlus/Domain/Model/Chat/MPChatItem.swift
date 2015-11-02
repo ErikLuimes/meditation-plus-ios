@@ -151,6 +151,10 @@ class MPChatItem: NSObject, Mappable {
         self.country  <- map["country"]
         self.me       <- map["me"]
         
+        createAttributedText()
+    }
+    
+    func createAttributedText() {
         let regExp = try! NSRegularExpression(pattern:"\\(.*\\)|:\\)|:\\(|:D|8-\\)|:o|;\\(|:\\||:\\*|:P|:\\^\\)|\\|-\\)|\\|\\(|\\]:\\)|:@|:S|8-\\||:x", options: [])
         
         if let message = self.message {
@@ -176,5 +180,6 @@ class MPChatItem: NSObject, Mappable {
             
             attributedText = attributedString
         }
+        
     }
 }

@@ -17,3 +17,7 @@ pod 'CWStatusBarNotification', '~> 2.3.3'
 
 pod 'SlackTextViewController'
 pod 'DTCoreText'
+
+pod 'DZNEmptyDataSet'
+
+pod 'PDTSimpleCalendar'
