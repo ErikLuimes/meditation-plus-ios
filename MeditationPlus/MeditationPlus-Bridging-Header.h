@@ -11,3 +11,5 @@
 #import <SlackTextViewController/SLKTextViewController.h>
 #import "SLKMessageViewLayout.h"
 #import "SLKMessageViewCell.h"
+
+#import <DTCoreText/DTCoreText.h>

@@ -223,7 +223,7 @@ class MPChatViewController: SLKTextViewController {
                 self.view.layoutIfNeeded()
                 let path : NSIndexPath = NSIndexPath(forRow: self.tableView.numberOfRowsInSection(0) - 1, inSection: 0)
                 //Basically maintain your logic to get the indexpath
-                self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: false)
+                self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
                 
             })
         }
