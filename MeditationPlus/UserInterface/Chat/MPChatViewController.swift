@@ -218,11 +218,11 @@ class MPChatViewController: SLKTextViewController {
 
             self.tableView.reloadData()
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.view.setNeedsLayout()
-                self.textInputbar.setNeedsLayout()
-                self.view.layoutIfNeeded()
+//                self.view.setNeedsLayout()
+//                self.textInputbar.setNeedsLayout()
+//                self.view.layoutIfNeeded()
+                
                 let path : NSIndexPath = NSIndexPath(forRow: self.tableView.numberOfRowsInSection(0) - 1, inSection: 0)
-                //Basically maintain your logic to get the indexpath
                 self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
                 
             })
