@@ -36,6 +36,8 @@ class MPChatItem: NSObject, Mappable {
     var country:  String?
     var me:       Bool?
     var attributedText: NSAttributedString?
+    var profile: MPProfile?
+    var avatarURL: NSURL?
 
     init(username: String, message: String) {
         self.username = username

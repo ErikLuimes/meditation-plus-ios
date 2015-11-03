@@ -16,6 +16,9 @@ class MPOtherMessageCell: UITableViewCell {
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var dateLabel: UILabel!
 
+    override func prepareForReuse() {
+        self.avatarImageView.image = nil
+    }
     func configureWithChatItem(chatItem: MPChatItem) {
         let dateFormatter       = NSDateFormatter()
         dateFormatter.dateStyle = NSDateFormatterStyle.LongStyle
@@ -26,7 +29,9 @@ class MPOtherMessageCell: UITableViewCell {
             self.dateLabel.text = dateFormatter.stringFromDate(chatItem.time!)
         }
         
-        self.avatarImageView.sd_setImageWithURL(NSURL(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")!)
+        let placeholderImage = NSURL(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")!
+        let avatarURL = chatItem.avatarURL ?? placeholderImage
+        self.avatarImageView.sd_setImageWithURL(avatarURL)
         
         messageLabel.attributedText = chatItem.attributedText
         

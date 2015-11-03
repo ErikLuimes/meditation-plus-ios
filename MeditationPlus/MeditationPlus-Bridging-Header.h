@@ -11,3 +11,5 @@
 #import <SlackTextViewController/SLKTextViewController.h>
 
 #import <DTCoreText/DTCoreText.h>
+
+#import <CommonCrypto/CommonCrypto.h>

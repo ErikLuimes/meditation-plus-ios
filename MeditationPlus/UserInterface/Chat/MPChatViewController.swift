@@ -12,6 +12,8 @@ import SlackTextViewController
 class MPChatViewController: SLKTextViewController {
     private let chatManager = MPChatManager()
 
+    private let profilemanager = MPProfileManager.sharedInstance
+    
     private var chats: [MPChatItem] = [MPChatItem]()
 
     private let chatCellIdentifier = "chatCellIdentifier"
@@ -73,12 +75,8 @@ class MPChatViewController: SLKTextViewController {
         }) { (chats) -> Void in
             self.chats.removeAll()
             self.chats += chats
+            self.enrichChatsWithProfileData()
 
-            self.tableView.reloadData()
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                let path : NSIndexPath = NSIndexPath(forRow: self.tableView.numberOfRowsInSection(0) - 1, inSection: 0)
-                self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
-            })
         }
         
         self.view.backgroundColor = UIColor.whiteColor()
@@ -168,5 +166,69 @@ class MPChatViewController: SLKTextViewController {
     
     override func heightForAutoCompletionView() -> CGFloat {
         return 300
+    }
+
+    func enrichChatsWithProfileData() {
+//        var usernames = self.chats.map({ $0.username })
+        
+        print("func start")
+        let dispatchGroup = dispatch_group_create()
+        
+        var profiles: [String: MPProfile] = [String: MPProfile]()
+        
+        for username in Set(self.chats.map({ $0.username ?? ""})) {
+            dispatch_group_enter(dispatchGroup)
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+                self.profilemanager.profile(username, completion: { (profile: MPProfile) -> Void in
+                    print("username: \(username)")
+                    profiles[username] = profile
+                    dispatch_group_leave(dispatchGroup)
+                })
+            })
+        }
+        
+        dispatch_group_notify(dispatchGroup, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+            for chat in self.chats where chat.username != nil{
+                if let profile: MPProfile = profiles[chat.username!], email = profile.email {
+                    let emailhash = email.md5()
+                    let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
+                    
+                    
+                    chat.avatarURL = avatarURL
+                    print("username: \(chat.username), avatar: \(avatarURL)")
+                }
+            }
+            
+            dispatch_sync(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    let path : NSIndexPath = NSIndexPath(forRow: self.tableView.numberOfRowsInSection(0) - 1, inSection: 0)
+                    self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+                })
+            })
+        });
+        
+//        dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), {
+//            
+//            print("items: \(profiles)")
+//            print("finally!");
+//        });
+    }
+}
+
+extension String {
+    func md5() -> String {
+        var digest = [UInt8](count: Int(CC_MD5_DIGEST_LENGTH), repeatedValue: 0)
+        if let data = self.dataUsingEncoding(NSUTF8StringEncoding) {
+            CC_MD5(data.bytes, CC_LONG(data.length), &digest)
+        }
+        
+        var digestHex = ""
+        for index in 0..<Int(CC_MD5_DIGEST_LENGTH) {
+            digestHex += String(format: "%02x", digest[index])
+        }
+        
+        return digestHex
+
     }
 }
