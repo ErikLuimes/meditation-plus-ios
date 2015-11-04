@@ -9,16 +9,17 @@
 import UIKit
 import DTCoreText
 
-class MPOtherMessageCell: UITableViewCell {
+class MPMessageCell: UITableViewCell {
 
-    @IBOutlet weak var messageLabel: UITextView!
-    @IBOutlet weak var authorLabel: UILabel!
+    @IBOutlet weak var messageLabel:    UITextView!
+    @IBOutlet weak var authorLabel:     UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
-    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var dateLabel:       UILabel!
 
     override func prepareForReuse() {
         self.avatarImageView.image = nil
     }
+    
     func configureWithChatItem(chatItem: MPChatItem) {
         let dateFormatter       = NSDateFormatter()
         dateFormatter.dateStyle = NSDateFormatterStyle.LongStyle

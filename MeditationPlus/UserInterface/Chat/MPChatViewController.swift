@@ -16,7 +16,8 @@ class MPChatViewController: SLKTextViewController {
     
     private var chats: [MPChatItem] = [MPChatItem]()
 
-    private let chatCellIdentifier = "chatCellIdentifier"
+    private let otherChatCellIdentifier = "otherChatCellIdentifier"
+    private let ownChatCellIdentifier = "ownChatCellIdentifier"
     
     private var autocompletionVisible: Bool = false
     
@@ -69,7 +70,8 @@ class MPChatViewController: SLKTextViewController {
         self.tableView.rowHeight          = UITableViewAutomaticDimension
         self.tableView.scrollsToTop       = false
         self.tableView.estimatedRowHeight = 100.0
-        self.tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: self.chatCellIdentifier)
+        self.tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: self.otherChatCellIdentifier)
+        self.tableView.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: self.ownChatCellIdentifier)
         
         self.chatManager.chatList({ (error) -> Void in
         }) { (chats) -> Void in
@@ -110,16 +112,18 @@ class MPChatViewController: SLKTextViewController {
         var cell: UITableViewCell!
         
         if tableView == self.tableView {
-            cell = tableView.dequeueReusableCellWithIdentifier(self.chatCellIdentifier, forIndexPath: indexPath)
             if indexPath.section == 0 && indexPath.row < self.chats.count {
                 let chatItem = self.chats[indexPath.row]
-                if cell is MPOtherMessageCell {
-                    (cell as? MPOtherMessageCell)?.configureWithChatItem(chatItem)
-                    
-                } else if cell is MPOwnMessageCell {
-                    cell.textLabel?.text       = chatItem.username
-                    cell.detailTextLabel?.text = chatItem.message
+                if chatItem.me ?? false {
+                    cell = tableView.dequeueReusableCellWithIdentifier(self.ownChatCellIdentifier, forIndexPath: indexPath)
+                } else {
+                    cell = tableView.dequeueReusableCellWithIdentifier(self.otherChatCellIdentifier, forIndexPath: indexPath)
                 }
+                
+                if cell is MPMessageCell {
+                    (cell as? MPMessageCell)?.configureWithChatItem(chatItem)
+                }
+                
             }
         } else {
             cell = tableView.dequeueReusableCellWithIdentifier("autocompletion", forIndexPath: indexPath)
