@@ -55,13 +55,13 @@ class MPChatItem: NSObject, Mappable {
     }
 
     func mapping(map: Map) {
-        self.uid      <- map["uid"]
-        self.cid      <- map["cid"]
-        self.username <- map["username"]
-        self.message  <- map["message"]
-        self.time     <- (map["time"],     MPValueTransform.transformDateEpochString())
-        self.country  <- map["country"]
-        self.me       <- map["me"]
+        uid      <- map["uid"]
+        cid      <- map["cid"]
+        username <- map["username"]
+        message  <- map["message"]
+        time     <- (map["time"],   MPValueTransform.transformDateEpochString())
+        country  <- map["country"]
+        me       <- (map["me"],     MPValueTransform.transformBoolString())
         
         createAttributedText()
     }

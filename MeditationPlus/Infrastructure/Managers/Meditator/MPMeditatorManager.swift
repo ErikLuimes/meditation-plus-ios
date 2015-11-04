@@ -33,6 +33,7 @@ class MPMeditatorManager {
     {
         if let username: String = self.authenticationManager.loggedInUser?.username {
             let endpoint                    = "http://meditation.sirimangalo.org/db.php"
+            // Always post 'last_chat' date so that no chat data is returned
             let parameters: [String:String] = ["username": username, "last_chat": String(UInt(NSDate().timeIntervalSince1970))]
             
             Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPMeditatorList?, error: ErrorType?) in

@@ -17,7 +17,7 @@ class MPChatViewController: SLKTextViewController {
     private var chats: [MPChatItem] = [MPChatItem]()
 
     private let otherChatCellIdentifier = "otherChatCellIdentifier"
-    private let ownChatCellIdentifier = "ownChatCellIdentifier"
+    private let ownChatCellIdentifier   = "ownChatCellIdentifier"
     
     private var autocompletionVisible: Bool = false
     
@@ -43,45 +43,45 @@ class MPChatViewController: SLKTextViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.bounces                = true
-        self.shakeToClearEnabled    = true
-        self.keyboardPanningEnabled = true
-        self.inverted               = false
+        bounces                = true
+        shakeToClearEnabled    = true
+        keyboardPanningEnabled = true
+        inverted               = false
         
+        autoCompletionView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "autocompletion")
+        registerPrefixesForAutoCompletion([":"])
         
-        self.autoCompletionView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "autocompletion")
-        self.registerPrefixesForAutoCompletion([":"])
-        
-        self.shouldScrollToBottomAfterKeyboardShows = false
+        shouldScrollToBottomAfterKeyboardShows = false
 
-        self.textView.placeholder      = "Message"
-        self.textView.placeholderColor = UIColor.lightGrayColor()
+        textView.placeholder      = "Message"
+        textView.placeholderColor = UIColor.lightGrayColor()
 
-        self.leftButton.setImage(UIImage(named: "icn_upload"), forState: UIControlState.Normal)
-        self.leftButton.tintColor = UIColor.grayColor()
-        self.rightButton.setTitle("Send", forState: UIControlState.Normal)
-
-        self.textInputbar.autoHideRightButton = true
-        self.textInputbar.maxCharCount        = 140
-        self.textInputbar.counterStyle        = SLKCounterStyle.Split
-
-        self.typingIndicatorView.canResignByTouch = true
+        leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
+        leftButton.tintColor = UIColor.grayColor()
         
-        self.tableView.rowHeight          = UITableViewAutomaticDimension
-        self.tableView.scrollsToTop       = false
-        self.tableView.estimatedRowHeight = 100.0
-        self.tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: self.otherChatCellIdentifier)
-        self.tableView.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: self.ownChatCellIdentifier)
+        rightButton.setTitle("Send", forState: UIControlState.Normal)
+        rightButton.tintColor = UIColor.orangeColor()
+
+        textInputbar.autoHideRightButton = true
+        textInputbar.maxCharCount        = 1000
+        textInputbar.counterStyle        = SLKCounterStyle.Split
+
+        typingIndicatorView.canResignByTouch = true
         
-        self.chatManager.chatList({ (error) -> Void in
+        view.backgroundColor = UIColor.whiteColor()
+        
+        tableView.rowHeight          = UITableViewAutomaticDimension
+        tableView.scrollsToTop       = false
+        tableView.estimatedRowHeight = 100.0
+        tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
+        tableView.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
+        
+        chatManager.chatList({ (error) -> Void in
         }) { (chats) -> Void in
             self.chats.removeAll()
             self.chats += chats
             self.enrichChatsWithProfileData()
-
         }
-        
-        self.view.backgroundColor = UIColor.whiteColor()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -148,24 +148,46 @@ class MPChatViewController: SLKTextViewController {
     }
 
     override func didPressRightButton(sender: AnyObject!) {
+        
+//        MPNotificationManager.displayStaticStatusBarNotification("Sending message ...")
 
         self.textView.refreshFirstResponder()
 
-        let message = self.textView.text.copy() as! NSString
-
-        let chatItem    = MPChatItem(username: MTAuthenticationManager.sharedInstance.loggedInUser!.username!, message: message as String)
-        chatItem.createAttributedText()
-        
-        let insertIndex = self.chats.count
-        self.chats.append(chatItem)
-        
-        let idxPath : NSIndexPath = NSIndexPath(forItem: insertIndex, inSection: 0)
-        self.tableView.insertRowsAtIndexPaths([idxPath], withRowAnimation: .Automatic)
-
-//        self.tableView.slk_scrollToBottomAnimated(true)
-        self.tableView.scrollToRowAtIndexPath(idxPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+        let message = self.textView.text.copy() as! String
 
         super.didPressRightButton(sender)
+        
+        if message.characters.count == 0 {
+            MPNotificationManager.displayStatusBarNotification("Please enter a message.")
+            return
+        }
+        
+        chatManager.postMessage(message, completion: { (chats: [MPChatItem]) -> Void in
+            self.appendChats(chats)
+        }) { (error: NSError?) -> Void in
+            MPNotificationManager.displayStatusBarNotification("Failed sending message.")
+        }
+    }
+    
+    func appendChats(newChats: [MPChatItem]) {
+        tableView.beginUpdates()
+        let numChatsToAdd = newChats.count
+        let startIndex    = chats.count
+        let endIndex      = startIndex + numChatsToAdd
+        
+        chats += newChats
+        
+        var indexPathsToAdd = [NSIndexPath]()
+        for index in startIndex..<endIndex {
+            indexPathsToAdd.append(NSIndexPath(forRow: index, inSection: 0))
+        }
+        
+        tableView.insertRowsAtIndexPaths(indexPathsToAdd, withRowAnimation: .Automatic)
+        tableView.endUpdates()
+        
+        if let indexPath = indexPathsToAdd.last {
+            tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+        }
     }
     
     override func heightForAutoCompletionView() -> CGFloat {
@@ -173,9 +195,6 @@ class MPChatViewController: SLKTextViewController {
     }
 
     func enrichChatsWithProfileData() {
-//        var usernames = self.chats.map({ $0.username })
-        
-        print("func start")
         let dispatchGroup = dispatch_group_create()
         
         var profiles: [String: MPProfile] = [String: MPProfile]()
@@ -184,7 +203,6 @@ class MPChatViewController: SLKTextViewController {
             dispatch_group_enter(dispatchGroup)
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
                 self.profilemanager.profile(username, completion: { (profile: MPProfile) -> Void in
-                    print("username: \(username)")
                     profiles[username] = profile
                     dispatch_group_leave(dispatchGroup)
                 })
@@ -210,7 +228,6 @@ class MPChatViewController: SLKTextViewController {
                         
                         chat.avatarURL = avatarURL
                     }
-//                    print("username: \(chat.username), avatar: \(avatarURL)")
                 }
             }
             
@@ -222,12 +239,6 @@ class MPChatViewController: SLKTextViewController {
                 })
             })
         });
-        
-//        dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), {
-//            
-//            print("items: \(profiles)")
-//            print("finally!");
-//        });
     }
 }
 
