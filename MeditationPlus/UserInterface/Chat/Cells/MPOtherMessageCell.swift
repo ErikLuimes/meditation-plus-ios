@@ -11,7 +11,7 @@ import DTCoreText
 
 class MPOtherMessageCell: UITableViewCell {
 
-    @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var messageLabel: UITextView!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var dateLabel: UILabel!

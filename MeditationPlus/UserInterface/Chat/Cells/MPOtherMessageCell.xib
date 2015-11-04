@@ -40,34 +40,37 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="0tc-ga-R7k">
+                                <rect key="frame" x="8" y="25" width="256" height="35.5"/>
+                                <animations/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                                <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
+                            </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s3G-ed-hgK" userLabel="Date Label">
-                                <rect key="frame" x="8" y="60" width="256" height="15"/>
+                                <rect key="frame" x="8" y="60.5" width="256" height="14.5"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="249" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEv-Ww-p9V" userLabel="Message Label">
-                                <rect key="frame" x="8" y="25" width="256" height="27"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" red="0.96654992015353536" green="0.94996123076285865" blue="0.90019516259082843" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="dEv-Ww-p9V" secondAttribute="trailing" constant="8" id="23e-FZ-Sm9"/>
+                            <constraint firstItem="s3G-ed-hgK" firstAttribute="top" secondItem="0tc-ga-R7k" secondAttribute="bottom" id="311-Q8-Vhj"/>
                             <constraint firstAttribute="bottom" secondItem="s3G-ed-hgK" secondAttribute="bottom" constant="8" id="BF9-f2-bmf"/>
+                            <constraint firstItem="0tc-ga-R7k" firstAttribute="top" secondItem="zr5-Ry-8Gl" secondAttribute="bottom" id="C07-AU-0bn"/>
                             <constraint firstItem="zr5-Ry-8Gl" firstAttribute="top" secondItem="bDh-6R-wh9" secondAttribute="top" constant="8" id="Ifb-2a-H9l"/>
                             <constraint firstAttribute="trailing" secondItem="s3G-ed-hgK" secondAttribute="trailing" constant="8" id="Iyq-k0-dx0"/>
+                            <constraint firstAttribute="trailing" secondItem="0tc-ga-R7k" secondAttribute="trailing" constant="8" id="cax-c8-udz"/>
                             <constraint firstAttribute="trailing" secondItem="zr5-Ry-8Gl" secondAttribute="trailing" constant="8" id="dSR-hp-JHG"/>
-                            <constraint firstItem="s3G-ed-hgK" firstAttribute="top" secondItem="dEv-Ww-p9V" secondAttribute="bottom" constant="8" id="dzD-a3-aVk"/>
                             <constraint firstItem="zr5-Ry-8Gl" firstAttribute="leading" secondItem="bDh-6R-wh9" secondAttribute="leading" constant="8" id="hu7-Tk-lPu"/>
-                            <constraint firstItem="dEv-Ww-p9V" firstAttribute="top" secondItem="zr5-Ry-8Gl" secondAttribute="bottom" id="qSc-uf-4oS"/>
+                            <constraint firstItem="0tc-ga-R7k" firstAttribute="leading" secondItem="bDh-6R-wh9" secondAttribute="leading" constant="8" id="q36-Ag-fY7"/>
                             <constraint firstItem="s3G-ed-hgK" firstAttribute="leading" secondItem="bDh-6R-wh9" secondAttribute="leading" constant="8" id="v5Q-KS-NDB"/>
-                            <constraint firstItem="dEv-Ww-p9V" firstAttribute="leading" secondItem="bDh-6R-wh9" secondAttribute="leading" constant="8" id="vv4-wm-Tp7"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -91,7 +94,7 @@
                 <outlet property="authorLabel" destination="zr5-Ry-8Gl" id="nN8-ag-fXI"/>
                 <outlet property="avatarImageView" destination="KEq-Hp-CNv" id="G8d-yd-WqG"/>
                 <outlet property="dateLabel" destination="s3G-ed-hgK" id="Vso-aj-HVd"/>
-                <outlet property="messageLabel" destination="dEv-Ww-p9V" id="o1p-V6-54C"/>
+                <outlet property="messageLabel" destination="0tc-ga-R7k" id="wRc-6t-MdI"/>
             </connections>
             <point key="canvasLocation" x="461.5" y="183"/>
         </tableViewCell>

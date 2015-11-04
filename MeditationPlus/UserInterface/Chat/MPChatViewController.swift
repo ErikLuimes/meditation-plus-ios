@@ -189,13 +189,24 @@ class MPChatViewController: SLKTextViewController {
         
         dispatch_group_notify(dispatchGroup, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
             for chat in self.chats where chat.username != nil{
-                if let profile: MPProfile = profiles[chat.username!], email = profile.email {
-                    let emailhash = email.md5()
-                    let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
-                    
-                    
-                    chat.avatarURL = avatarURL
-                    print("username: \(chat.username), avatar: \(avatarURL)")
+                if let profile: MPProfile = profiles[chat.username!] {
+                    if let _ = profile.img, imgURL = NSURL(string: profile.img!) where profile.img!.characters.count > 0 {
+                        chat.avatarURL = imgURL
+                    } else if let _ = profile.img where profile.img!.rangeOfString("@") != nil {
+                        let emailhash = profile.img!.md5()
+                        let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
+                        
+                        
+                        chat.avatarURL = avatarURL
+                        
+                    } else if let email = profile.email {
+                        let emailhash = email.md5()
+                        let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
+                        
+                        
+                        chat.avatarURL = avatarURL
+                    }
+//                    print("username: \(chat.username), avatar: \(avatarURL)")
                 }
             }
             
