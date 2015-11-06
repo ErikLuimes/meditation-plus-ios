@@ -8,8 +8,9 @@
 
 import UIKit
 import SlackTextViewController
+import DZNEmptyDataSet
 
-class MPChatViewController: SLKTextViewController {
+class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
     private let chatManager = MPChatManager()
 
     private let profilemanager = MPProfileManager.sharedInstance
@@ -87,6 +88,8 @@ class MPChatViewController: SLKTextViewController {
         tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
         tableView.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
         
+        self.tableView.emptyDataSetSource   = self
+        self.tableView.emptyDataSetDelegate = self
         
         
         chatManager.chatList({ (error) -> Void in
@@ -280,6 +283,28 @@ class MPChatViewController: SLKTextViewController {
             })
         });
     }
+    
+    // MARK: DZNEmptyDataSetDelegate
+    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage! {
+        return UIImage(named: "chat-icon")
+    }
+    
+    func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation! {
+        let animation = CABasicAnimation(keyPath: "transform")
+        
+        animation.fromValue = NSValue(CATransform3D: CATransform3DIdentity)
+        animation.toValue = NSValue(CATransform3D: CATransform3DMakeRotation(CGFloat(M_PI_2), 0.0, 1.0, 0.0))
+        animation.duration = 0.75
+        animation.cumulative = true
+        animation.repeatCount = 1000
+        
+        return animation
+    }
+    
+    func emptyDataSetShouldAnimateImageView(scrollView: UIScrollView!) -> Bool {
+        return true
+    }
+    // MARK: DZNEmptyDataSetSource
 }
 
 extension String {
