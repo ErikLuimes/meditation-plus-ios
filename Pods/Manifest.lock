@@ -5,15 +5,29 @@ PODS:
     - ObjectMapper (= 0.17)
   - Crashlytics (3.3.4)
   - CWStatusBarNotification (2.3.3)
+  - DTCoreText (1.6.16):
+    - DTFoundation/Core (~> 1.7.5)
+    - DTFoundation/DTAnimatedGIF (~> 1.7.5)
+    - DTFoundation/DTHTMLParser (~> 1.7.5)
+    - DTFoundation/UIKit (~> 1.7.5)
+  - DTFoundation/Core (1.7.8)
+  - DTFoundation/DTAnimatedGIF (1.7.8)
+  - DTFoundation/DTHTMLParser (1.7.8):
+    - DTFoundation/Core
+  - DTFoundation/UIKit (1.7.8):
+    - DTFoundation/Core
+  - DZNEmptyDataSet (1.7.2)
   - Fabric (1.5.5):
     - Fabric/Base (= 1.5.5)
   - Fabric/Base (1.5.5)
   - KGFloatingDrawer (0.2.0)
   - Locksmith (2.0.1)
   - ObjectMapper (0.17)
+  - PDTSimpleCalendar (0.9.1)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
+  - SlackTextViewController (1.7.1)
   - UIImage+Additions (2.1.0)
 
 DEPENDENCIES:
@@ -21,11 +35,15 @@ DEPENDENCIES:
   - AlamofireObjectMapper (= 1.0)
   - Crashlytics
   - CWStatusBarNotification (~> 2.3.3)
+  - DTCoreText
+  - DZNEmptyDataSet
   - Fabric
   - KGFloatingDrawer (from `https://github.com/ErikLuimes/KGFloatingDrawer.git`, tag
     `0.2.0`)
   - Locksmith (= 2.0.1)
+  - PDTSimpleCalendar
   - SDWebImage (~> 3.7)
+  - SlackTextViewController
   - UIImage+Additions (= 2.1.0)
 
 EXTERNAL SOURCES:
@@ -43,11 +61,16 @@ SPEC CHECKSUMS:
   AlamofireObjectMapper: 4f9d766a4742bb69258921723bafc260849f216c
   Crashlytics: 41c082440d2e14da444186fff65e79c0b4b35d4c
   CWStatusBarNotification: 2349142e97c9f16fb8247ed3c00308cd355d334b
+  DTCoreText: 934a16fe9ffdd169c96261721b39dc312b75713d
+  DTFoundation: 46e2b2fafe78d67febfd8d1f85fe9845a093f00e
+  DZNEmptyDataSet: 0ec00bfc230d7450997b60c127afdd0b9f24f3b6
   Fabric: 190bf1a6eb65f7500de1347d027d2e59a7e53db1
   KGFloatingDrawer: b0c2810954bfb61f4d4dd01b8891d5c23933e368
   Locksmith: 2c7bdc5c3a31a97d748791ad830310b1af4b8549
   ObjectMapper: fa286b7cb5a398f1b0d8d64d0dd33fd1b307022c
+  PDTSimpleCalendar: d1c03387678422715dc021aa1a85d70f4d1014f2
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  SlackTextViewController: 139ffc5b09276ff5ac1609ac78eafab702fc974e
   UIImage+Additions: 6181430b139099649e56171d58a52d6c37d57e42
 
 COCOAPODS: 0.39.0

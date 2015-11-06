@@ -36,4 +36,18 @@ class MPNotificationManager {
         notification.notificationAnimationOutStyle    = .Left
         notification.displayNotificationWithMessage(message, forDuration: 4.0)
     }
+    
+    class func displayStatusBarNotification(message: String) {
+        let notification                              = CWStatusBarNotification()
+        notification.notificationStyle                = .StatusBarNotification
+        notification.displayNotificationWithMessage(message, forDuration: 4.0)
+    }
+    
+    class func displayStaticStatusBarNotification(message: String) {
+        let notification                              = CWStatusBarNotification()
+        notification.notificationStyle                = .StatusBarNotification
+        notification.displayNotificationWithMessage(message) { () -> Void in
+            //
+        }
+    }
 }
