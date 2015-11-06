@@ -4,43 +4,45 @@
 //
 
 import Foundation
-import AFNetworking
+import Alamofire
 
 class MPChatManager {
     private let authenticationManager = MTAuthenticationManager.sharedInstance
+    static var lastUpdateTimeStamp: String = "0"
 
     func chatList(failure: ((NSError?) -> Void)? = nil, completion: ([MPChatItem]) -> Void) {
-        if let username = self.authenticationManager.loggedInUser, token = self.authenticationManager.token {
-            let parameters = [
-                    "username": username,
-                    "token":    token,
+        if let username: String = self.authenticationManager.loggedInUser?.username {
+            let endpoint                    = "http://meditation.sirimangalo.org/db.php"
+            let parameters: [String:String] = ["username": username, "last_chat": MPChatManager.lastUpdateTimeStamp]
+            
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPChatList?, error: ErrorType?) in
+                
+                if let chats = response?.chats where chats.count > 0  {
+                    MPChatManager.lastUpdateTimeStamp = chats.last?.timestamp ?? "0"
+                    completion(chats)
+                }
+            }
+        }
+    }
+    
+    func postMessage(message:String,  completion: ([MPChatItem]) -> Void, failure: ((NSError?) -> Void)? = nil) {
+        if let username: String = self.authenticationManager.loggedInUser?.username {
+            let endpoint                    = "http://meditation.sirimangalo.org/db.php"
+            let parameters: [String:String] = [
+                "username":  username,
+                "form_id":   "chatform",
+                "message":   message,
+                "last_chat": MPChatManager.lastUpdateTimeStamp
             ]
-
-            let manager    = AFHTTPRequestOperationManager()
-            let endpoint   = "http://meditation.sirimangalo.org/db.php"
-
-            var jsonResponseSerializer : AFJSONResponseSerializer = MPResponseObjectSerializer<MPChatList>()
-            var acceptableContentTypes = NSMutableSet(set: jsonResponseSerializer.acceptableContentTypes!)
-            acceptableContentTypes.addObject("text/html")
-
-            jsonResponseSerializer.acceptableContentTypes = acceptableContentTypes as Set
-            manager.responseSerializer = jsonResponseSerializer
-
-            manager.POST(
-                endpoint,
-                parameters: parameters,
-                success: { (operation: AFHTTPRequestOperation!, responseObject: AnyObject?) in
-                    if let chatList = responseObject as? MPChatList where chatList.chats != nil {
-                        completion(chatList.chats!)
-                    } else {
-                        failure?(nil)
-                    }
-
-                },
-                failure: { (operation: AFHTTPRequestOperation!, error: NSError!) in
+            
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPChatList?, error: ErrorType?) in
+                if let chats = response?.chats where chats.count > 0  {
+                    MPChatManager.lastUpdateTimeStamp = chats.last?.timestamp ?? "0"
+                    completion(chats)
+                } else {
                     failure?(nil)
                 }
-            )
+            }
         }
     }
 }

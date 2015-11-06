@@ -8,158 +8,34 @@
 
 import UIKit
 import SlackTextViewController
+import DZNEmptyDataSet
 
-class MPChatViewController: SLKTextViewController {
+class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
     private let chatManager = MPChatManager()
 
+    private let profilemanager = MPProfileManager.sharedInstance
+    
     private var chats: [MPChatItem] = [MPChatItem]()
 
-    init() {
-        super.init(collectionViewLayout: SLKMessageViewLayout())
-    }
+    private let otherChatCellIdentifier = "otherChatCellIdentifier"
+    private let ownChatCellIdentifier   = "ownChatCellIdentifier"
     
-    required init!(coder decoder: NSCoder!) {
-        super.init(coder: decoder)
-    }
+    private var autocompletionVisible: Bool = false
     
-    override class func collectionViewLayoutForCoder(decoder: NSCoder) -> UICollectionViewLayout {
-        let layout = SLKMessageViewLayout();
-        return layout
-    }
-
-    override func viewDidLoad() {
-
-        super.viewDidLoad()
-
-        self.bounces = true
-        self.shakeToClearEnabled = true
-        self.keyboardPanningEnabled = true
-        self.inverted = false
-
-        self.textView.placeholder = "Message"
-        self.textView.placeholderColor = UIColor.lightGrayColor()
-
-        self.leftButton.setImage(UIImage(named: "icn_upload"), forState: UIControlState.Normal)
-        self.leftButton.tintColor = UIColor.grayColor()
-        self.rightButton.setTitle("Send", forState: UIControlState.Normal)
-
-        self.textInputbar.autoHideRightButton = true
-        self.textInputbar.maxCharCount = 140
-        self.textInputbar.counterStyle = SLKCounterStyle.Split
-
-        self.typingIndicatorView.canResignByTouch = true
-
-        self.collectionView!.registerClass(SLKMessageViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
-        self.collectionView!.backgroundColor = UIColor.whiteColor()
-        
-        self.chatManager.chatList(failure: { (error) -> Void in
-            // refreshControl.endRefreshing()
-            }) { (chats) -> Void in
-                //self.meditatorDataSource.updateMeditators(meditators)
-                //self.meditatorView.tableView.reloadData()
-                //refreshControl.endRefreshing()
-                self.chats.removeAll()
-                self.chats += chats
-                
-                self.collectionView.reloadData()
-        }
-
-//        for index in 0...101 {
-//            let message:NSString = "blaaat ertresdfg sdfgdisdf sdf sdf asdl ajsdlfj asldfk jasdlf kjasdfl kjasdfl kjasdfl kjasdf  f dfgsd fsdfg "
-//            self.messages.addObject(message)
-//        }
-    }
+    private var chatUpdateTimer: NSTimer?
     
+    private var emojis: [String] = Array<String>(MPTextManager.sharedInstance.emoticons.keys.sort(){ $0 < $1 })
     
-
-    // MARK: - SLKTextViewController
-
-    override func didPressLeftButton(sender: AnyObject!) {
-
-    }
-
-    override func didPressRightButton(sender: AnyObject!) {
-
-        self.textView.refreshFirstResponder()
-
-        let message = self.textView.text.copy() as! NSString
-
-        let chatItem = MPChatItem(username: MTAuthenticationManager.sharedInstance.loggedInUser!.username, message: message as String)
-//        self.messages.insertObject(message, atIndex: 0)
-        self.chats.insert(chatItem, atIndex: 0)
-        
-
-        let idxPath : NSIndexPath = NSIndexPath(forItem: 0, inSection: 0)
-        self.collectionView.insertItemsAtIndexPaths([idxPath])
-
-        self.collectionView.slk_scrollToBottomAnimated(true)
-
-        super.didPressRightButton(sender)
-    }
-
-    // MARK: - UICollectionViewDataSource
-
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.chats.count
-    }
-
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> SLKMessageViewCell {
-
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CollectionViewCell", forIndexPath: indexPath) as! SLKMessageViewCell
-//        let message = self.messages.objectAtIndex(indexPath.row) as! NSString
-        
-        if indexPath.section == 0 && indexPath.row < self.chats.count {
-            var chatItem = self.chats[indexPath.row]
-            cell.titleLabel.text = chatItem.message
-            cell.imageView.setImageWithURL(NSURL(string: "http://randomimage.setgetgo.com/get.php?height=400&width=400")!)
-        }
-
-//        cell.titleLabel.text = message as String
-
-        return cell
-    }
-
-    func collectionView(collectionView: UICollectionView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        let minHeight: CGFloat = 40.0
-
-        let message = self.chats[indexPath.row].message! as NSString
-        let width: CGFloat = CGRectGetWidth(collectionView.frame)
-
-        var paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        paragraphStyle.alignment = NSTextAlignment.Left
-
-        var attributes: NSDictionary = [NSFontAttributeName: UIFont.systemFontOfSize(17.0), NSParagraphStyleAttributeName: paragraphStyle]
-
-        let bounds: CGRect = message.boundingRectWithSize(CGSizeMake(width, 0.0), options:NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: attributes as [NSObject : AnyObject], context: nil)
-
-        if (message.length == 0) {
-            return 0.0;
-        }
-
-        return max(CGRectGetHeight(bounds), minHeight)
-    }
-
-    // MARK: - UICollectionViewDataSource
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-}
-
-class _MPChatViewController: SLKTextViewController {
-    private let chatManager = MPChatManager()
-
-    private var chats: [MPChatItem] = [MPChatItem]()
-
-    private let chatCellIdentifier = "chatCellIdentifier"
+    private var emoticonButton: UIButton!
     
     init() {
         super.init(tableViewStyle: UITableViewStyle.Plain)
+        
+        tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "chat-icon"), tag: 0)
+        
+        edgesForExtendedLayout   = .None
+        tableView.separatorStyle = .None
+        
     }
 
     required init!(coder decoder: NSCoder!) {
@@ -173,25 +49,79 @@ class _MPChatViewController: SLKTextViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tableView.rowHeight = UITableViewAutomaticDimension
-        self.tableView.estimatedRowHeight = 160.0
+        bounces                = true
+        shakeToClearEnabled    = true
+        keyboardPanningEnabled = true
+        inverted               = false
         
-//        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: self.chatCellIdentifier)
-//        self.tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: self.chatCellIdentifier)
-        self.tableView.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: self.chatCellIdentifier)
-        self.chatManager.chatList(failure: { (error) -> Void in
-            // refreshControl.endRefreshing()
+        autoCompletionView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "autocompletion")
+        registerPrefixesForAutoCompletion([":"])
+        
+        shouldScrollToBottomAfterKeyboardShows = false
+
+
+        leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
+        leftButton.tintColor = UIColor.grayColor()
+        
+        rightButton.setTitle("Send", forState: UIControlState.Normal)
+        rightButton.tintColor = UIColor.orangeColor()
+        
+        emoticonButton = UIButton(type: UIButtonType.Custom)
+        emoticonButton.setImage(UIImage(named: "orange_q"), forState: .Normal)
+        emoticonButton.addTarget(self, action: "didPressEmoticonButton:", forControlEvents: UIControlEvents.TouchUpInside)
+        textInputbar.insertSubview(emoticonButton, atIndex: 0)
+
+        textView.placeholder      = "Message"
+        textView.placeholderColor = UIColor.lightGrayColor()
+        
+        textInputbar.autoHideRightButton   = true
+        textInputbar.maxCharCount          = 1000
+        textInputbar.counterStyle          = SLKCounterStyle.Split
+        
+        typingIndicatorView.canResignByTouch = true
+        
+        view.backgroundColor = UIColor.whiteColor()
+        
+        tableView.rowHeight          = UITableViewAutomaticDimension
+        tableView.scrollsToTop       = false
+        tableView.estimatedRowHeight = 100.0
+        tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
+        tableView.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
+        
+        self.tableView.emptyDataSetSource   = self
+        self.tableView.emptyDataSetDelegate = self
+        
+        
+        chatManager.chatList({ (error) -> Void in
         }) { (chats) -> Void in
-            //self.meditatorDataSource.updateMeditators(meditators)
-            //self.meditatorView.tableView.reloadData()
-            //refreshControl.endRefreshing()
             self.chats.removeAll()
             self.chats += chats
-
-            self.tableView.reloadData()
+            self.enrichChatsWithProfileData()
         }
-//        self.view.backgroundColor = UIColor.greenColor()
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        chatUpdateTimer?.invalidate()
+        chatUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: "updateChat", userInfo: nil, repeats: true)
+        NSRunLoop.mainRunLoop().addTimer(chatUpdateTimer!, forMode:NSRunLoopCommonModes)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        chatUpdateTimer?.invalidate()
+    }
+    
+    func updateChat() {
+        chatManager.chatList({ (error) -> Void in
+        }) { (chats) -> Void in
+            if chats.count > 0 {
+                self.appendChats(chats)
+                self.enrichChatsWithProfileData()
+            }
+        }
     }
 
     // MARK: UITableViewDataSource
@@ -204,7 +134,7 @@ class _MPChatViewController: SLKTextViewController {
         var numRows = 0
         
         if tableView == self.autoCompletionView {
-            numRows = 0
+            numRows = self.emojis.count
         } else if section == 0 {
             numRows = self.chats.count
         }
@@ -215,40 +145,181 @@ class _MPChatViewController: SLKTextViewController {
     // MARK: UITableViewDataSource
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.chatCellIdentifier, forIndexPath: indexPath) as! UITableViewCell
-        cell.transform = self.tableView.transform
+        var cell: UITableViewCell!
         
         if tableView == self.tableView {
             if indexPath.section == 0 && indexPath.row < self.chats.count {
-                var chatItem = self.chats[indexPath.row]
-                if cell is MPOtherMessageCell {
-                    (cell as? MPOtherMessageCell)?.configureWithChatItem(chatItem)
-                    
-                } else if cell is MPOwnMessageCell {
-                    cell.textLabel?.text       = chatItem.username
-                    cell.detailTextLabel?.text = chatItem.message
+                let chatItem = self.chats[indexPath.row]
+                if chatItem.me ?? false {
+                    cell = tableView.dequeueReusableCellWithIdentifier(self.ownChatCellIdentifier, forIndexPath: indexPath)
+                } else {
+                    cell = tableView.dequeueReusableCellWithIdentifier(self.otherChatCellIdentifier, forIndexPath: indexPath)
                 }
+                
+                if cell is MPMessageCell {
+                    (cell as? MPMessageCell)?.configureWithChatItem(chatItem)
+                }
+                
             }
+        } else {
+            cell = tableView.dequeueReusableCellWithIdentifier("autocompletion", forIndexPath: indexPath)
+            cell.textLabel?.text  = self.emojis[indexPath.row]
+            cell.imageView?.image = UIImage(named: MPTextManager.sharedInstance.emoticons[self.emojis[indexPath.row]]!)
         }
         
         return cell
     }
     
-//    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        return 140
-//    }
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if tableView == self.autoCompletionView {
+            textInputbar.textView.insertText(self.emojis[indexPath.row])
+        }
+    }
     
-//    - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-//    {
-//    #warning Incomplete method implementation.
-//    // Returns the number of rows in the section.
-//    
-//    if ([tableView isEqual:self.autoCompletionView]) {
-//    return 0;
-//    }
-//    
-//    return 0;
-//    }
+    // MARK: - SLKTextViewController
 
+    override func didPressLeftButton(sender: AnyObject!) {
+        autocompletionVisible = !autocompletionVisible
+        self.showAutoCompletionView(autocompletionVisible)
+    }
+    
+    func didPressEmoticonButton(sener: UIButton) {
+        autocompletionVisible = !autocompletionVisible
+        self.showAutoCompletionView(autocompletionVisible)
+    }
 
+    override func didPressRightButton(sender: AnyObject!) {
+        self.textView.refreshFirstResponder()
+
+        let message = self.textView.text.copy() as! String
+
+        super.didPressRightButton(sender)
+        
+        if message.characters.count == 0 {
+            MPNotificationManager.displayStatusBarNotification("Please enter a message.")
+            return
+        }
+        
+        chatManager.postMessage(message, completion: { (chats: [MPChatItem]) -> Void in
+            self.appendChats(chats)
+            self.enrichChatsWithProfileData()
+        }) { (error: NSError?) -> Void in
+            MPNotificationManager.displayStatusBarNotification("Failed sending message.")
+        }
+    }
+    
+    func appendChats(newChats: [MPChatItem]) {
+        if newChats.count == 0 {
+            return
+        }
+        
+        tableView.beginUpdates()
+        let numChatsToAdd = newChats.count
+        let startIndex    = chats.count
+        let endIndex      = startIndex + numChatsToAdd
+        
+        chats += newChats
+        
+        var indexPathsToAdd = [NSIndexPath]()
+        for index in startIndex..<endIndex {
+            indexPathsToAdd.append(NSIndexPath(forRow: index, inSection: 0))
+        }
+        
+        tableView.insertRowsAtIndexPaths(indexPathsToAdd, withRowAnimation: .Automatic)
+        tableView.endUpdates()
+        
+        if let indexPath = indexPathsToAdd.last {
+            tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+        }
+    }
+    
+    override func heightForAutoCompletionView() -> CGFloat {
+        return 300
+    }
+
+    func enrichChatsWithProfileData(animated: Bool = true) {
+        let dispatchGroup = dispatch_group_create()
+        
+        var profiles: [String: MPProfile] = [String: MPProfile]()
+        
+        for username in Set(self.chats.map({ $0.username ?? ""})) {
+            dispatch_group_enter(dispatchGroup)
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+                self.profilemanager.profile(username, completion: { (profile: MPProfile) -> Void in
+                    profiles[username] = profile
+                    dispatch_group_leave(dispatchGroup)
+                })
+            })
+        }
+        
+        dispatch_group_notify(dispatchGroup, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+            for chat in self.chats where chat.username != nil{
+                if let profile: MPProfile = profiles[chat.username!] {
+                    if let _ = profile.img, imgURL = NSURL(string: profile.img!) where profile.img!.characters.count > 0 {
+                        chat.avatarURL = imgURL
+                    } else if let _ = profile.img where profile.img!.rangeOfString("@") != nil {
+                        let emailhash = profile.img!.md5()
+                        let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
+                        
+                        
+                        chat.avatarURL = avatarURL
+                        
+                    } else if let email = profile.email {
+                        let emailhash = email.md5()
+                        let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
+                        
+                        
+                        chat.avatarURL = avatarURL
+                    }
+                }
+            }
+            
+            dispatch_sync(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+//                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    let path : NSIndexPath = NSIndexPath(forRow: self.tableView.numberOfRowsInSection(0) - 1, inSection: 0)
+                    self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
+//                })
+            })
+        });
+    }
+    
+    // MARK: DZNEmptyDataSetDelegate
+    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage! {
+        return UIImage(named: "chat-icon")
+    }
+    
+    func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation! {
+        let animation = CABasicAnimation(keyPath: "transform")
+        
+        animation.fromValue = NSValue(CATransform3D: CATransform3DIdentity)
+        animation.toValue = NSValue(CATransform3D: CATransform3DMakeRotation(CGFloat(M_PI_2), 0.0, 1.0, 0.0))
+        animation.duration = 0.75
+        animation.cumulative = true
+        animation.repeatCount = 1000
+        
+        return animation
+    }
+    
+    func emptyDataSetShouldAnimateImageView(scrollView: UIScrollView!) -> Bool {
+        return true
+    }
+    // MARK: DZNEmptyDataSetSource
+}
+
+extension String {
+    func md5() -> String {
+        var digest = [UInt8](count: Int(CC_MD5_DIGEST_LENGTH), repeatedValue: 0)
+        if let data = self.dataUsingEncoding(NSUTF8StringEncoding) {
+            CC_MD5(data.bytes, CC_LONG(data.length), &digest)
+        }
+        
+        var digestHex = ""
+        for index in 0..<Int(CC_MD5_DIGEST_LENGTH) {
+            digestHex += String(format: "%02x", digest[index])
+        }
+        
+        return digestHex
+
+    }
 }
