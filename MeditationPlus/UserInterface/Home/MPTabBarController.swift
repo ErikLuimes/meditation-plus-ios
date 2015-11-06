@@ -37,8 +37,8 @@ class MPTabBarController: UITabBarController
         let chatViewController: MPChatViewController = MPChatViewController()
         viewControllers.append(chatViewController)
         
-        let dhammaViewController : MPDhammaViewController = MPDhammaViewController(nibName: "MPDhammaViewController", bundle: nil)
-        viewControllers.append(dhammaViewController)
+//        let dhammaViewController : MPDhammaViewController = MPDhammaViewController(nibName: "MPDhammaViewController", bundle: nil)
+//        viewControllers.append(dhammaViewController)
         
         let quoteViewController : MPQuoteViewController = MPQuoteViewController(nibName: "MPQuoteViewController", bundle: nil)
         viewControllers.append(quoteViewController)
