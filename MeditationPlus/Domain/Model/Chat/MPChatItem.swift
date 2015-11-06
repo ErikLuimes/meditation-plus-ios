@@ -28,16 +28,17 @@ import ObjectMapper
 import DTCoreText
 
 class MPChatItem: NSObject, Mappable {
-    var uid:      String?
-    var cid:      String?
-    var username: String?
-    var message:  String?
-    var time:     NSDate?
-    var country:  String?
-    var me:       Bool?
+    var uid:            String?
+    var cid:            String?
+    var username:       String?
+    var message:        String?
+    var time:           NSDate?
+    var timestamp:      String?
+    var country:        String?
+    var me:             Bool?
     var attributedText: NSAttributedString?
-    var profile: MPProfile?
-    var avatarURL: NSURL?
+    var profile:        MPProfile?
+    var avatarURL:      NSURL?
 
     init(username: String, message: String) {
         self.username = username
@@ -55,13 +56,14 @@ class MPChatItem: NSObject, Mappable {
     }
 
     func mapping(map: Map) {
-        uid      <- map["uid"]
-        cid      <- map["cid"]
-        username <- map["username"]
-        message  <- map["message"]
-        time     <- (map["time"],   MPValueTransform.transformDateEpochString())
-        country  <- map["country"]
-        me       <- (map["me"],     MPValueTransform.transformBoolString())
+        uid       <- map["uid"]
+        cid       <- map["cid"]
+        username  <- map["username"]
+        message   <- map["message"]
+        time      <- (map["time"],   MPValueTransform.transformDateEpochString())
+        timestamp <- map["time"]
+        country   <- map["country"]
+        me        <- (map["me"],     MPValueTransform.transformBoolString())
         
         createAttributedText()
     }

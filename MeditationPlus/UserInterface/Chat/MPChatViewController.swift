@@ -21,7 +21,11 @@ class MPChatViewController: SLKTextViewController {
     
     private var autocompletionVisible: Bool = false
     
-    private var emojis: [String] = Array<String>(MPTextManager.sharedInstance.emoticons.keys)
+    private var chatUpdateTimer: NSTimer?
+    
+    private var emojis: [String] = Array<String>(MPTextManager.sharedInstance.emoticons.keys.sort(){ $0 < $1 })
+    
+    private var emoticonButton: UIButton!
     
     init() {
         super.init(tableViewStyle: UITableViewStyle.Plain)
@@ -30,6 +34,7 @@ class MPChatViewController: SLKTextViewController {
         
         edgesForExtendedLayout   = .None
         tableView.separatorStyle = .None
+        
     }
 
     required init!(coder decoder: NSCoder!) {
@@ -53,19 +58,25 @@ class MPChatViewController: SLKTextViewController {
         
         shouldScrollToBottomAfterKeyboardShows = false
 
-        textView.placeholder      = "Message"
-        textView.placeholderColor = UIColor.lightGrayColor()
 
         leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
         leftButton.tintColor = UIColor.grayColor()
         
         rightButton.setTitle("Send", forState: UIControlState.Normal)
         rightButton.tintColor = UIColor.orangeColor()
+        
+        emoticonButton = UIButton(type: UIButtonType.Custom)
+        emoticonButton.setImage(UIImage(named: "orange_q"), forState: .Normal)
+        emoticonButton.addTarget(self, action: "didPressEmoticonButton:", forControlEvents: UIControlEvents.TouchUpInside)
+        textInputbar.insertSubview(emoticonButton, atIndex: 0)
 
-        textInputbar.autoHideRightButton = true
-        textInputbar.maxCharCount        = 1000
-        textInputbar.counterStyle        = SLKCounterStyle.Split
-
+        textView.placeholder      = "Message"
+        textView.placeholderColor = UIColor.lightGrayColor()
+        
+        textInputbar.autoHideRightButton   = true
+        textInputbar.maxCharCount          = 1000
+        textInputbar.counterStyle          = SLKCounterStyle.Split
+        
         typingIndicatorView.canResignByTouch = true
         
         view.backgroundColor = UIColor.whiteColor()
@@ -75,6 +86,8 @@ class MPChatViewController: SLKTextViewController {
         tableView.estimatedRowHeight = 100.0
         tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
         tableView.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
+        
+        
         
         chatManager.chatList({ (error) -> Void in
         }) { (chats) -> Void in
@@ -86,6 +99,26 @@ class MPChatViewController: SLKTextViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        chatUpdateTimer?.invalidate()
+        chatUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: "updateChat", userInfo: nil, repeats: true)
+        NSRunLoop.mainRunLoop().addTimer(chatUpdateTimer!, forMode:NSRunLoopCommonModes)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        chatUpdateTimer?.invalidate()
+    }
+    
+    func updateChat() {
+        chatManager.chatList({ (error) -> Void in
+        }) { (chats) -> Void in
+            if chats.count > 0 {
+                self.appendChats(chats)
+                self.enrichChatsWithProfileData()
+            }
+        }
     }
 
     // MARK: UITableViewDataSource
@@ -136,7 +169,7 @@ class MPChatViewController: SLKTextViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if tableView == self.autoCompletionView {
-            acceptAutoCompletionWithString(self.emojis[indexPath.row])
+            textInputbar.textView.insertText(self.emojis[indexPath.row])
         }
     }
     
@@ -146,11 +179,13 @@ class MPChatViewController: SLKTextViewController {
         autocompletionVisible = !autocompletionVisible
         self.showAutoCompletionView(autocompletionVisible)
     }
+    
+    func didPressEmoticonButton(sener: UIButton) {
+        autocompletionVisible = !autocompletionVisible
+        self.showAutoCompletionView(autocompletionVisible)
+    }
 
     override func didPressRightButton(sender: AnyObject!) {
-        
-//        MPNotificationManager.displayStaticStatusBarNotification("Sending message ...")
-
         self.textView.refreshFirstResponder()
 
         let message = self.textView.text.copy() as! String
@@ -164,12 +199,17 @@ class MPChatViewController: SLKTextViewController {
         
         chatManager.postMessage(message, completion: { (chats: [MPChatItem]) -> Void in
             self.appendChats(chats)
+            self.enrichChatsWithProfileData()
         }) { (error: NSError?) -> Void in
             MPNotificationManager.displayStatusBarNotification("Failed sending message.")
         }
     }
     
     func appendChats(newChats: [MPChatItem]) {
+        if newChats.count == 0 {
+            return
+        }
+        
         tableView.beginUpdates()
         let numChatsToAdd = newChats.count
         let startIndex    = chats.count
@@ -194,7 +234,7 @@ class MPChatViewController: SLKTextViewController {
         return 300
     }
 
-    func enrichChatsWithProfileData() {
+    func enrichChatsWithProfileData(animated: Bool = true) {
         let dispatchGroup = dispatch_group_create()
         
         var profiles: [String: MPProfile] = [String: MPProfile]()
@@ -233,10 +273,10 @@ class MPChatViewController: SLKTextViewController {
             
             dispatch_sync(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//                dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     let path : NSIndexPath = NSIndexPath(forRow: self.tableView.numberOfRowsInSection(0) - 1, inSection: 0)
-                    self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
-                })
+                    self.tableView.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
+//                })
             })
         });
     }

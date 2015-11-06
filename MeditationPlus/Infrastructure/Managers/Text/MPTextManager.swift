@@ -30,11 +30,12 @@ class MPTextManager
     static let sharedInstance = MPTextManager()
 
     lazy var regExp = {
-        return try! NSRegularExpression(pattern:"\\(.*\\)|:\\)|:\\(|:D|8-\\)|:o|;\\(|:\\||:\\*|:P|:\\^\\)|\\|-\\)|\\|\\(|\\]:\\)|:@|:S|8-\\||:x", options: [])
+        return try! NSRegularExpression(pattern:"\\(.*\\)|Q:|:\\)|:\\(|:D|8-\\)|:o|;\\(|:\\||:\\*|:P|:\\^\\)|\\|-\\)|\\|\\(|\\]:\\)|:@|:S|8-\\||:x", options: [])
     }()
 
     lazy var emoticons: [String:String] = {
         return [
+                "Q:": "orange_q",
                 ":)": "emoticon_00100_smile",
                 ":(": "emoticon_00101_sadsmile",
                 ":D": "emoticon_00102_bigsmile",
