@@ -132,10 +132,6 @@ class MPMeditatorCell: UITableViewCell {
             meditations.append("sitting \(sittingMinutes)m")
         }
         
-        if let anumodanaMinutes: Int = meditator.anumodanaMinutes where anumodanaMinutes > 0 {
-            meditations.append("anumodana \(anumodanaMinutes)m")
-        }
-        
         meditationDescription.text = meditations.joinWithSeparator(", ")
     }
     
