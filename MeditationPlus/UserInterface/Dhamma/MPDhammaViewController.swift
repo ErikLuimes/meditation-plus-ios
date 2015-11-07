@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import DZNEmptyDataSet
 
-class MPDhammaViewController: UIViewController, UITableViewDelegate {
+class MPDhammaViewController: UIViewController {
     private var videoListView: MPVideoListView { return view as! MPVideoListView }
 
     private var videoDataSource: MPVideoDataSource = MPVideoDataSource()
@@ -17,7 +18,6 @@ class MPDhammaViewController: UIViewController, UITableViewDelegate {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
         tabBarItem = UITabBarItem(title: "Dhamma", image: UIImage(named: "dhamma-wheel"), tag: 0)
-
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -27,8 +27,10 @@ class MPDhammaViewController: UIViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        videoListView.tableView.dataSource = videoDataSource
-        videoListView.tableView.delegate   = self
+        videoListView.tableView.dataSource           = videoDataSource
+        videoListView.tableView.delegate             = self
+        videoListView.tableView.emptyDataSetSource   = self
+        videoListView.tableView.emptyDataSetDelegate = self
         videoListView.refreshControl.addTarget(self, action: "refreshVideos:", forControlEvents: UIControlEvents.ValueChanged)
 
         MPYoutubeManager.setup()
@@ -39,6 +41,18 @@ class MPDhammaViewController: UIViewController, UITableViewDelegate {
         }
     }
     
+    
+    func refreshVideos(refreshControl: UIRefreshControl) {
+        MPYoutubeManager.sharedInstance.videoList { (videos) -> Void in
+            self.videoDataSource.updateVideos(videos)
+            self.videoListView.tableView.reloadData()
+            self.calculateCellParallax()
+            refreshControl.endRefreshing()
+        }
+    }
+}
+
+extension MPDhammaViewController: UITableViewDelegate {
     // MARK: UITableViewDelegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -95,12 +109,12 @@ class MPDhammaViewController: UIViewController, UITableViewDelegate {
         {
             // Down scroll
             nextIndex = Int(floor(targetContentOffset.memory.y / rowHeight))
-            let newTargetYOffset = (CGFloat(nextIndex) * rowHeight);
+            let newTargetYOffset = (CGFloat(nextIndex) * rowHeight) - self.videoListView.tableView.contentInset.top
             let maxScrollViewOffset = scrollView.contentSize.height - CGRectGetHeight(scrollView.frame);
             
             if (Int(targetContentOffset.memory.y) >= Int(maxScrollViewOffset))
             {
-                targetContentOffset.memory.y = maxScrollViewOffset
+                targetContentOffset.memory.y = maxScrollViewOffset + self.videoListView.tableView.contentInset.bottom
             }
                 
             else
@@ -113,16 +127,32 @@ class MPDhammaViewController: UIViewController, UITableViewDelegate {
         {
             // Up scroll
             nextIndex = Int(floor(targetContentOffset.memory.y / rowHeight))
-            targetContentOffset.memory.y = CGFloat(nextIndex) * rowHeight
+            targetContentOffset.memory.y = CGFloat(nextIndex) * rowHeight - self.videoListView.tableView.contentInset.top
         }
     }
+
+}
+
+extension MPDhammaViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+    // MARK: DZNEmptyDataSetDelegate
     
-    func refreshVideos(refreshControl: UIRefreshControl) {
-        MPYoutubeManager.sharedInstance.videoList { (videos) -> Void in
-            self.videoDataSource.updateVideos(videos)
-            self.videoListView.tableView.reloadData()
-            self.calculateCellParallax()
-            refreshControl.endRefreshing()
-        }
+    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage! {
+        return UIImage(named: "dhamma-wheel")
+    }
+    
+    func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation! {
+        let animation = CABasicAnimation(keyPath: "transform")
+        
+        animation.fromValue   = NSValue(CATransform3D: CATransform3DIdentity)
+        animation.toValue     = NSValue(CATransform3D: CATransform3DMakeRotation(CGFloat(M_PI_2), 0.0, 1.0, 0.0))
+        animation.duration    = 0.75
+        animation.cumulative  = true
+        animation.repeatCount = 1000
+        
+        return animation
+    }
+    
+    func emptyDataSetShouldAnimateImageView(scrollView: UIScrollView!) -> Bool {
+        return true
     }
 }

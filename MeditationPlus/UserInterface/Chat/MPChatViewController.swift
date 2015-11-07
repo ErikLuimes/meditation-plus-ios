@@ -88,8 +88,8 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
         tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
         tableView.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
         
-        self.tableView.emptyDataSetSource   = self
-        self.tableView.emptyDataSetDelegate = self
+        tableView.emptyDataSetSource   = self
+        tableView.emptyDataSetDelegate = self
         
         
         chatManager.chatList({ (error) -> Void in

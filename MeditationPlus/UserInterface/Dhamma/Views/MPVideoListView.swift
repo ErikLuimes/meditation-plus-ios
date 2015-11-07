@@ -35,8 +35,9 @@ class MPVideoListView: UIView
         super.awakeFromNib()
         
         tableView.registerNib(UINib(nibName: "MPVideoCell", bundle: nil), forCellReuseIdentifier: "VideoCell")
-        tableView.rowHeight    = (UIScreen.mainScreen().bounds.size.width / 16.0) * 9.0
-        tableView.contentInset = UIEdgeInsetsMake(44, 0, 49, 0);
+        tableView.rowHeight       = (UIScreen.mainScreen().bounds.size.width / 16.0) * 9.0
+        tableView.contentInset    = UIEdgeInsetsMake(44, 0, 49, 0);
+        tableView.tableFooterView = UIView()
         
         refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = UIColor.whiteColor()

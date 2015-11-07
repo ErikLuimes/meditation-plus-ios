@@ -6,6 +6,7 @@ PODS:
   - Crashlytics (3.4.0):
     - Fabric (~> 1.6.0)
   - CWStatusBarNotification (2.3.3)
+  - DateTools (1.7.0)
   - DTCoreText (1.6.16):
     - DTFoundation/Core (~> 1.7.5)
     - DTFoundation/DTAnimatedGIF (~> 1.7.5)
@@ -37,6 +38,7 @@ DEPENDENCIES:
   - AlamofireObjectMapper (= 1.0)
   - Crashlytics
   - CWStatusBarNotification (~> 2.3.3)
+  - DateTools
   - DTCoreText
   - DZNEmptyDataSet
   - Fabric
@@ -64,6 +66,7 @@ SPEC CHECKSUMS:
   AlamofireObjectMapper: 4f9d766a4742bb69258921723bafc260849f216c
   Crashlytics: 1ee87895c37472eb3f01f409ea1654a464d2f8d4
   CWStatusBarNotification: 2349142e97c9f16fb8247ed3c00308cd355d334b
+  DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
   DTCoreText: 934a16fe9ffdd169c96261721b39dc312b75713d
   DTFoundation: 46e2b2fafe78d67febfd8d1f85fe9845a093f00e
   DZNEmptyDataSet: 0ec00bfc230d7450997b60c127afdd0b9f24f3b6
