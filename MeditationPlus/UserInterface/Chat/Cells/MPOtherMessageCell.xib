@@ -58,11 +58,11 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" alpha="0.10000000000000001" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TPs-HN-ThT" userLabel="Report Button">
-                                <rect key="frame" x="248" y="4" width="20" height="20"/>
+                                <rect key="frame" x="236" y="-8" width="44" height="44"/>
                                 <animations/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="lCo-Qo-m71"/>
-                                    <constraint firstAttribute="width" constant="20" id="v8o-2E-c6u"/>
+                                    <constraint firstAttribute="height" constant="44" id="lCo-Qo-m71"/>
+                                    <constraint firstAttribute="width" constant="44" id="v8o-2E-c6u"/>
                                 </constraints>
                                 <state key="normal" image="warning"/>
                                 <connections>
@@ -78,13 +78,11 @@
                             <constraint firstItem="0tc-ga-R7k" firstAttribute="top" secondItem="zr5-Ry-8Gl" secondAttribute="bottom" id="C07-AU-0bn"/>
                             <constraint firstItem="zr5-Ry-8Gl" firstAttribute="top" secondItem="bDh-6R-wh9" secondAttribute="top" constant="8" id="Ifb-2a-H9l"/>
                             <constraint firstAttribute="trailing" secondItem="s3G-ed-hgK" secondAttribute="trailing" constant="8" id="Iyq-k0-dx0"/>
-                            <constraint firstAttribute="trailing" secondItem="TPs-HN-ThT" secondAttribute="trailing" constant="4" id="U1W-6M-Edt"/>
                             <constraint firstAttribute="trailing" secondItem="0tc-ga-R7k" secondAttribute="trailing" constant="8" id="cax-c8-udz"/>
                             <constraint firstAttribute="trailing" secondItem="zr5-Ry-8Gl" secondAttribute="trailing" constant="8" id="dSR-hp-JHG"/>
                             <constraint firstItem="zr5-Ry-8Gl" firstAttribute="leading" secondItem="bDh-6R-wh9" secondAttribute="leading" constant="8" id="hu7-Tk-lPu"/>
                             <constraint firstItem="0tc-ga-R7k" firstAttribute="leading" secondItem="bDh-6R-wh9" secondAttribute="leading" constant="8" id="q36-Ag-fY7"/>
                             <constraint firstItem="s3G-ed-hgK" firstAttribute="leading" secondItem="bDh-6R-wh9" secondAttribute="leading" constant="32" id="v5Q-KS-NDB"/>
-                            <constraint firstItem="TPs-HN-ThT" firstAttribute="top" secondItem="bDh-6R-wh9" secondAttribute="top" constant="4" id="x1Y-R9-luz"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -97,7 +95,9 @@
                 <constraints>
                     <constraint firstItem="bDh-6R-wh9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="87" id="3Cr-jx-4Wf"/>
                     <constraint firstAttribute="bottomMargin" secondItem="bDh-6R-wh9" secondAttribute="bottom" id="61b-9t-w2w"/>
+                    <constraint firstAttribute="trailing" secondItem="TPs-HN-ThT" secondAttribute="trailing" id="GZ8-RB-P8K"/>
                     <constraint firstAttribute="trailingMargin" secondItem="bDh-6R-wh9" secondAttribute="trailing" id="IGX-rC-tKl"/>
+                    <constraint firstItem="TPs-HN-ThT" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="Q9q-2q-Kcl"/>
                     <constraint firstAttribute="topMargin" secondItem="KEq-Hp-CNv" secondAttribute="top" id="boX-fq-mSD"/>
                     <constraint firstAttribute="leadingMargin" secondItem="KEq-Hp-CNv" secondAttribute="leading" id="io1-NL-rHP"/>
                     <constraint firstAttribute="topMargin" secondItem="bDh-6R-wh9" secondAttribute="top" id="qGB-qp-3wy"/>
