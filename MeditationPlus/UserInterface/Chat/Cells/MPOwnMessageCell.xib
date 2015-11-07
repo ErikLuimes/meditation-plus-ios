@@ -59,7 +59,7 @@
                             </label>
                         </subviews>
                         <animations/>
-                        <color key="backgroundColor" red="0.96654992015353536" green="0.94996123076285865" blue="0.90019516259082843" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.88627451658248901" green="0.87058824300765991" blue="0.82745099067687988" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="s3G-ed-hgK" firstAttribute="top" secondItem="0tc-ga-R7k" secondAttribute="bottom" id="311-Q8-Vhj"/>
                             <constraint firstAttribute="bottom" secondItem="s3G-ed-hgK" secondAttribute="bottom" constant="8" id="BF9-f2-bmf"/>

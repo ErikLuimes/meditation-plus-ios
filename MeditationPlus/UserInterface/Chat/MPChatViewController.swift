@@ -9,8 +9,9 @@
 import UIKit
 import SlackTextViewController
 import DZNEmptyDataSet
+import MessageUI
 
-class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, MPMessageCellDelegate, MFMailComposeViewControllerDelegate {
     private let chatManager = MPChatManager()
 
     private let profilemanager = MPProfileManager.sharedInstance
@@ -88,8 +89,8 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
         tableView.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
         tableView.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
         
-        self.tableView.emptyDataSetSource   = self
-        self.tableView.emptyDataSetDelegate = self
+        tableView.emptyDataSetSource   = self
+        tableView.emptyDataSetDelegate = self
         
         
         chatManager.chatList({ (error) -> Void in
@@ -168,6 +169,14 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
         }
         
         return cell
+    }
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        (cell as? MPMessageCell)?.delegate = self
+    }
+    
+    override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        (cell as? MPMessageCell)?.delegate = nil
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -304,7 +313,69 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
     func emptyDataSetShouldAnimateImageView(scrollView: UIScrollView!) -> Bool {
         return true
     }
-    // MARK: DZNEmptyDataSetSource
+    // MARK: MPMessageCellDelegate
+    
+    func didPressReportButton(button: UIButton, chatItem: MPChatItem?) {
+        let alertController = UIAlertController(title: "Report inappropriate content", message: "By clicking the 'Report' button you can send us an email to report abuse and inappropriate content.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        let rapportAction = UIAlertAction(title: "Report ", style: UIAlertActionStyle.Destructive) { (action) -> Void in
+            self.presentedViewController?.dismissViewControllerAnimated(true, completion: nil)
+            
+            if chatItem != nil {
+                self.rapportChatItem(chatItem!)
+            }
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(rapportAction)
+        
+        if let popover = alertController.popoverPresentationController {
+            popover.sourceView               = button
+            popover.sourceRect               = button.bounds
+            popover.permittedArrowDirections = UIPopoverArrowDirection.Any
+        }
+        
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func rapportChatItem(chatItem: MPChatItem) {
+        
+        if MFMailComposeViewController.canSendMail() {
+            let title = "Report inappropriate content"
+            let body  = "Dear sir/madam, \n\nI would like to report inappropriate content on the Meditator Shoutbox.\n\nusername:\n\(chatItem.username ?? "")\n\nmessage:\n\(chatItem.message ?? "")\n\nmessageId: \(chatItem.cid ?? "")"
+            let to    = ["erik.luimes@gmail.com"]
+            
+            let composer = MFMailComposeViewController()
+            composer.mailComposeDelegate = self
+            composer.setSubject(title)
+            composer.setMessageBody(body, isHTML: false)
+            composer.setToRecipients(to)
+        
+            self.presentViewController(composer, animated: true, completion: nil)
+        } else {
+            MPNotificationManager.displayNotification("Unable to use email.")
+        }
+        
+    }
+    
+    // MARK: MFMailComposeViewControllerDelegate Method
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        switch result {
+        case MFMailComposeResultCancelled:
+            break
+        case MFMailComposeResultSent:
+            MPNotificationManager.displayStatusBarNotification("Report sent")
+        case MFMailComposeResultSaved:
+            MPNotificationManager.displayStatusBarNotification("Report saved")
+        case MFMailComposeResultFailed:
+            MPNotificationManager.displayNotification(error?.localizedDescription ?? "Somer error occurred, please try again later.")
+        default:
+            break
+        }
+        
+        controller.dismissViewControllerAnimated(true, completion: nil)
+    }
 }
 
 extension String {

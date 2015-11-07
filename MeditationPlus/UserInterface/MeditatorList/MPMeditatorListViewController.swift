@@ -24,6 +24,8 @@
 // THE SOFTWARE.
 
 import UIKit
+import DZNEmptyDataSet
+
 class MPMeditatorListViewController: UIViewController {
     private var meditatorView: MPMeditatorView { return view as! MPMeditatorView }
 
@@ -64,6 +66,8 @@ class MPMeditatorListViewController: UIViewController {
         
         meditatorView.tableView.delegate   = self
         meditatorView.tableView.dataSource = meditatorDataSource
+        meditatorView.tableView.emptyDataSetSource   = self
+        meditatorView.tableView.emptyDataSetDelegate = self
         meditatorView.refreshControl.addTarget(self, action: "refreshMeditators:", forControlEvents: UIControlEvents.ValueChanged)
         
         meditatorView.meditationPickerView.dataSource = timerDataSource
@@ -103,7 +107,6 @@ class MPMeditatorListViewController: UIViewController {
         }
         
         meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
-
 
         meditatorManager.meditatorList { (meditators) -> Void in
             self.meditatorDataSource.updateMeditators(meditators)
@@ -324,5 +327,29 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
 //            NSLog("Cancel meditation failed")
         })
     }
+}
+
+
+extension MPMeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+    // MARK: DZNEmptyDataSetDelegate
     
+    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage! {
+        return UIImage(named: "BuddhaIcon")
+    }
+    
+    func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation! {
+        let animation = CABasicAnimation(keyPath: "transform")
+        
+        animation.fromValue   = NSValue(CATransform3D: CATransform3DIdentity)
+        animation.toValue     = NSValue(CATransform3D: CATransform3DMakeRotation(CGFloat(M_PI_2), 0.0, 1.0, 0.0))
+        animation.duration    = 0.75
+        animation.cumulative  = true
+        animation.repeatCount = 1000
+        
+        return animation
+    }
+    
+    func emptyDataSetShouldAnimateImageView(scrollView: UIScrollView!) -> Bool {
+        return true
+    }
 }

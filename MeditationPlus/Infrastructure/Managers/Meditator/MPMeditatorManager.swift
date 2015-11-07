@@ -55,20 +55,6 @@ class MPMeditatorManager {
         }
     }
 
-//    func profile(profile: String, completion: (MPProfile -> Void)?)
-//    {
-//        if let _ = self.authenticationManager.loggedInUser?.username {
-//            let endpoint                    = "http://meditation.sirimangalo.org/post.php"
-//            let parameters: [String:String] = ["profile": profile, "submit", "Profile"]
-//
-//            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPProfile?, error: ErrorType?) in
-//                if response != nil {
-//                    completion?(response!)
-//                }
-//            }
-//        }
-//    }
-
     func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: (() -> Void)? = nil, failure: ((NSError?) -> Void)? = nil) {
         if sittingTimeInMinutes == nil && walkingTimeInMinutes == nil { failure?(nil) }
         
