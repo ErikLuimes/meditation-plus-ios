@@ -97,6 +97,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/SDWebImage.framework"
   install_framework "Pods/SlackTextViewController.framework"
   install_framework "Pods/UIImage_Additions.framework"
+  install_framework "Pods/youtube_ios_player_helper.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/Alamofire.framework"
@@ -112,4 +113,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/SDWebImage.framework"
   install_framework "Pods/SlackTextViewController.framework"
   install_framework "Pods/UIImage_Additions.framework"
+  install_framework "Pods/youtube_ios_player_helper.framework"
 fi
