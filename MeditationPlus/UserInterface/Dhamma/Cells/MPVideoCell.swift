@@ -20,6 +20,7 @@ class MPVideoCell: UITableViewCell {
         clipsToBounds = true
         
         videoImageView.transform = CGAffineTransformMakeScale(1.5, 1.5)
+        selectionStyle = UITableViewCellSelectionStyle.None
     }
     
     func setParallaxFactor(factor: CGFloat) {

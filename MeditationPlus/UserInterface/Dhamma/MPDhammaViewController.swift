@@ -60,7 +60,7 @@ extension MPDhammaViewController: UITableViewDelegate {
             return
         }
         
-        if let youtubeURL = NSURL(string: "http://www.youtube.com/v/\(videoItemId)") {
+        if let youtubeURL = NSURL(string: "http://www.youtube.com/watch?v=\(videoItemId)") {
             UIApplication.sharedApplication().openURL(youtubeURL)
         }
     }
