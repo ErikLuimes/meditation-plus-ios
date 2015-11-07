@@ -8,6 +8,7 @@
 
 import UIKit
 import DTCoreText
+import DateTools
 
 class MPMessageCell: UITableViewCell {
 
@@ -21,13 +22,10 @@ class MPMessageCell: UITableViewCell {
     }
     
     func configureWithChatItem(chatItem: MPChatItem) {
-        let dateFormatter       = NSDateFormatter()
-        dateFormatter.dateStyle = NSDateFormatterStyle.LongStyle
-
-        authorLabel.text  = (chatItem.username)
+        authorLabel.text = (chatItem.username)
 
         if chatItem.time != nil {
-            self.dateLabel.text = dateFormatter.stringFromDate(chatItem.time!)
+            self.dateLabel.text = chatItem.time!.timeAgoSinceNow()
         }
         
         let placeholderImage = NSURL(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")!

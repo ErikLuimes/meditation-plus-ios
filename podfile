@@ -21,3 +21,7 @@ pod 'DTCoreText'
 pod 'DZNEmptyDataSet'
 
 pod 'PDTSimpleCalendar'
+
+pod 'youtube-ios-player-helper'
+
+pod 'DateTools'
