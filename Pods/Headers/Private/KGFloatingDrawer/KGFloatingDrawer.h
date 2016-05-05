@@ -1,1 +1,0 @@
-../../../KGFloatingDrawer/Pod/Classes/KGFloatingDrawer.h

@@ -24,20 +24,19 @@
 // THE SOFTWARE.
 
 import Foundation
+import UIKit
 
-class MPVideoListView: UIView
-{
+class MPVideoListView: UIView {
     @IBOutlet weak var tableView: UITableView!
 
     var refreshControl: UIRefreshControl!
 
-    override func awakeFromNib()
-    {
+    override func awakeFromNib() {
         super.awakeFromNib()
 
         tableView.registerNib(UINib(nibName: "MPVideoCell", bundle: nil), forCellReuseIdentifier: "VideoCell")
         tableView.rowHeight = (UIScreen.mainScreen().bounds.size.width / 16.0) * 9.0
-        tableView.contentInset = UIEdgeInsetsMake(44, 0, 49, 0);
+        tableView.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 49, right: 0)
         tableView.tableFooterView = UIView()
 
         refreshControl = UIRefreshControl()

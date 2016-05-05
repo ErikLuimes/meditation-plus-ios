@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Cocoanetics. All rights reserved.
 //
 
-#import "DTWeakSupport.h"
+#import <DTFoundation/DTWeakSupport.h>
 
 @class DTSmartPagingScrollView;
 
@@ -51,7 +51,7 @@
 /**
  The page data source for the receiver
  */
-@property (nonatomic, DT_WEAK_PROPERTY) id <DTSmartPagingScrollViewDatasource> pageDatasource;
+@property (nonatomic, DT_WEAK_PROPERTY) IBOutlet id <DTSmartPagingScrollViewDatasource> pageDatasource;
 
 /**
  The current page index visible on the receiver

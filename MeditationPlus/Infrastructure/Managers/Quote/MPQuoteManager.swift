@@ -34,12 +34,13 @@ class MPQuoteManager
     {
         if let username: String = self.authenticationManager.loggedInUser?.username, token: String = self.authenticationManager.token?.token {
             let endpoint = "http://meditation.sirimangalo.org/post.php"
-            let parameters = ["username": username, "token": token, "submit": "Quote"]
+            let parameters: [String:AnyObject] = ["username": username, "token": token, "submit": "Quote"]
 
             Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject
             {
-                (response: MPQuote?, error: ErrorType?) in
-                if let quote = response {
+                (response: Response<MPQuote, NSError>) in
+                
+                if let quote = response.result.value {
                     completion?(quote)
                 }
             }

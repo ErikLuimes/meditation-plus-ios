@@ -26,16 +26,14 @@
 import Foundation
 import Alamofire
 
-class MPProfileManager
-{
+class MPProfileManager {
     static let sharedInstance = MPProfileManager()
 
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
     private var cache: [MPProfile] = [MPProfile]()
 
-    func profile(name: String, completion: (MPProfile -> Void)?)
-    {
+    func profile(name: String, completion: (MPProfile -> Void)?) {
         for profile in cache {
             if profile.username == name {
                 completion?(profile)
@@ -45,13 +43,17 @@ class MPProfileManager
 
         if let _ = self.authenticationManager.loggedInUser?.username {
             let endpoint = "http://meditation.sirimangalo.org/post.php"
-            let parameters: [String:String] = ["profile": name, "submit": "Profile"]
+            let parameters: [String:AnyObject] = ["profile": name, "submit": "Profile"]
 
-            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject
-            {
-                (response: MPProfile?, error: ErrorType?) in
-                if response != nil {
-                    completion?(response!)
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject {
+                (response: Response<MPProfile, NSError>) in
+
+                guard response.result.isSuccess else {
+                    return
+                }
+
+                if let profile = response.result.value {
+                    completion?(profile)
                 }
             }
         }

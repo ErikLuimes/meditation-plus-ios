@@ -25,22 +25,22 @@
 
 import Foundation
 import Alamofire
+import AlamofireObjectMapper
 
-class MPMeditatorManager
-{
+class MPMeditatorManager {
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
-    func meditatorList(completion: ([MPMeditator] -> Void)?)
-    {
+    func meditatorList(completion: ([MPMeditator] -> Void)?) {
         if let username: String = self.authenticationManager.loggedInUser?.username {
             let endpoint = "http://meditation.sirimangalo.org/db.php"
             // Always post 'last_chat' date so that no chat data is returned
-            let parameters: [String:String] = ["username": username, "last_chat": String(UInt(NSDate().timeIntervalSince1970))]
+            let parameters: [String:AnyObject] = ["username": username, "last_chat": String(UInt(NSDate().timeIntervalSince1970))]
 
-            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject
-            {
-                (response: MPMeditatorList?, error: ErrorType?) in
-                if let meditators = response?.meditators {
+
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject {
+                (response: Response<MPMeditatorList, NSError>) in
+
+                if let meditators = response.result.value?.meditators {
                     dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
                         for m in meditators {
                             if let isMe = m.me, avatar = m.avatar where isMe == true {
@@ -59,8 +59,7 @@ class MPMeditatorManager
         }
     }
 
-    func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: (() -> Void)? = nil, failure: ((NSError?) -> Void)? = nil)
-    {
+    func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: (() -> Void)? = nil, failure: ((NSError?) -> Void)? = nil) {
         if sittingTimeInMinutes == nil && walkingTimeInMinutes == nil {
             failure?(nil)
         }
@@ -79,22 +78,19 @@ class MPMeditatorManager
             parameters["walking"] = walkingTimeInMinutes == nil ? "" : String(walkingTimeInMinutes!)
 
             Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseString(completionHandler: {
-                (request, response, result) -> Void in
-                if response != nil {
-                    if response!.statusCode >= 200 && response!.statusCode < 300 {
-                        completion?()
-                    } else {
-                        failure?(nil)
-                    }
-                } else {
+                (response) -> Void in
+
+                guard response.result.isSuccess else {
                     failure?(nil)
+                    return
                 }
+
+                completion?()
             })
         }
     }
 
-    func cancelMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: (() -> Void)? = nil, failure: ((NSError?) -> Void)? = nil)
-    {
+    func cancelMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completion: (() -> Void)? = nil, failure: ((NSError?) -> Void)? = nil) {
         if sittingTimeInMinutes == nil && walkingTimeInMinutes == nil {
             failure?(nil)
         }
@@ -113,16 +109,9 @@ class MPMeditatorManager
             parameters["walking"] = walkingTimeInMinutes == nil ? "" : String(walkingTimeInMinutes!)
 
             Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseString(completionHandler: {
-                (request, response, result) -> Void in
-                if response != nil {
-                    if response!.statusCode >= 200 && response!.statusCode < 300 {
-                        completion?()
-                    } else {
-                        failure?(nil)
-                    }
-                } else {
-                    failure?(nil)
-                }
+                (response) -> Void in
+
+                response.result.isSuccess ? completion?() : failure?(nil)
             })
         }
 

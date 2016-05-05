@@ -46,8 +46,9 @@ class MPYoutubeManager
 
         Alamofire.request(.GET, endpoint, parameters: parameters).responseObject
         {
-            (response: MPVideoList?, error: ErrorType?) in
-            if let list = response where list.items?.count ?? 0 > 0 {
+            (response: Response<MPVideoList, NSError>) in
+            
+            if let list = response.result.value where list.items?.count ?? 0 > 0 {
                 completion?(list.items!)
             }
         }

@@ -28,33 +28,27 @@ import Locksmith
 import Alamofire
 import AlamofireObjectMapper
 
-class MTAuthenticationManager
-{
+class MTAuthenticationManager {
     static let sharedInstance = MTAuthenticationManager()
 
     var loggedInUser: MPUser?
 
     var token: MPToken?
 
-    var rememberPassword: Bool
-    {
-        get
-        {
+    var rememberPassword: Bool {
+        get {
             return NSUserDefaults.standardUserDefaults().boolForKey("rememberPassword")
         }
-        set
-        {
+        set {
             return NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: "rememberPassword")
         }
     }
 
-    var isLoggedIn: Bool
-    {
+    var isLoggedIn: Bool {
         return self.loggedInUser != nil
     }
 
-    func loginWithUsername(username: String, password: String, failure: ((error:NSError?, errorString:NSString?) -> Void)? = nil, completion: (MPUser) -> Void)
-    {
+    func loginWithUsername(username: String, password: String, failure: ((error: NSError?, errorString: NSString?) -> Void)? = nil, completion: (MPUser) -> Void) {
         let endpoint = "http://meditation.sirimangalo.org/post.php"
         let parameters = ["username": username, "password": password, "submit": "Login", "source": "ios"]
 
@@ -63,43 +57,43 @@ class MTAuthenticationManager
                 NSHTTPCookieStorage.sharedHTTPCookieStorage().deleteCookie(cookie)
             }
         }
-            
+
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
 
-        Alamofire.request(.POST, endpoint, parameters: parameters).responseObject
-        {
-            (response: MPToken?, error: ErrorType?) in
+        Alamofire.request(.POST, endpoint, parameters: parameters).responseObject {
+            (response: Response<MPToken, NSError>) in
+
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
 
-            if let _ = response?.token {
-                self.loggedInUser = MPUser(username: username, password: self.rememberPassword ? password : nil)
-                do {
-                    try self.loggedInUser?.deleteFromSecureStore()
-                } catch {
-                    NSLog("Failed deleting account from secure storage")
-                }
-
-                do {
-                    try self.loggedInUser?.createInSecureStore()
-                } catch {
-                    NSLog("Failed creating account in secure storage")
-                }
-
-                self.token = response!
-                completion(self.loggedInUser!)
-            } else {
-                if let errorString = response?.error {
-                    failure?(error: nil, errorString: errorString)
-                    return
-                }
-
+            guard response.result.isSuccess else {
+                print("Error while fetching remote rooms: \(response.result.error)")
                 failure?(error: nil, errorString: nil)
+                return
             }
+
+            guard (response.result.value?.token) != nil else {
+                return
+            }
+
+            self.loggedInUser = MPUser(username: username, password: self.rememberPassword ? password : nil)
+            do {
+                try self.loggedInUser?.deleteFromSecureStore()
+            } catch {
+                NSLog("Failed deleting account from secure storage")
+            }
+
+            do {
+                try self.loggedInUser?.createInSecureStore()
+            } catch {
+                NSLog("Failed creating account in secure storage")
+            }
+
+            self.token = response.result.value!
+            completion(self.loggedInUser!)
         }
     }
 
-    func logout() -> Void
-    {
+    func logout() -> Void {
         self.loggedInUser = nil
         if self.token != nil {
             do {

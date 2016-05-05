@@ -26,6 +26,7 @@
 import Foundation
 import AVFoundation
 import AudioToolbox
+import UIKit
 
 class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
 {
