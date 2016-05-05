@@ -25,9 +25,10 @@
 
 import Foundation
 
-class MPIdleTimeoutMeditationTimerDelegate: NSObject, MPMeditationTimerDelegate {
+class MPIdleTimeoutMeditationTimerDelegate: NSObject, MPMeditationTimerDelegate
+{
     static let sharedInstance = MPIdleTimeoutMeditationTimerDelegate()
-    
+
     // MARK: MPMeditationTimerDelegate
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
@@ -36,18 +37,21 @@ class MPIdleTimeoutMeditationTimerDelegate: NSObject, MPMeditationTimerDelegate 
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
-    {}
-    
+    {
+    }
+
     func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
-    {}
-    
+    {
+    }
+
     func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
     {
-            UIApplication.sharedApplication().idleTimerDisabled = false
+        UIApplication.sharedApplication().idleTimerDisabled = false
     }
-    
+
     func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
-    {}
+    {
+    }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
     {

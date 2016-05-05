@@ -27,105 +27,126 @@ import UIKit
 import AVFoundation
 import CWStatusBarNotification
 
-class MPSplashViewController: UIViewController {
-    private var splashScreenView: MPSplashView { return self.view as! MPSplashView }
-    
-    @IBAction func didSwitchRememberPassword(sender: UISwitch) {
+class MPSplashViewController: UIViewController
+{
+    private var splashScreenView: MPSplashView
+    {
+        return self.view as! MPSplashView
+    }
+
+    @IBAction func didSwitchRememberPassword(sender: UISwitch)
+    {
         self.authenticationManager.rememberPassword = sender.on
     }
     private let authenticationManager = MTAuthenticationManager.sharedInstance
 
-    @IBAction func didPressRegisterAccount(sender: UIButton) {
+    @IBAction func didPressRegisterAccount(sender: UIButton)
+    {
         let websiteURL = NSURL(string: "http://meditation.sirimangalo.org")!
         if UIApplication.sharedApplication().canOpenURL(websiteURL) {
             UIApplication.sharedApplication().openURL(websiteURL)
         }
     }
-    @IBAction func didTapContentView(sender: UITapGestureRecognizer) {
+
+    @IBAction func didTapContentView(sender: UITapGestureRecognizer)
+    {
         self.view.endEditing(true)
     }
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+
+    override func preferredStatusBarStyle() -> UIStatusBarStyle
+    {
         return .LightContent
     }
-    
-    private func attachObservers() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+
+    private func attachObservers()
+    {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MPSplashViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MPSplashViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
-    
-    private func detachObservers() {
+
+    private func detachObservers()
+    {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
-    
-    override func viewDidLoad() {
+
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
 
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.view.clipsToBounds = true
-        
+
         let loadedUser = MPUser()
         if let username = loadedUser.readFromSecureStore()?.data?["username"] as? String {
             self.splashScreenView.usernameField.text = username
         }
-        
+
         if let password = loadedUser.readFromSecureStore()?.data?["password"] as? String {
             if authenticationManager.rememberPassword {
                 self.splashScreenView.passwordField.text = password
             }
         }
-        
+
     }
-    
-    override func viewWillAppear(animated: Bool) {
+
+    override func viewWillAppear(animated: Bool)
+    {
         super.viewWillAppear(animated)
-        
+
         attachObservers()
-        
+
         splashScreenView.rememberPasswordSwitch.setOn(authenticationManager.rememberPassword, animated: true)
     }
-    
-    override func viewDidAppear(animated: Bool) {
+
+    override func viewDidAppear(animated: Bool)
+    {
         super.viewDidAppear(animated)
-        
+
         self.splashScreenView.transitionToBlurredBackground()
     }
-    
-    override func viewWillDisappear(animated: Bool) {
+
+    override func viewWillDisappear(animated: Bool)
+    {
         super.viewWillDisappear(animated)
-        
+
         detachObservers()
         view.endEditing(true)
     }
-    
+
     // MARK: Keyboard handling
 
-    func keyboardWillShow(notification: NSNotification) {
-        let userInfo              = notification.userInfo!
+    func keyboardWillShow(notification: NSNotification)
+    {
+        let userInfo = notification.userInfo!
         let keyboardFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-        let animationCurve        = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
-        let duration              = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
+        let animationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
 
         let centerY: CGFloat = (CGRectGetHeight(UIScreen.mainScreen().bounds) - CGRectGetHeight(keyboardFrame)) / 2.0
-        let offset: CGFloat  = self.splashScreenView.passwordField.center.y - centerY
-        
-        UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: { () -> Void in
+        let offset: CGFloat = self.splashScreenView.passwordField.center.y - centerY
+
+        UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: {
+            () -> Void in
             self.splashScreenView.scrollView.contentOffset = CGPointMake(0, offset)
         }, completion: nil)
     }
-    
-    func keyboardWillHide(notification: NSNotification) {
-        let userInfo              = notification.userInfo!
-        let animationCurve        = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
-        let duration              = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
 
-        UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: { () -> Void in
+    func keyboardWillHide(notification: NSNotification)
+    {
+        let userInfo = notification.userInfo!
+        let animationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
+
+        UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: {
+            () -> Void in
             self.splashScreenView.scrollView.contentOffset = CGPointZero
         }, completion: nil)
     }
-    
+
     // MARK: Actions
-    
-    @IBAction func didPressLoginButton(sender: UIButton) {
+
+    @IBAction func didPressLoginButton(sender: UIButton)
+    {
         sender.enabled = false
 
         if (self.validate()) {
@@ -134,11 +155,13 @@ class MPSplashViewController: UIViewController {
             }
 
 
-            self.authenticationManager.loginWithUsername(username, password: password, failure: { (error, errorString) -> Void in
-                 MPNotificationManager.displayNotification((errorString ?? "Some error occured, Please try again later.") as String)
-                
+            self.authenticationManager.loginWithUsername(username, password: password, failure: {
+                (error, errorString) -> Void in
+                MPNotificationManager.displayNotification((errorString ?? "Some error occured, Please try again later.") as String)
+
                 sender.enabled = true
-            }, completion: { (user) -> Void in
+            }, completion: {
+                (user) -> Void in
                 sender.enabled = true
                 self.navigatoToMainViewController()
             })
@@ -150,25 +173,26 @@ class MPSplashViewController: UIViewController {
 
         }
     }
-    
+
     func navigatoToMainViewController()
     {
         let tabBarController = MPTabBarController()
         self.navigationController?.setViewControllers([tabBarController], animated: true)
     }
-    
-    func validate() -> Bool {
+
+    func validate() -> Bool
+    {
         var isValid = true
-        
+
         guard let username = self.splashScreenView.usernameField.text, password = self.splashScreenView.passwordField.text else {
             isValid = false
             return isValid
         }
-        
+
         if username.characters.count == 0 || password.characters.count == 0 {
             isValid = false
         }
-        
+
         return isValid
     }
 }

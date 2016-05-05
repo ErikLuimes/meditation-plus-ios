@@ -33,12 +33,14 @@ class MPQuote: Mappable
 
     // MARK: Mappable
 
-    required init?(_ map: Map) {
+    required init?(_ map: Map)
+    {
         mapping(map)
     }
 
-    func mapping(map: Map) {
+    func mapping(map: Map)
+    {
         quote <- map["quote"]
-        cite  <- map["cite"]
+        cite <- map["cite"]
     }
 }

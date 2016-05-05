@@ -27,7 +27,10 @@ import UIKit
 
 class MPMenuViewController: UIViewController, UITableViewDelegate
 {
-    private var menuView: MPMenuView { return self.view as! MPMenuView }
+    private var menuView: MPMenuView
+    {
+        return self.view as! MPMenuView
+    }
 
     var drawerNavigationHandler: ((UIViewController, Bool) -> Void)?
 
@@ -41,19 +44,21 @@ class MPMenuViewController: UIViewController, UITableViewDelegate
 
         self.menuDataSource = MPMenuDataSource(cellReuseIdentifier: self.menuCellIdentifier)
         self.menuDataSource.updateSections(self.menuSections())
-        self.menuDataSource.cellConfigurationHandler = { cell, menuItem in
+        self.menuDataSource.cellConfigurationHandler = {
+            cell, menuItem in
             cell.viewData = MPMenuCell.ViewData(menuItem: menuItem)
         }
 
         self.menuView.menuTableView.dataSource = self.menuDataSource;
-        self.menuView.menuTableView.delegate   = self
+        self.menuView.menuTableView.delegate = self
         self.menuView.menuTableView.registerNib(UINib(nibName: "MPMenuCell", bundle: nil), forCellReuseIdentifier: self.menuCellIdentifier)
     }
 
     // MARK: Setup Menu Items
 
-    private func menuSections() -> [MPTableViewSection<MPMenuItem>] {
-        var sections: [MPTableViewSection<MPMenuItem>] = [MPTableViewSection<MPMenuItem>]()
+    private func menuSections() -> [MPTableViewSection<MPMenuItem>]
+    {
+        var sections: [MPTableViewSection<MPMenuItem>] = [MPTableViewSection < MPMenuItem>]()
 
         let toolsSection = MPTableViewSection<MPMenuItem>(title: "Tools", items: [
                 MPMenuItem.Home,

@@ -28,38 +28,47 @@ import Locksmith
 import Alamofire
 import AlamofireObjectMapper
 
-class MTAuthenticationManager {
+class MTAuthenticationManager
+{
     static let sharedInstance = MTAuthenticationManager()
-    
+
     var loggedInUser: MPUser?
-    
+
     var token: MPToken?
-    
-    var rememberPassword: Bool {
-        get {
+
+    var rememberPassword: Bool
+    {
+        get
+        {
             return NSUserDefaults.standardUserDefaults().boolForKey("rememberPassword")
         }
-        set {
+        set
+        {
             return NSUserDefaults.standardUserDefaults().setBool(newValue, forKey: "rememberPassword")
         }
     }
-    
-    var isLoggedIn: Bool { return self.loggedInUser != nil }
-    
-    func loginWithUsername(username: String, password: String,failure: ((error: NSError?, errorString: NSString?) -> Void)? = nil, completion: (MPUser) -> Void)
+
+    var isLoggedIn: Bool
     {
-        let endpoint   = "http://meditation.sirimangalo.org/post.php"
+        return self.loggedInUser != nil
+    }
+
+    func loginWithUsername(username: String, password: String, failure: ((error:NSError?, errorString:NSString?) -> Void)? = nil, completion: (MPUser) -> Void)
+    {
+        let endpoint = "http://meditation.sirimangalo.org/post.php"
         let parameters = ["username": username, "password": password, "submit": "Login", "source": "ios"]
-        
+
         if let cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookies {
             for cookie in cookies {
                 NSHTTPCookieStorage.sharedHTTPCookieStorage().deleteCookie(cookie)
             }
         }
-        
+            
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
 
-        Alamofire.request(.POST, endpoint, parameters: parameters).responseObject { (response: MPToken?, error: ErrorType?) in
+        Alamofire.request(.POST, endpoint, parameters: parameters).responseObject
+        {
+            (response: MPToken?, error: ErrorType?) in
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
 
             if let _ = response?.token {
@@ -69,13 +78,13 @@ class MTAuthenticationManager {
                 } catch {
                     NSLog("Failed deleting account from secure storage")
                 }
-                
+
                 do {
                     try self.loggedInUser?.createInSecureStore()
                 } catch {
                     NSLog("Failed creating account in secure storage")
                 }
-                
+
                 self.token = response!
                 completion(self.loggedInUser!)
             } else {
@@ -83,16 +92,20 @@ class MTAuthenticationManager {
                     failure?(error: nil, errorString: errorString)
                     return
                 }
-                
+
                 failure?(error: nil, errorString: nil)
             }
         }
     }
-    
-    func logout() -> Void {
+
+    func logout() -> Void
+    {
         self.loggedInUser = nil
         if self.token != nil {
-            do { try self.token?.deleteFromSecureStore() } catch {}
+            do {
+                try self.token?.deleteFromSecureStore()
+            } catch {
+            }
             self.token = nil
         }
     }

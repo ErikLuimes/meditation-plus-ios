@@ -44,10 +44,12 @@ class MPProfileManager
         }
 
         if let _ = self.authenticationManager.loggedInUser?.username {
-            let endpoint                    = "http://meditation.sirimangalo.org/post.php"
+            let endpoint = "http://meditation.sirimangalo.org/post.php"
             let parameters: [String:String] = ["profile": name, "submit": "Profile"]
 
-            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPProfile?, error: ErrorType?) in
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject
+            {
+                (response: MPProfile?, error: ErrorType?) in
                 if response != nil {
                     completion?(response!)
                 }

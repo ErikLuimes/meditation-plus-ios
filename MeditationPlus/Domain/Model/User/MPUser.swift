@@ -27,29 +27,29 @@ import Foundation
 import ObjectMapper
 import Locksmith
 
-struct MPUser:
-    ReadableSecureStorable,
-    CreateableSecureStorable,
-    DeleteableSecureStorable,
-    GenericPasswordSecureStorable
+struct MPUser: ReadableSecureStorable,
+        CreateableSecureStorable,
+        DeleteableSecureStorable,
+        GenericPasswordSecureStorable
 {
     var username: String?
     var password: String?
-    
+
     let service = "MeditationPlus"
     let account = "UserAccount"
-    
-    var data: [String: AnyObject] {
-        var dict: [String: AnyObject] = [String: AnyObject]()
-        
+
+    var data: [String:AnyObject]
+    {
+        var dict: [String:AnyObject] = [String: AnyObject]()
+
         if username != nil {
             dict["username"] = username!
         }
-        
+
         if password != nil {
             dict["password"] = password!
         }
-        
+
         return dict
     }
 }

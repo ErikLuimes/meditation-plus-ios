@@ -26,78 +26,90 @@
 import UIKit
 import DZNEmptyDataSet
 
-class MPMeditatorListViewController: UIViewController {
-    private var meditatorView: MPMeditatorView { return view as! MPMeditatorView }
+class MPMeditatorListViewController: UIViewController
+{
+    private var meditatorView: MPMeditatorView
+    {
+        return view as! MPMeditatorView
+    }
 
     private let timer = MPMeditationTimer.sharedInstance
 
-    private let meditatorManager    = MPMeditatorManager()
+    private let meditatorManager = MPMeditatorManager()
     private let meditatorDataSource = MPMeditatorDataSource()
 
     private let timerDataSource = MPTimerDataSource()
-    
+
     private var meditationProgressUpdateTimer: NSTimer?
 
 
     // Current meditation times
     private var sittingTimeInMinutes: Int?
-    
+
     private var walkingTimeInMinutes: Int?
-    
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
+    {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        
+
         tabBarItem = UITabBarItem(title: "Meditate", image: UIImage(named: "BuddhaIcon"), tag: 0)
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willEnterForeground:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MPMeditatorListViewController.willEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder)
+    {
         super.init(coder: aDecoder)
     }
-    
-    deinit {
+
+    deinit
+    {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
-    
-    override func viewDidLoad() {
+
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
 
-        
-        meditatorView.tableView.delegate   = self
+
+        meditatorView.tableView.delegate = self
         meditatorView.tableView.dataSource = meditatorDataSource
-        meditatorView.tableView.emptyDataSetSource   = self
+        meditatorView.tableView.emptyDataSetSource = self
         meditatorView.tableView.emptyDataSetDelegate = self
-        meditatorView.refreshControl.addTarget(self, action: "refreshMeditators:", forControlEvents: UIControlEvents.ValueChanged)
-        
+        meditatorView.refreshControl.addTarget(self, action: #selector(MPMeditatorListViewController.refreshMeditators(_:)), forControlEvents: UIControlEvents.ValueChanged)
+
         meditatorView.meditationPickerView.dataSource = timerDataSource
-        meditatorView.meditationPickerView.delegate   = self
+        meditatorView.meditationPickerView.delegate = self
 
         if timer.state != .Stopped {
             timer.cancelTimer()
         }
-        
+
         meditatorView.setSelectionViewHidden(false, animated: true)
 
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("walkingMeditationTimeId"), inComponent: 0, animated: true)
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("sittingMeditationTimeId"), inComponent: 2, animated: true)
     }
-    
-    func refreshMeditators(refreshControl: UIRefreshControl) {
-        meditatorManager.meditatorList { (meditators) -> Void in
+
+    func refreshMeditators(refreshControl: UIRefreshControl)
+    {
+        meditatorManager.meditatorList
+        {
+            (meditators) -> Void in
             refreshControl.endRefreshing()
             self.meditatorDataSource.updateMeditators(meditators)
             self.meditatorView.tableView.reloadData()
         }
     }
-    
-    override func viewWillAppear(animated: Bool) {
+
+    override func viewWillAppear(animated: Bool)
+    {
         super.viewWillAppear(animated)
-        
+
         UIApplication.sharedApplication().registerUserNotificationSettings(UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound], categories: nil))
-        
+
         timer.addDelegate(self)
-        
+
         if timer.state == .Meditation {
             meditatorView.setSelectionViewHidden(true, animated: true)
         } else if timer.state == .Preparation {
@@ -105,24 +117,27 @@ class MPMeditatorListViewController: UIViewController {
         } else {
             meditatorView.setSelectionViewHidden(false, animated: true)
         }
-        
-        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "meditationProgressTimerTick", userInfo: nil, repeats: true)
 
-        meditatorManager.meditatorList { (meditators) -> Void in
+        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(MPMeditatorListViewController.meditationProgressTimerTick), userInfo: nil, repeats: true)
+
+        meditatorManager.meditatorList
+        {
+            (meditators) -> Void in
             self.meditatorDataSource.updateMeditators(meditators)
             self.meditatorView.tableView.reloadData()
         }
     }
-    
-    override func viewWillDisappear(animated: Bool) {
+
+    override func viewWillDisappear(animated: Bool)
+    {
         super.viewWillDisappear(animated)
-        
+
         timer.removeDelegate(self)
-        
+
         meditationProgressUpdateTimer?.invalidate()
         meditationProgressUpdateTimer = nil
     }
-    
+
     func meditationProgressTimerTick()
     {
         meditatorDataSource.checkMeditatorProgress(meditatorView.tableView)
@@ -131,23 +146,24 @@ class MPMeditatorListViewController: UIViewController {
             (cell as! MPMeditatorCell).updateProgressIndicatorIfNeeded()
         }
     }
-    
+
     // MARK: Actions
-    
-    @IBAction func didPressStartMeditationButton(sender: UIButton) {
+
+    @IBAction func didPressStartMeditationButton(sender: UIButton)
+    {
         if timer.state == .Stopped {
             let selectedWalkingMeditationTime = meditatorView.meditationPickerView.selectedRowInComponent(0)
             let selectedSittingMeditationTime = meditatorView.meditationPickerView.selectedRowInComponent(2)
-            var totalTime                     = 0
-            
+            var totalTime = 0
+
             NSUserDefaults.standardUserDefaults().setInteger(selectedWalkingMeditationTime, forKey: "walkingMeditationTimeId")
             NSUserDefaults.standardUserDefaults().setInteger(selectedSittingMeditationTime, forKey: "sittingMeditationTimeId")
 
             walkingTimeInMinutes = nil
             sittingTimeInMinutes = nil
-            
+
             var meditationTimes: [MPMeditationSession] = [MPMeditationSession]()
-            
+
             if selectedWalkingMeditationTime > 0 {
                 walkingTimeInMinutes = timerDataSource.times[selectedWalkingMeditationTime]
                 totalTime += walkingTimeInMinutes!
@@ -159,7 +175,7 @@ class MPMeditatorListViewController: UIViewController {
                 totalTime += sittingTimeInMinutes!
                 meditationTimes.append(MPMeditationSession(type: .Sitting, time: Double(sittingTimeInMinutes!) * 60.0))
             }
-            
+
             if meditationTimes.count > 0 {
                 try! timer.startTimer(meditationTimes, preparationTime: 3)
             }
@@ -169,13 +185,15 @@ class MPMeditatorListViewController: UIViewController {
     }
 
 
-    func toggleSelectionView() {
+    func toggleSelectionView()
+    {
         meditatorView.setSelectionViewHidden(!meditatorView.isSelectionViewHidden, animated: true)
     }
 
     // MARK: Notifications
-    
-    func willEnterForeground(notification: NSNotification) {
+
+    func willEnterForeground(notification: NSNotification)
+    {
         if timer.state == .Meditation {
             meditatorView.setSelectionViewHidden(true, animated: true)
         } else if timer.state == .Preparation {
@@ -188,68 +206,74 @@ class MPMeditatorListViewController: UIViewController {
 
 extension MPMeditatorListViewController: UITableViewDelegate
 {
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
+    {
         return 80
     }
-    
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
+    {
         return meditatorDataSource.meditatorSections[section].items.count > 0 ? 40 : 0
     }
-    
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat
+    {
         return 0
     }
-    
-    
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    {
         let view = UITableViewHeaderFooterView()
         view.contentView.backgroundColor = UIColor.whiteColor()
-        view.textLabel?.textColor        = UIColor.darkGrayColor()
+        view.textLabel?.textColor = UIColor.darkGrayColor()
         return view
     }
 }
 
 extension MPMeditatorListViewController: UIPickerViewDelegate
 {
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView
+    {
         var label: UILabel!
         var title = ""
-        
+
         if view is UILabel {
             label = view as! UILabel
         } else {
-            label               = UILabel()
+            label = UILabel()
             label.textAlignment = .Left
         }
-        
+
         if component == 0 || component == 2 {
-            let hours   = timerDataSource.times[row] / 60
+            let hours = timerDataSource.times[row] / 60
             let minutes = timerDataSource.times[row] % 60
-            title       = String(format: "%d:%2.2d" , hours ,minutes)
+            title = String(format: "%d:%2.2d", hours, minutes)
         } else if component == 1 {
             title = "Walking"
         } else if component == 3 {
             title = "Sitting"
         }
-        
-        
+
+
         label.text = title
-        
+
         return label
     }
-    
-    func pickerView(pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+
+    func pickerView(pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat
+    {
         var width: CGFloat = 0
-        
+
         if component == 0 || component == 2 {
             width = 40
         } else {
             width = 70
         }
-        
+
         return width
     }
-    
+
 }
 
 extension MPMeditatorListViewController: MPMeditationTimerDelegate
@@ -261,12 +285,16 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
         if state == MPMeditationState.Preparation {
             meditatorView.setSelectionViewHidden(true, animated: true)
         } else if state == MPMeditationState.Meditation {
-            meditatorManager.startMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {[weak self] () -> Void in
-                self?.meditatorManager.meditatorList { (meditators) -> Void in
+            meditatorManager.startMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {
+                [weak self] () -> Void in
+                self?.meditatorManager.meditatorList
+                {
+                    (meditators) -> Void in
                     self?.meditatorDataSource.updateMeditators(meditators)
                     self?.meditatorView.tableView.reloadData()
                 }
-            }, failure: { (error) -> Void in
+            }, failure: {
+                (error) -> Void in
 //                NSLog("Start meditation failed")
             })
         }
@@ -279,12 +307,12 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
         } else if state == MPMeditationState.Meditation {
             meditatorView.preparationProgressView.setProgress(0.0, animated: false)
             let seconds = timeLeft % 60;
-            let hours   = timeLeft / 3600
+            let hours = timeLeft / 3600
             let minutes = timeLeft / 60 % 60
-            meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d" , Int(hours) , Int(minutes), Int(seconds))
+            meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d", Int(hours), Int(minutes), Int(seconds))
         }
     }
-    
+
     func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
     {
         if state == MPMeditationState.Preparation {
@@ -292,11 +320,11 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
         } else if state == MPMeditationState.Meditation {
             meditatorView.preparationProgressView.setProgress(0.0, animated: false)
             let seconds = totalTimeLeft % 60;
-            let hours   = totalTimeLeft / 3600
+            let hours = totalTimeLeft / 3600
             let minutes = totalTimeLeft / 60 % 60
-            meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d" , Int(hours) , Int(minutes), Int(seconds))
+            meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d", Int(hours), Int(minutes), Int(seconds))
         }
-        
+
 //        NSLog("type: \(type), progress: \(progress), timeLeft: \(timeLeft), totalTimeLeft: \(totalTimeLeft)")
     }
 
@@ -304,52 +332,60 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
     {
 //        NSLog("didChange meditation type")
     }
-    
+
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
     {
         if state == MPMeditationState.Meditation {
             meditatorView.setSelectionViewHidden(false, animated: true)
         }
     }
-    
+
     func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
     {
         sittingTimeInMinutes = nil
         walkingTimeInMinutes = nil
-        
+
         meditatorView.setSelectionViewHidden(false, animated: true)
-        meditatorManager.cancelMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {[weak self] () -> Void in
-            self?.meditatorManager.meditatorList { (meditators) -> Void in
+        meditatorManager.cancelMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completion: {
+            [weak self] () -> Void in
+            self?.meditatorManager.meditatorList
+            {
+                (meditators) -> Void in
                 self?.meditatorDataSource.updateMeditators(meditators)
                 self?.meditatorView.tableView.reloadData()
             }
-        }, failure: { (error) -> Void in
+        }, failure: {
+            (error) -> Void in
 //            NSLog("Cancel meditation failed")
         })
     }
 }
 
 
-extension MPMeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+extension MPMeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate
+{
     // MARK: DZNEmptyDataSetDelegate
-    
-    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage! {
+
+    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
+    {
         return UIImage(named: "BuddhaIcon")
     }
-    
-    func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation! {
+
+    func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation!
+    {
         let animation = CABasicAnimation(keyPath: "transform")
-        
-        animation.fromValue   = NSValue(CATransform3D: CATransform3DIdentity)
-        animation.toValue     = NSValue(CATransform3D: CATransform3DMakeRotation(CGFloat(M_PI_2), 0.0, 1.0, 0.0))
-        animation.duration    = 0.75
-        animation.cumulative  = true
+
+        animation.fromValue = NSValue(CATransform3D: CATransform3DIdentity)
+        animation.toValue = NSValue(CATransform3D: CATransform3DMakeRotation(CGFloat(M_PI_2), 0.0, 1.0, 0.0))
+        animation.duration = 0.75
+        animation.cumulative = true
         animation.repeatCount = 1000
-        
+
         return animation
     }
-    
-    func emptyDataSetShouldAnimateImageView(scrollView: UIScrollView!) -> Bool {
+
+    func emptyDataSetShouldAnimateImageView(scrollView: UIScrollView!) -> Bool
+    {
         return true
     }
 }

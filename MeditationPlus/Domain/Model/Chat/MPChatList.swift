@@ -26,14 +26,17 @@
 import Foundation
 import ObjectMapper
 
-class MPChatList: Mappable {
+class MPChatList: Mappable
+{
     var chats: [MPChatItem]?
 
-    required init?(_ map: Map) {
+    required init?(_ map: Map)
+    {
         self.mapping(map)
     }
 
-    func mapping(map: Map) {
+    func mapping(map: Map)
+    {
         self.chats <- map["chat"]
     }
 }

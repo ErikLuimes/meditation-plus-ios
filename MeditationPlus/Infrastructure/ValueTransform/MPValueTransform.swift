@@ -26,17 +26,21 @@
 import Foundation
 import ObjectMapper
 
-public class MPValueTransform {
-    class public func transformIntString() -> TransformOf<Int, String> {
-        return TransformOf<Int, String>(fromJSON: { (value: String?) -> Int? in
+public class MPValueTransform
+{
+    class public func transformIntString() -> TransformOf<Int, String>
+    {
+        return TransformOf<Int, String>(fromJSON: {
+            (value: String?) -> Int? in
             // transform value from String? to Int?
             guard let stringValue = value else {
                 return nil
             }
-            
-            
+
+
             return Int(stringValue)
-        }, toJSON: { (value: Int?) -> String? in
+        }, toJSON: {
+            (value: Int?) -> String? in
             // transform value from Int? to String?
             if let value = value {
                 return String(value)
@@ -44,14 +48,16 @@ public class MPValueTransform {
             return nil
         })
     }
-    
-    class public func transformBoolString() -> TransformOf<Bool, String> {
-        return TransformOf<Bool, String>(fromJSON: { (value: String?) -> Bool? in
+
+    class public func transformBoolString() -> TransformOf<Bool, String>
+    {
+        return TransformOf<Bool, String>(fromJSON: {
+            (value: String?) -> Bool? in
             // transform value from String? to Bool?
             guard let stringValue = value else {
                 return nil
             }
-            
+
             if stringValue == "true" {
                 return true
             } else if stringValue == "false" {
@@ -59,7 +65,8 @@ public class MPValueTransform {
             } else {
                 return nil
             }
-        }, toJSON: { (value: Bool?) -> String? in
+        }, toJSON: {
+            (value: Bool?) -> String? in
             // transform value from Bool? to String?
             if let someBool: Bool = value {
                 return someBool ? "true" : "false"
@@ -69,33 +76,38 @@ public class MPValueTransform {
         })
     }
 
-    class public func transformTimeIntervalMinuteString() -> TransformOf<NSTimeInterval, String> {
-        return TransformOf<NSTimeInterval, String>(fromJSON: { (value: String?) -> NSTimeInterval? in
+    class public func transformTimeIntervalMinuteString() -> TransformOf<NSTimeInterval, String>
+    {
+        return TransformOf<NSTimeInterval, String>(fromJSON: {
+            (value: String?) -> NSTimeInterval? in
             // transform value from String? to NSTimeInterval?
             guard let stringValue = value else {
                 return nil
             }
-            
+
             if let minuteInt = Int(stringValue) {
                 return NSTimeInterval(Double(minuteInt * 60))
             }
             return nil
-        }, toJSON: { (value: NSTimeInterval?) -> String? in
+        }, toJSON: {
+            (value: NSTimeInterval?) -> String? in
             // transform value from NSTimeInterval? to String?
             if let minuteInterval: NSTimeInterval = value {
-                return String(Int(minuteInterval / 60) )
+                return String(Int(minuteInterval / 60))
             }
 
             return nil
         })
     }
 
-    class public func transformDateEpochString() -> TransformOf<NSDate, String> {
-        return TransformOf<NSDate, String>(fromJSON: { (value: String?) -> NSDate? in
+    class public func transformDateEpochString() -> TransformOf<NSDate, String>
+    {
+        return TransformOf<NSDate, String>(fromJSON: {
+            (value: String?) -> NSDate? in
             guard let stringValue = value else {
                 return nil
             }
-            
+
             var date: NSDate? = nil
 
             if let dateInteger = Int(stringValue) {
@@ -103,8 +115,9 @@ public class MPValueTransform {
             }
 
             return date
-        }, toJSON: { (value: NSDate?) -> String? in
-            var epochString : String?
+        }, toJSON: {
+            (value: NSDate?) -> String? in
+            var epochString: String?
 
             if let epochTimeInterval = value?.timeIntervalSince1970 {
                 epochString = String(stringInterpolationSegment: epochTimeInterval)

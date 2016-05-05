@@ -25,6 +25,7 @@
 
 import Foundation
 
-func clamp<T:Comparable>(value:T, lowerBound:T, upperBound:T) -> T {
+func clamp<T:Comparable>(value: T, lowerBound: T, upperBound: T) -> T
+{
     return min(max(lowerBound, value), upperBound)
 }

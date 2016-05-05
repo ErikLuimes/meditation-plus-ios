@@ -34,7 +34,7 @@ class MPCoreDataStore: NSObject
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "me.iascchen.MyTTT" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1]
+        return urls[urls.count - 1]
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {

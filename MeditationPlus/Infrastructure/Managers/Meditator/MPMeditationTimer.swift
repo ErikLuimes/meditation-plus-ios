@@ -26,10 +26,14 @@
 import Foundation
 import AVFoundation
 
-protocol MPMeditationTimerDelegate: NSObjectProtocol {
+protocol MPMeditationTimerDelegate: NSObjectProtocol
+{
     func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
+
     func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+
     func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
+
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
@@ -37,12 +41,14 @@ protocol MPMeditationTimerDelegate: NSObjectProtocol {
     func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
 }
 
-enum MPMeditationTimerError: ErrorType {
+enum MPMeditationTimerError: ErrorType
+{
     case NoValidTimeAvailable
     case InvalidTime
 }
 
-enum MPMeditationState: Int {
+enum MPMeditationState: Int
+{
     case Stopped
     case Suspended
     case Preparation
@@ -59,7 +65,8 @@ enum MPMeditationState: Int {
         }
     }
 
-    var title: String {
+    var title: String
+    {
         switch self {
             case .Stopped:     return "Stopped"
             case .Suspended:   return "Suspended"
@@ -69,7 +76,8 @@ enum MPMeditationState: Int {
     }
 }
 
-enum MPMeditationType: String {
+enum MPMeditationType: String
+{
     case Sitting
     case Walking
 }
@@ -78,69 +86,77 @@ class MPMeditationSession
 {
     let type: MPMeditationType
     let time: NSTimeInterval
-    
-    var remaining: NSTimeInterval {
+
+    var remaining: NSTimeInterval
+    {
         var remaining = endDate.timeIntervalSinceNow
         if remaining < 0 {
             remaining = 0
         }
-        
+
         return remaining
     }
-    
+
     var startDate: NSDate!
-    var endDate:   NSDate!
-    
-    var isCurrent: Bool {
+    var endDate: NSDate!
+
+    var isCurrent: Bool
+    {
         let timeInterval = NSDate().timeIntervalSince1970
         return startDate.timeIntervalSince1970 <= timeInterval && timeInterval <= timeInterval
     }
-    
-    var progress: Double {
+
+    var progress: Double
+    {
         return time > 0 ? (time - remaining) / time : 0.0
     }
 
-    init(type: MPMeditationType, time: NSTimeInterval, startDate: NSDate = NSDate()) {
+    init(type: MPMeditationType, time: NSTimeInterval, startDate: NSDate = NSDate())
+    {
         self.type = type
         self.time = time
 
         self.updateDateWithOffset(0.0)
     }
-    
-    func updateDateWithOffset(offset: NSTimeInterval) {
+
+    func updateDateWithOffset(offset: NSTimeInterval)
+    {
         self.startDate = NSDate().dateByAddingTimeInterval(offset)
-        self.endDate   = startDate.dateByAddingTimeInterval(time)
+        self.endDate = startDate.dateByAddingTimeInterval(time)
     }
 }
 
 class MPMeditationTimer: NSObject
 {
     static let sharedInstance: MPMeditationTimer = MPMeditationTimer()
-    
+
     internal var delegate: MPMeditationTimerDelegate?
 
     private(set) var state: MPMeditationState = .Stopped
 
     private let timeInterval: NSTimeInterval = 1
-    
+
     private var meditationTimer: NSTimer?
-    
+
     // MARK: Meditation time
     private var meditationSessions: [MPMeditationSession] = [MPMeditationSession]()
 
-    private var currentSessionIndex: Int = 0 {
-        didSet {
+    private var currentSessionIndex: Int = 0
+    {
+        didSet
+        {
             if currentSessionIndex < meditationSessions.count {
                 currentSessionIndex = 0
             }
         }
     }
-    
+
     private var meditationTimerStartDate: NSDate = NSDate()
 
     private var totalMeditationTime: NSTimeInterval = 0
 
-    private var totalRemainingMeditationTime: NSTimeInterval {
+    private var totalRemainingMeditationTime: NSTimeInterval
+    {
         var totalRemainingMeditationTime: NSTimeInterval = 0.0
         if let lastMeditationSession = meditationSessions.last {
             totalRemainingMeditationTime = lastMeditationSession.endDate.timeIntervalSinceNow
@@ -151,7 +167,8 @@ class MPMeditationTimer: NSObject
         return totalRemainingMeditationTime
     }
 
-    private var totalMeditationProgress: Double {
+    private var totalMeditationProgress: Double
+    {
         return calculateProgress(totalMeditationTime, remaining: totalRemainingMeditationTime)
     }
 
@@ -159,16 +176,20 @@ class MPMeditationTimer: NSObject
     // MARK: Preparation time
     private var totalPreparationTime: NSTimeInterval = 0
 
-    private var remainingPreparationTime: NSTimeInterval {
+    private var remainingPreparationTime: NSTimeInterval
+    {
         var remainingTime = meditationTimerStartDate.dateByAddingTimeInterval(totalPreparationTime).timeIntervalSinceNow
-        if remainingTime < 0 { remainingTime = 0}
+        if remainingTime < 0 {
+            remainingTime = 0
+        }
         return remainingTime
     }
 
-    private var preparationProgress: Double {
+    private var preparationProgress: Double
+    {
         return calculateProgress(totalPreparationTime, remaining: remainingPreparationTime)
     }
-    
+
     private func calculateProgress(total: NSTimeInterval, remaining: NSTimeInterval) -> Double
     {
         return total > 0 ? (total - remaining) / total : 0.0
@@ -176,54 +197,60 @@ class MPMeditationTimer: NSObject
 
     // MARK: Init
 
-    override init() {
+    override init()
+    {
         super.init()
     }
 
     // MARK: Timer functions
 
-    func startTimer(meditationSessions: [MPMeditationSession], preparationTime: NSTimeInterval = 0) throws -> Void {
-        self.meditationSessions  = meditationSessions.filter({ $0.time > 0})
-        
+    func startTimer(meditationSessions: [MPMeditationSession], preparationTime: NSTimeInterval = 0) throws -> Void
+    {
+        self.meditationSessions = meditationSessions.filter({ $0.time > 0 })
+
         if self.meditationSessions.count == 0 {
             throw MPMeditationTimerError.NoValidTimeAvailable
         }
-        
+
         self.meditationTimerStartDate = NSDate()
         self.totalPreparationTime = preparationTime
-    
+
         var offset = totalPreparationTime
         for session in self.meditationSessions {
             session.updateDateWithOffset(offset)
             offset += session.time
         }
-        
+
         self.totalMeditationTime = meditationSessions.map({ $0.time }).reduce(0, combine: +)
 
         initTimer()
     }
 
-    private func initTimer() {
-        meditationTimer = NSTimer.scheduledTimerWithTimeInterval(timeInterval, target: self, selector: "meditationTimerCompoundTick", userInfo: nil, repeats: true)
-        NSRunLoop.mainRunLoop().addTimer(meditationTimer!, forMode:NSRunLoopCommonModes)
+    private func initTimer()
+    {
+        meditationTimer = NSTimer.scheduledTimerWithTimeInterval(timeInterval, target: self, selector: #selector(MPMeditationTimer.meditationTimerCompoundTick), userInfo: nil, repeats: true)
+        NSRunLoop.mainRunLoop().addTimer(meditationTimer!, forMode: NSRunLoopCommonModes)
         meditationTimerCompoundTick()
     }
-    
-    private func stopTimer() {
+
+    private func stopTimer()
+    {
         meditationTimer?.invalidate()
-        
-        state                        = .Stopped
-        currentSessionIndex          = 0
+
+        state = .Stopped
+        currentSessionIndex = 0
         meditationSessions.removeAll()
     }
-    
-    private func suspendTimer() {
+
+    private func suspendTimer()
+    {
         meditationTimer?.invalidate()
-        
+
         state = .Suspended
     }
-    
-    func cancelTimer() {
+
+    func cancelTimer()
+    {
         stopTimer()
         delegate?.meditationTimerWasCancelled(self)
         UIApplication.sharedApplication().cancelAllLocalNotifications()
@@ -233,11 +260,11 @@ class MPMeditationTimer: NSObject
     {
         let oldState = self.state
         let newState = MPMeditationState(remainingMeditationTime: totalRemainingMeditationTime, remainingPreparationTime: remainingPreparationTime)
-        
+
         if oldState != newState {
             notifyStateChangeFromState(oldState, toState: newState)
         }
-        
+
         state = newState
 
         switch state {
@@ -255,7 +282,7 @@ class MPMeditationTimer: NSObject
     }
 
     // MARK State change notifications
-    
+
     func notifyStateChangeFromState(fromState: MPMeditationState, toState: MPMeditationState) -> Void
     {
         if toState == .Stopped {
@@ -272,45 +299,49 @@ class MPMeditationTimer: NSObject
             }
         }
     }
-    
-    func applicationDidEnterBackground() {
+
+    func applicationDidEnterBackground()
+    {
         registerNotificationForSessionStart()
         registerNotificationForSessionEnd()
     }
-    
-    func applicationWillEnterForeground() {
+
+    func applicationWillEnterForeground()
+    {
         UIApplication.sharedApplication().cancelAllLocalNotifications()
-        
+
         self.meditationTimer?.invalidate()
         initTimer()
     }
-    
-    func registerNotificationForSessionStart() {
+
+    func registerNotificationForSessionStart()
+    {
         if remainingPreparationTime > 0 {
-            let localNotification:UILocalNotification = UILocalNotification()
-            localNotification.alertBody               = "Meditation session started."
-            localNotification.fireDate                = NSDate().dateByAddingTimeInterval(remainingPreparationTime)
-            localNotification.soundName               = "bell.mp3"
-            
+            let localNotification: UILocalNotification = UILocalNotification()
+            localNotification.alertBody = "Meditation session started."
+            localNotification.fireDate = NSDate().dateByAddingTimeInterval(remainingPreparationTime)
+            localNotification.soundName = "bell.mp3"
+
             UIApplication.sharedApplication().scheduleLocalNotification(localNotification)
         }
     }
-    
-    func registerNotificationForSessionEnd() {
+
+    func registerNotificationForSessionEnd()
+    {
         let numSessions = meditationSessions.count
-        
+
         var currentSessionNumber = 1
         for session in meditationSessions {
             if session.endDate.timeIntervalSince1970 > NSDate().timeIntervalSince1970 {
-                let localNotification:UILocalNotification = UILocalNotification()
-                localNotification.alertBody               = "\(session.type) session ended."
-                localNotification.fireDate                = session.endDate
-                localNotification.soundName               = currentSessionNumber == numSessions ? "bell.mp3" : "bowl.mp3"
-                
+                let localNotification: UILocalNotification = UILocalNotification()
+                localNotification.alertBody = "\(session.type) session ended."
+                localNotification.fireDate = session.endDate
+                localNotification.soundName = currentSessionNumber == numSessions ? "bell.mp3" : "bowl.mp3"
+
                 UIApplication.sharedApplication().scheduleLocalNotification(localNotification)
             }
-            
-            ++currentSessionNumber
+
+            currentSessionNumber += 1
         }
     }
 }

@@ -27,31 +27,33 @@ import Foundation
 import Locksmith
 import ObjectMapper
 
-struct MPToken:
-    ReadableSecureStorable,
-    CreateableSecureStorable,
-    DeleteableSecureStorable,
-    GenericPasswordSecureStorable,
-    Mappable
+struct MPToken: ReadableSecureStorable,
+        CreateableSecureStorable,
+        DeleteableSecureStorable,
+        GenericPasswordSecureStorable,
+        Mappable
 {
     var token: String?
     var error: String?
-    
+
     let service = "MeditationPlus"
     let account = "AccountToken"
 
-    var data: [String: AnyObject] {
+    var data: [String:AnyObject]
+    {
         return ["token": token != nil ? token! : ""]
     }
 
-    
+
     // MARK: Mappable
-    
-    init?(_ map: Map) {
+
+    init?(_ map: Map)
+    {
         mapping(map)
     }
-    
-    mutating func mapping(map: Map) {
+
+    mutating func mapping(map: Map)
+    {
         token <- map["login_token"]
         error <- map["error"]
     }

@@ -26,37 +26,40 @@ import Foundation
 
 class MPTabBarController: UITabBarController
 {
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
+    {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        
+
         var viewControllers: [UIViewController] = []
-        
-        let meditatorController : MPMeditatorListViewController = MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil)
+
+        let meditatorController: MPMeditatorListViewController = MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil)
         viewControllers.append(meditatorController)
-        
+
         let chatViewController: MPChatViewController = MPChatViewController()
         viewControllers.append(chatViewController)
-        
-        let dhammaViewController : MPDhammaViewController = MPDhammaViewController(nibName: "MPDhammaViewController", bundle: nil)
+
+        let dhammaViewController: MPDhammaViewController = MPDhammaViewController(nibName: "MPDhammaViewController", bundle: nil)
         viewControllers.append(dhammaViewController)
-        
-        let quoteViewController : MPQuoteViewController = MPQuoteViewController(nibName: "MPQuoteViewController", bundle: nil)
+
+        let quoteViewController: MPQuoteViewController = MPQuoteViewController(nibName: "MPQuoteViewController", bundle: nil)
         viewControllers.append(quoteViewController)
-        
+
         self.viewControllers = viewControllers
-        
+
         UITabBar.appearance().tintColor = UIColor.orangeColor()
-        
+
         title = "Meditation+"
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder)
+    {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func viewWillAppear(animated: Bool) {
+
+    override func viewWillAppear(animated: Bool)
+    {
         super.viewWillAppear(animated)
-        
+
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
 }

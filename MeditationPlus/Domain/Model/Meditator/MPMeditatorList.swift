@@ -26,16 +26,19 @@
 import Foundation
 import ObjectMapper
 
-class MPMeditatorList: Mappable {
+class MPMeditatorList: Mappable
+{
     var meditators: [MPMeditator]?
 
     // MARK: Mappable
 
-    required init?(_ map: Map) {
+    required init?(_ map: Map)
+    {
         self.mapping(map)
     }
 
-    func mapping(map: Map) {
+    func mapping(map: Map)
+    {
         self.meditators <- map["list"]
     }
 }

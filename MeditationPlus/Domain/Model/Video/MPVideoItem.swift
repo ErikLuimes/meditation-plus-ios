@@ -38,25 +38,28 @@ import ObjectMapper
 		}
 	}
 */
+
 class MPVideoItem: Mappable
 {
-    var id:          String?
+    var id: String?
     var publishedAt: NSDate?
-    var title:       String?
+    var title: String?
     var description: String?
-    var thumbnail:   NSURL?
+    var thumbnail: NSURL?
 
     // MARK: Mappable
 
-    required init?(_ map: Map) {
+    required init?(_ map: Map)
+    {
         mapping(map)
     }
 
-    func mapping(map: Map) {
-        id           <- map["id.videoId"]
-        publishedAt  <- map["snipper.publishedAt"]
-        title        <- map["snippet.title"]
-        description  <- map["snippet.description"]
-        thumbnail    <- (map["snippet.thumbnails.high.url"], URLTransform())
+    func mapping(map: Map)
+    {
+        id <- map["id.videoId"]
+        publishedAt <- map["snipper.publishedAt"]
+        title <- map["snippet.title"]
+        description <- map["snippet.description"]
+        thumbnail <- (map["snippet.thumbnails.high.url"], URLTransform())
     }
 }
