@@ -37,6 +37,7 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
         edgesForExtendedLayout   = .None
         tableView.separatorStyle = .None
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "orange_q"), style: UIBarButtonItemStyle.Plain, target: self, action: "didPressQuestionButton:")
     }
 
     required init!(coder decoder: NSCoder!) {
@@ -45,6 +46,10 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
     
     override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
         return UITableViewStyle.Plain;
+    }
+    
+    func didPressQuestionButton(button: UIBarButtonItem) {
+        NSLog("did press button")
     }
     
     override func viewDidLoad() {
@@ -71,6 +76,7 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
         emoticonButton.setImage(UIImage(named: "orange_q"), forState: .Normal)
         emoticonButton.addTarget(self, action: "didPressEmoticonButton:", forControlEvents: UIControlEvents.TouchUpInside)
         textInputbar.insertSubview(emoticonButton, atIndex: 0)
+        emoticonButton.sizeToFit()
 
         textView.placeholder      = "Message"
         textView.placeholderColor = UIColor.lightGrayColor()
