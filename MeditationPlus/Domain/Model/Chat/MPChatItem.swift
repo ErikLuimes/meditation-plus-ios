@@ -27,57 +27,62 @@ import Foundation
 import ObjectMapper
 import DTCoreText
 
-class MPChatItem: NSObject, Mappable {
-    var uid:            String?
-    var cid:            String?
-    var username:       String?
-    var message:        String?
-    var time:           NSDate?
-    var timestamp:      String?
-    var country:        String?
-    var me:             Bool?
+class MPChatItem: NSObject, Mappable
+{
+    var uid: String?
+    var cid: String?
+    var username: String?
+    var message: String?
+    var time: NSDate?
+    var timestamp: String?
+    var country: String?
+    var me: Bool?
     var attributedText: NSAttributedString?
-    var profile:        MPProfile?
-    var avatarURL:      NSURL?
+    var profile: MPProfile?
+    var avatarURL: NSURL?
 
-    init(username: String, message: String) {
+    init(username: String, message: String)
+    {
         self.username = username
-        self.message  = message
-        self.time     = NSDate()
-        self.me       = true
+        self.message = message
+        self.time = NSDate()
+        self.me = true
     }
-    
+
 
     // MARK: Mappable
 
-    required init?(_ map: Map) {
+    required init?(_ map: Map)
+    {
         super.init()
         self.mapping(map)
     }
 
-    func mapping(map: Map) {
-        uid       <- map["uid"]
-        cid       <- map["cid"]
-        username  <- map["username"]
-        message   <- map["message"]
-        time      <- (map["time"],   MPValueTransform.transformDateEpochString())
+    func mapping(map: Map)
+    {
+        uid <- map["uid"]
+        cid <- map["cid"]
+        username <- map["username"]
+        message <- map["message"]
+        time <- (map["time"], MPValueTransform.transformDateEpochString())
         timestamp <- map["time"]
-        country   <- map["country"]
-        me        <- (map["me"],     MPValueTransform.transformBoolString())
-        
+        country <- map["country"]
+        me <- (map["me"], MPValueTransform.transformBoolString())
+
         createAttributedText()
     }
-    
-    func createAttributedText() {
+
+    func createAttributedText()
+    {
         let regExp = MPTextManager.sharedInstance.regExp
-        
+
         if let message = self.message {
             let font = UIFont.systemFontOfSize(15)
-            
+
             // Html parsing
-            let modified         = NSString(format:"<span style=\"font-family: \(font.fontName); font-size: \(font.pointSize)\">%@</span>", message) as String
+            let modified = NSString(format: "<span style=\"font-family: \(font.fontName); font-size: \(font.pointSize)\">%@</span>", message) as String
             let attributedString = NSMutableAttributedString(HTMLData: modified.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: true)!, options: [DTUseiOS6Attributes: true], documentAttributes: nil)
-            
+
             // Emoji parsing
             let matches = regExp.matchesInString(attributedString.mutableString as String, options: NSMatchingOptions(), range: NSMakeRange(0, (attributedString.mutableString as String).characters.count))
 
@@ -91,9 +96,9 @@ class MPChatItem: NSObject, Mappable {
                 let replacementForTemplate = NSAttributedString(attachment: textAttachment)
                 attributedString.replaceCharactersInRange(result.range, withAttributedString: replacementForTemplate)
             }
-            
+
             attributedText = attributedString
         }
-        
+
     }
 }

@@ -12,31 +12,35 @@ class MPChatManager {
 
     func chatList(failure: ((NSError?) -> Void)? = nil, completion: ([MPChatItem]) -> Void) {
         if let username: String = self.authenticationManager.loggedInUser?.username {
-            let endpoint                    = "http://meditation.sirimangalo.org/db.php"
-            let parameters: [String:String] = ["username": username, "last_chat": MPChatManager.lastUpdateTimeStamp]
-            
-            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPChatList?, error: ErrorType?) in
-                
-                if let chats = response?.chats where chats.count > 0  {
+            let endpoint = "http://meditation.sirimangalo.org/db.php"
+            let parameters: [String:AnyObject] = ["username": username, "last_chat": MPChatManager.lastUpdateTimeStamp]
+
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject {
+                (response: Response<MPChatList, NSError>) in
+
+                if let chats = response.result.value?.chats where chats.count > 0 {
                     MPChatManager.lastUpdateTimeStamp = chats.last?.timestamp ?? "0"
                     completion(chats)
                 }
             }
         }
     }
-    
-    func postMessage(message:String,  completion: ([MPChatItem]) -> Void, failure: ((NSError?) -> Void)? = nil) {
+
+    func postMessage(message: String, completion: ([MPChatItem]) -> Void, failure: ((NSError?) -> Void)? = nil) {
         if let username: String = self.authenticationManager.loggedInUser?.username {
-            let endpoint                    = "http://meditation.sirimangalo.org/db.php"
-            let parameters: [String:String] = [
-                "username":  username,
-                "form_id":   "chatform",
-                "message":   message,
-                "last_chat": MPChatManager.lastUpdateTimeStamp
+            let endpoint = "http://meditation.sirimangalo.org/db.php"
+            let parameters: [String:AnyObject] = [
+                    "username": username,
+                    "form_id": "chatform",
+                    "message": message,
+                    "last_chat": MPChatManager.lastUpdateTimeStamp
             ]
-            
-            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject { (response: MPChatList?, error: ErrorType?) in
-                if let chats = response?.chats where chats.count > 0  {
+
+//            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"] as [String]).responseObject
+            Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseObject {
+                (response: Response<MPChatList, NSError>) in
+
+                if let chats = response.result.value?.chats where chats.count > 0 {
                     MPChatManager.lastUpdateTimeStamp = chats.last?.timestamp ?? "0"
                     completion(chats)
                 } else {
@@ -46,4 +50,3 @@ class MPChatManager {
         }
     }
 }
-

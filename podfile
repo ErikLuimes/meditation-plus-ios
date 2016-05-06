@@ -3,25 +3,27 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, "8.0"
 use_frameworks!
 
-pod 'Alamofire',               '2.0.2'
-pod 'AlamofireObjectMapper',   '1.0'
-pod 'KGFloatingDrawer',        :git => 'https://github.com/ErikLuimes/KGFloatingDrawer.git', :tag => '0.2.0'
-pod 'Locksmith',               '2.0.1'
-pod 'UIImage+Additions',       '2.1.0'
-pod 'SDWebImage',              '~>3.7'
+target 'MeditationPlus' do
+    pod 'Alamofire', '3.3.1'
+    pod 'AlamofireObjectMapper', '3.0.0'
+    pod 'KGFloatingDrawer', '0.2.0'
+    pod 'Locksmith', '2.0.8'
+    pod 'UIImage+Additions', '2.1.0'
+    pod 'SDWebImage', '3.7.5'
 
-pod 'Fabric'
-pod 'Crashlytics'
+    pod 'Fabric', '1.6.7'
+    pod 'Crashlytics', '3.7.0'
 
-pod 'CWStatusBarNotification', '~> 2.3.3'
+    pod 'CWStatusBarNotification', '2.3.4'
 
-pod 'SlackTextViewController'
-pod 'DTCoreText'
+    pod 'SlackTextViewController', '1.9.2'
+    pod 'DTCoreText', '1.6.17'
 
-pod 'DZNEmptyDataSet'
+    pod 'DZNEmptyDataSet', '1.8'
 
-pod 'PDTSimpleCalendar'
+    pod 'PDTSimpleCalendar', '0.9.1'
 
-pod 'youtube-ios-player-helper'
+    pod 'youtube-ios-player-helper', '0.1.6'
 
-pod 'DateTools'
+    pod 'DateTools', '1.7.0'
+end

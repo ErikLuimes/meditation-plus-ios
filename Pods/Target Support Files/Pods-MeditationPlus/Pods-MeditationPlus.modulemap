@@ -1,0 +1,6 @@
+framework module Pods_MeditationPlus {
+  umbrella header "Pods-MeditationPlus-umbrella.h"
+
+  export *
+  module * { export * }
+}

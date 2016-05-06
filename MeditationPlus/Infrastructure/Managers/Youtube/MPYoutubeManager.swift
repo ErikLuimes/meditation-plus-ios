@@ -28,23 +28,27 @@ class MPYoutubeManager
 
     private var apiKey: String = ""
 
-    class func setup() {
+    class func setup()
+    {
         sharedInstance.apiKey = NSBundle.mainBundle().objectForInfoDictionaryKey("YoutubeDataAPIKey") as? String ?? ""
     }
 
     func videoList(completion: ([MPVideoItem] -> Void)?)
     {
-        let endpoint                    = "https://www.googleapis.com/youtube/v3/search"
+        let endpoint = "https://www.googleapis.com/youtube/v3/search"
         let parameters: [String:String] = [
-                "key":        apiKey,
-                "part":       "snippet",
+                "key": apiKey,
+                "part": "snippet",
                 "maxResults": "50",
-                "order":      "date",
-                "channelId":  "UCQJ6ESCWQotBwtJm0Ff_gyQ"
+                "order": "date",
+                "channelId": "UCQJ6ESCWQotBwtJm0Ff_gyQ"
         ]
 
-        Alamofire.request(.GET, endpoint, parameters: parameters).responseObject { (response: MPVideoList?, error: ErrorType?) in
-            if let list = response where list.items?.count ?? 0 > 0 {
+        Alamofire.request(.GET, endpoint, parameters: parameters).responseObject
+        {
+            (response: Response<MPVideoList, NSError>) in
+            
+            if let list = response.result.value where list.items?.count ?? 0 > 0 {
                 completion?(list.items!)
             }
         }

@@ -30,32 +30,36 @@ class MPNavigationController: UINavigationController, UINavigationControllerDele
 {
     var toggleDrawerHandler: (() -> Void)?
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
+    {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
-    
+
     override init(rootViewController: UIViewController)
     {
         super.init(rootViewController: rootViewController)
 
-        self.navigationBar.tintColor   = UIColor.orangeColor()
+        self.navigationBar.tintColor = UIColor.orangeColor()
         self.navigationBar.translucent = false
-        self.delegate                  = self;
+        self.delegate = self;
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder)
+    {
         super.init(coder: aDecoder)
     }
-    
-    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
+
+    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool)
+    {
         if self.viewControllers.count != 1 {
             return
         }
-        
-        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("menu_btn", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: "didPressMenuButton:")
+
+        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("menu_btn", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPNavigationController.didPressMenuButton(_:)))
     }
 
-    func didPressMenuButton(sender: UIBarButtonItem) {
+    func didPressMenuButton(sender: UIBarButtonItem)
+    {
         self.toggleDrawerHandler?()
     }
 }

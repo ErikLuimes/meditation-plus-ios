@@ -27,35 +27,38 @@ class MPQuoteView: UIView
     @IBOutlet weak var quoteView: UITextView!
 
     @IBOutlet weak var cite: UILabel!
-    
+
     @IBOutlet weak var contentWidth: NSLayoutConstraint!
-    
-    override func awakeFromNib() {
+
+    override func awakeFromNib()
+    {
         super.awakeFromNib()
-    
+
         contentWidth.constant = UIScreen.mainScreen().bounds.size.width - 30
         quoteView.alpha = 0
-        cite.alpha      = 0
+        cite.alpha = 0
     }
-    
-    func configureWithQuote(quote: MPQuote) {
+
+    func configureWithQuote(quote: MPQuote)
+    {
         if let quote = quote.quote {
             let font = UIFont.systemFontOfSize(16)
-            let modifiedFont = NSString(format:"<span style=\"font-family: \(font.fontName); font-size: \(font.pointSize)\">%@</span>", quote) as String
-            
+            let modifiedFont = NSString(format: "<span style=\"font-family: \(font.fontName); font-size: \(font.pointSize)\">%@</span>", quote) as String
+
             let attrStr = try? NSAttributedString(
-                data: modifiedFont.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: true)!,
-                options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding],
-                documentAttributes: nil)
-            
+            data: modifiedFont.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: true)!,
+            options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding],
+            documentAttributes: nil)
+
             quoteView.attributedText = attrStr
         }
-        
+
         cite.text = quote.cite
-        
-        UIView.animateWithDuration(0.3, delay: 0.0, options: .CurveEaseInOut, animations: { () -> Void in
+
+        UIView.animateWithDuration(0.3, delay: 0.0, options: .CurveEaseInOut, animations: {
+            () -> Void in
             self.quoteView.alpha = 1.0
-            self.cite.alpha      = 1.0
+            self.cite.alpha = 1.0
         }, completion: nil)
     }
 }

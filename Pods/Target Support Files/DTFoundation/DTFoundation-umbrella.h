@@ -1,6 +1,5 @@
 #import <UIKit/UIKit.h>
 
-#import "DTAsyncFileDeleter.h"
 #import "DTBase64Coding.h"
 #import "DTBlockFunctions.h"
 #import "DTCompatibility.h"

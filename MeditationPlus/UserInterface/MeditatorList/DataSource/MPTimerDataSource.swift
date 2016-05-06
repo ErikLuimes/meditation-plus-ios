@@ -24,31 +24,34 @@
 // THE SOFTWARE.
 
 import Foundation
+import UIKit
 
-class MPTimerDataSource:  NSObject, UIPickerViewDataSource
+class MPTimerDataSource: NSObject, UIPickerViewDataSource
 {
     lazy private(set) var times: [Int] = {
         var times = [Int]()
-        
-        for i in 0...480 {
+
+        for i in 0 ... 480 {
             if i < 120 && i % 5 == 0 {
                 times.append(i)
-            } else if i >= 120 && i < 240 && i % 15 == 0{
+            } else if i >= 120 && i < 240 && i % 15 == 0 {
                 times.append(i)
-            } else if i >= 240 && i <= 480 && i % 30 == 0{
+            } else if i >= 240 && i <= 480 && i % 30 == 0 {
                 times.append(i)
             }
         }
-        
+
         return times
     }()
-    
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
+    {
         return 4
     }
-    
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
+    {
         return (component == 0 || component == 2) ? times.count : 1
     }
-    
+
 }

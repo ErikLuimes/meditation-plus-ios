@@ -34,7 +34,8 @@ enum MPMenuItem: Int
     case About
     case Logout
 
-    var title: String {
+    var title: String
+    {
         switch self {
             case .Home:       return "Home"
             case .Chat:       return "Chat"

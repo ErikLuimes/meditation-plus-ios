@@ -35,12 +35,12 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool
     {
         Fabric.with([Crashlytics.self])
-        
+
         application.cancelAllLocalNotifications()
 
-        window                     = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window!.rootViewController = MPMenuContainerViewController()
-        window!.backgroundColor    = UIColor.whiteColor()
+        window!.backgroundColor = UIColor.whiteColor()
         window!.makeKeyAndVisible()
 
         setupDefaults()
@@ -48,53 +48,59 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
 
         return true
     }
-    
-    func setupDefaults() {
+
+    func setupDefaults()
+    {
         NSUserDefaults.standardUserDefaults().registerDefaults([
-            "rememberPassword":        false,
-            "walkingMeditationTimeId": 0,
-            "sittingMeditationTimeId": 0
-        ])
-        
+                                                                       "rememberPassword": false,
+                                                                       "walkingMeditationTimeId": 0,
+                                                                       "sittingMeditationTimeId": 0
+                                                               ])
+
         if (NSUserDefaults.standardUserDefaults().URLForKey("avatar") == nil) {
             let url = NSURL(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")!
             NSUserDefaults.standardUserDefaults().setURL(url, forKey: "avatar")
         }
     }
 
-    func setupMeditationTimer() {
+    func setupMeditationTimer()
+    {
         MPMeditationTimer.sharedInstance.addDelegate(MPAudioPlayerManager.sharedInstance)
         MPMeditationTimer.sharedInstance.addDelegate(MPIdleTimeoutMeditationTimerDelegate.sharedInstance)
     }
-    
-    func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+
+    func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification)
+    {
         NSLog("did receive local notification")
     }
-    
-    func applicationWillEnterForeground(application: UIApplication) {
+
+    func applicationWillEnterForeground(application: UIApplication)
+    {
         // FG
         MPMeditationTimer.sharedInstance.applicationWillEnterForeground()
         NSLog("will enter fg")
     }
-    
-    func applicationDidEnterBackground(application: UIApplication) {
+
+    func applicationDidEnterBackground(application: UIApplication)
+    {
         MPMeditationTimer.sharedInstance.applicationDidEnterBackground()
         NSLog("did enter bg")
     }
-    
-    func applicationWillTerminate(application: UIApplication) {
+
+    func applicationWillTerminate(application: UIApplication)
+    {
         NSLog("Terminate")
         application.cancelAllLocalNotifications()
     }
-    
+
     lazy var cdstore: MPCoreDataStore = {
         let cdstore = MPCoreDataStore()
         return cdstore
     }()
-    
+
     lazy var cdh: MPCoreDataHelper = {
         let cdh = MPCoreDataHelper()
         return cdh
     }()
-    
+
 }

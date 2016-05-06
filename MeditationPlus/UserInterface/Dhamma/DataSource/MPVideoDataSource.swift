@@ -24,26 +24,29 @@
 // THE SOFTWARE.
 
 import Foundation
+import UIKit
 
 class MPVideoDataSource: NSObject, UITableViewDataSource
 {
     private var videos: [MPVideoItem] = [MPVideoItem]()
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
         return self.videos.count
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
         let cell: MPVideoCell = tableView.dequeueReusableCellWithIdentifier("VideoCell") as! MPVideoCell
 
         if let video = self.videoForIndexPath(indexPath) {
-            let style:NSMutableParagraphStyle =  NSMutableParagraphStyle.defaultParagraphStyle().mutableCopy() as! NSMutableParagraphStyle
+            let style: NSMutableParagraphStyle = NSMutableParagraphStyle.defaultParagraphStyle().mutableCopy() as! NSMutableParagraphStyle
             style.alignment = NSTextAlignment.Justified
             style.firstLineHeadIndent = 10.0
-            style.headIndent          = 10.0
-            style.tailIndent          = -10.0
-            style.paragraphSpacing    = 10
-            
+            style.headIndent = 10.0
+            style.tailIndent = -10.0
+            style.paragraphSpacing = 10
+
             cell.titleLabel.attributedText = NSAttributedString(string: video.title ?? "", attributes: [NSParagraphStyleAttributeName: style])
             if video.thumbnail != nil {
                 cell.videoImageView.sd_setImageWithURL(video.thumbnail!)
@@ -53,11 +56,13 @@ class MPVideoDataSource: NSObject, UITableViewDataSource
         return cell
     }
 
-    func videoForIndexPath(indexPath: NSIndexPath) -> MPVideoItem? {
+    func videoForIndexPath(indexPath: NSIndexPath) -> MPVideoItem?
+    {
         return videos[safe: indexPath.row]
     }
 
-    func updateVideos(newVideos: [MPVideoItem]) {
+    func updateVideos(newVideos: [MPVideoItem])
+    {
         videos.removeAll()
         videos += newVideos
     }

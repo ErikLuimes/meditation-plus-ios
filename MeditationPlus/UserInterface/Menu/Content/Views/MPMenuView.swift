@@ -53,8 +53,8 @@ class MPMenuView: UIView
         super.awakeFromNib()
 
         menuTableView.tableFooterView = UIView(frame: CGRectZero)
-        menuTableView.bounces         = false
-        
+        menuTableView.bounces = false
+
         imageViewTrailingMargin.constant = (-CGRectGetWidth(cutoutImageView.frame) / 3.0)
     }
 }

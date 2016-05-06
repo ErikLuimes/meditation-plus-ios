@@ -29,14 +29,16 @@ import ObjectMapper
 class MPVideoList: Mappable
 {
     var nextPageToken: String?
-    var items:         [MPVideoItem]?
+    var items: [MPVideoItem]?
 
-    required init?(_ map: Map) {
+    required init?(_ map: Map)
+    {
         mapping(map)
     }
 
-    func mapping(map: Map) {
+    func mapping(map: Map)
+    {
         nextPageToken <- map["nextPageToken"]
-        items         <- map["items"]
+        items <- map["items"]
     }
 }

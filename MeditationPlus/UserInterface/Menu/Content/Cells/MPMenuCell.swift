@@ -25,20 +25,27 @@
 
 import UIKit
 
-class MPMenuCell: UITableViewCell {
-    struct ViewData {
+class MPMenuCell: UITableViewCell
+{
+
+    struct ViewData
+    {
         let title: String
     }
 
-    var viewData: ViewData? {
-        didSet {
+    var viewData: ViewData?
+    {
+        didSet
+        {
             textLabel!.text = viewData?.title
         }
     }
 }
 
-extension MPMenuCell.ViewData {
-    init(menuItem: MPMenuItem) {
+extension MPMenuCell.ViewData
+{
+    init(menuItem: MPMenuItem)
+    {
         self.title = menuItem.title
     }
 }

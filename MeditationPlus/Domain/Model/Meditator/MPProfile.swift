@@ -23,6 +23,7 @@ import ObjectMapper
 	"can_edit": "false"
 }
 */
+
 class MPProfile: NSObject, Mappable
 {
     var uid: String?
@@ -34,19 +35,21 @@ class MPProfile: NSObject, Mappable
     var website: String?
     var showEmail: String?
 
-    required init?(_ map: Map) {
+    required init?(_ map: Map)
+    {
         super.init()
         self.mapping(map)
     }
 
-    func mapping(map: Map) {
-        uid       <- map["uid"]
-        username  <- map["username"]
-        email     <- map["email"]
-        hours     <- map["hours"]
-        img       <- map["img"]
-        country   <- map["country"]
-        website   <- map["website"]
+    func mapping(map: Map)
+    {
+        uid <- map["uid"]
+        username <- map["username"]
+        email <- map["email"]
+        hours <- map["hours"]
+        img <- map["img"]
+        country <- map["country"]
+        website <- map["website"]
         showEmail <- map["showEmail"]
     }
 }

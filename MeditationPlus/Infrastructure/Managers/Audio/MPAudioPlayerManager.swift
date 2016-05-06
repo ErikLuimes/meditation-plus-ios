@@ -26,6 +26,7 @@
 import Foundation
 import AVFoundation
 import AudioToolbox
+import UIKit
 
 class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
 {
@@ -33,13 +34,14 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
 
     private var audioPlayer: AVAudioPlayer!
 
-    private let bell  = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
-    
+    private let bell = NSURL(string: NSBundle.mainBundle().pathForResource("bell", ofType: "mp3")!)!
+
     private let bowl = NSURL(string: NSBundle.mainBundle().pathForResource("bowl", ofType: "mp3")!)!
-    
+
     private let gong = NSURL(string: NSBundle.mainBundle().pathForResource("gong", ofType: "mp3")!)!
 
-    private override init() {
+    private override init()
+    {
         try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
         try! AVAudioSession.sharedInstance().setActive(true)
     }
@@ -55,11 +57,13 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
-    {}
-    
+    {
+    }
+
     func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
-    {}
-    
+    {
+    }
+
     func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
     {
         if UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
@@ -67,7 +71,7 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
             audioPlayer.play()
         }
     }
-    
+
     func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
     {
         if UIApplication.sharedApplication().applicationState == UIApplicationState.Active {

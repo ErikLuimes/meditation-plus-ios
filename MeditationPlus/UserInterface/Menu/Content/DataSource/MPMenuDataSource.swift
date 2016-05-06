@@ -24,6 +24,7 @@
 // THE SOFTWARE.
 
 import Foundation
+import UIKit
 
 class MPMenuDataSource: NSObject, UITableViewDataSource
 {
@@ -31,7 +32,7 @@ class MPMenuDataSource: NSObject, UITableViewDataSource
 
     var cellConfigurationHandler: ((MPMenuCell, MPMenuItem) -> ())?
 
-    private var sections: [MPTableViewSection<MPMenuItem>] = [MPTableViewSection<MPMenuItem>]()
+    private var sections: [MPTableViewSection<MPMenuItem>] = [MPTableViewSection < MPMenuItem>]()
 
     required init(cellReuseIdentifier: String)
     {
@@ -40,7 +41,8 @@ class MPMenuDataSource: NSObject, UITableViewDataSource
 
     // MARK: UITableViewDataSource
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    {
         return self.sections.count
     }
 
@@ -73,7 +75,8 @@ class MPMenuDataSource: NSObject, UITableViewDataSource
         return self.sections[safe: indexPath.section]?.items[safe: indexPath.row]
     }
 
-    func updateSections(sections: [MPTableViewSection<MPMenuItem>]) {
+    func updateSections(sections: [MPTableViewSection<MPMenuItem>])
+    {
         self.sections = sections
     }
 }

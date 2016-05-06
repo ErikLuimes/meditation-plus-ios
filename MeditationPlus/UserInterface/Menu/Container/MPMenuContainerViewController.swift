@@ -29,15 +29,17 @@ import KGFloatingDrawer
 class MPMenuContainerViewController: KGDrawerViewController
 {
     var toggleMenuHandler: (() -> Void)!
-    
+
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
         // Handler to open and close the menu drawer, will be passed to navigation controllers
-        self.toggleMenuHandler = {() -> Void in
-            self.toggleDrawer(.Left, animated: true, complete: { (finished) -> Void in
-                
+        self.toggleMenuHandler = {
+            () -> Void in
+            self.toggleDrawer(.Left, animated: true, complete: {
+                (finished) -> Void in
+
             })
         }
 
@@ -45,24 +47,26 @@ class MPMenuContainerViewController: KGDrawerViewController
 
         // Menu view controller
         let menuViewController = MPMenuViewController(nibName: "MPMenuViewController", bundle: nil)
-        menuViewController.drawerNavigationHandler = {(viewController: UIViewController, animated: Bool) in
+        menuViewController.drawerNavigationHandler = {
+            (viewController: UIViewController, animated: Bool) in
             let navigationViewController = MPNavigationController(rootViewController: viewController)
             navigationViewController.toggleDrawerHandler = self.toggleMenuHandler
-            
+
             self.centerViewController = navigationViewController
-            self.closeDrawer(.Left, animated: animated, complete: { (finished) -> Void in
-                
+            self.closeDrawer(.Left, animated: animated, complete: {
+                (finished) -> Void in
+
             })
         }
 
         // Initial view controller
         let initialContentViewController = MPSplashViewController(nibName: "MPSplashViewController", bundle: nil)
-        let navigationViewController     = MPNavigationController(rootViewController: initialContentViewController)
+        let navigationViewController = MPNavigationController(rootViewController: initialContentViewController)
         navigationViewController.toggleDrawerHandler = self.toggleMenuHandler
 
         self.centerViewController = navigationViewController
-        self.leftViewController   = menuViewController
-        self.backgroundImage      = UIImage(named: "background_blurred")
+        self.leftViewController = menuViewController
+        self.backgroundImage = UIImage(named: "background_blurred")
     }
 
     required init?(coder aDecoder: NSCoder)
