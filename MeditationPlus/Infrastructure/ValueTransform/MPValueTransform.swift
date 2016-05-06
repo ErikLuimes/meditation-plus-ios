@@ -57,7 +57,7 @@ public class MPValueTransform
             guard let stringValue = value else {
                 return nil
             }
-
+            
             if stringValue == "true" {
                 return true
             } else if stringValue == "false" {
@@ -70,7 +70,7 @@ public class MPValueTransform
             // transform value from Bool? to String?
             if let someBool: Bool = value {
                 return someBool ? "true" : "false"
-            }
+        }
 
             return ""
         })
@@ -88,17 +88,17 @@ public class MPValueTransform
             if let minuteInt = Int(stringValue) {
                 return NSTimeInterval(Double(minuteInt * 60))
             }
-            return nil
-        }, toJSON: {
-            (value: NSTimeInterval?) -> String? in
-            // transform value from NSTimeInterval? to String?
-            if let minuteInterval: NSTimeInterval = value {
-                return String(Int(minuteInterval / 60))
-            }
+        return nil
+    }, toJSON: {
+        (value: NSTimeInterval?) -> String? in
+        // transform value from NSTimeInterval? to String?
+        if let minuteInterval: NSTimeInterval = value {
+            return String(Int(minuteInterval / 60))
+        }
 
-            return nil
-        })
-    }
+        return nil
+    })
+}
 
     class public func transformDateEpochString() -> TransformOf<NSDate, String>
     {

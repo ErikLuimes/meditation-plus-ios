@@ -25,10 +25,8 @@
 
 import UIKit
 
-class MPMenuViewController: UIViewController, UITableViewDelegate
-{
-    private var menuView: MPMenuView
-    {
+class MPMenuViewController: UIViewController, UITableViewDelegate {
+    private var menuView: MPMenuView {
         return self.view as! MPMenuView
     }
 
@@ -38,26 +36,24 @@ class MPMenuViewController: UIViewController, UITableViewDelegate
 
     private var menuDataSource: MPMenuDataSource!
 
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.menuDataSource = MPMenuDataSource(cellReuseIdentifier: self.menuCellIdentifier)
-        self.menuDataSource.updateSections(self.menuSections())
-        self.menuDataSource.cellConfigurationHandler = {
+        menuDataSource = MPMenuDataSource(cellReuseIdentifier: menuCellIdentifier)
+        menuDataSource.updateSections(menuSections())
+        menuDataSource.cellConfigurationHandler = {
             cell, menuItem in
             cell.viewData = MPMenuCell.ViewData(menuItem: menuItem)
         }
 
-        self.menuView.menuTableView.dataSource = self.menuDataSource;
-        self.menuView.menuTableView.delegate = self
-        self.menuView.menuTableView.registerNib(UINib(nibName: "MPMenuCell", bundle: nil), forCellReuseIdentifier: self.menuCellIdentifier)
+        menuView.menuTableView.dataSource = menuDataSource
+        menuView.menuTableView.delegate = self
+        menuView.menuTableView.registerNib(UINib(nibName: "MPMenuCell", bundle: nil), forCellReuseIdentifier: menuCellIdentifier)
     }
 
     // MARK: Setup Menu Items
 
-    private func menuSections() -> [MPTableViewSection<MPMenuItem>]
-    {
+    private func menuSections() -> [MPTableViewSection<MPMenuItem>] {
         var sections: [MPTableViewSection<MPMenuItem>] = [MPTableViewSection < MPMenuItem>]()
 
         let toolsSection = MPTableViewSection<MPMenuItem>(title: "Tools", items: [
@@ -71,13 +67,12 @@ class MPMenuViewController: UIViewController, UITableViewDelegate
         sections.append(toolsSection)
         sections.append(informationSection)
 
-        return sections;
+        return sections
     }
 
     // MARK: UITableViewDelegate
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
-    {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let menuItem = self.menuDataSource.itemForIndexPath(indexPath) {
             switch menuItem {
                 case .Home:
