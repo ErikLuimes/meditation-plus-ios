@@ -73,9 +73,13 @@ public class MPChatItem: Object, Mappable
     
     override public static func primaryKey() -> String?
     {
-        return "uid"
+        return "cid"
     }
 
+    override public class func indexedProperties() -> [String]
+    {
+        return ["uid", "time"]
+    }
 
 
     public func mapping(map: Map)

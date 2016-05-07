@@ -18,8 +18,6 @@ protocol ChatServiceProtocol
     func chatItems(notificationBlock: (RealmCollectionChange<Results<MPChatItem>> -> Void)) -> (NotificationToken, Results<MPChatItem>)
 }
 
-
-
 public class ChatService: ChatServiceProtocol
 {
     private var apiClient: ChatApiClientProtocol!
