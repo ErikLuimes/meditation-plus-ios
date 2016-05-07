@@ -24,24 +24,23 @@ import ObjectMapper
 }
 */
 
-class MPProfile: NSObject, Mappable
+public class MPProfile: NSObject, Mappable
 {
-    var uid: String?
-    var username: String?
-    var email: String?
-    var hours: [Int]?
-    var img: String?
-    var country: String?
-    var website: String?
-    var showEmail: String?
+    public var uid: String?
+    public var username: String?
+    public var email: String?
+    public var hours: [Int]?
+    public var img: String?
+    public var country: String?
+    public var website: String?
+    public var showEmail: String?
 
-    required init?(_ map: Map)
+    public required init?(_ map: Map)
     {
         super.init()
-        self.mapping(map)
     }
 
-    func mapping(map: Map)
+    public func mapping(map: Map)
     {
         uid <- map["uid"]
         username <- map["username"]

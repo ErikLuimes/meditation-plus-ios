@@ -10,14 +10,18 @@ import UIKit
 import SlackTextViewController
 import DZNEmptyDataSet
 import MessageUI
-import Security
+import RealmSwift
+import CocoaLumberjack
+
 
 class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, MPMessageCellDelegate, MFMailComposeViewControllerDelegate {
     private let chatManager = MPChatManager()
 
     private let profilemanager = MPProfileManager.sharedInstance
 
-    private var chats: [MPChatItem] = [MPChatItem]()
+//    private var chats: [MPChatItem] = [MPChatItem]()
+    
+    private var chatResults: Results<MPChatItem>?
 
     private let otherChatCellIdentifier = "otherChatCellIdentifier"
     private let ownChatCellIdentifier = "ownChatCellIdentifier"
@@ -26,15 +30,19 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
 
     private var chatUpdateTimer: NSTimer?
 
-    private var emojis: [String] = Array<String>(MPTextManager.sharedInstance.emoticons.keys.sort() {
-                                                     $0 < $1
-                                                 })
+    private var emojis: [String] = Array<String>(MPTextManager.sharedInstance.emoticons.keys.sort() { $0 < $1 })
 
     private var emoticonButton: UIButton!
+    
+    private var chatService: ChatService!
+    
+    private var chatNotificationToken: NotificationToken?
 
     init() {
         super.init(tableViewStyle: UITableViewStyle.Plain)
 
+        chatService = ChatService()
+        
         tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "chat-icon"), tag: 0)
 
         edgesForExtendedLayout = .None
@@ -104,40 +112,97 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
         tableView?.emptyDataSetDelegate = self
 
 
-        chatManager.chatList({
-            (error) -> Void in
-        }) {
-            (chats) -> Void in
-            self.chats.removeAll()
-            self.chats += chats
-            self.enrichChatsWithProfileData()
-        }
+//        chatManager.chatList({
+//            (error) -> Void in
+//        }) {
+//            (chats) -> Void in
+//            self.chats.removeAll()
+//            self.chats += chats
+//            self.enrichChatsWithProfileData()
+//        }
     }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-
+        
+        enableChatNotification()
+        chatService.reloadChatItemsIfNeeded()
+        
+        startChatUpdateTimer()
+    }
+    
+    private func startChatUpdateTimer()
+    {
         chatUpdateTimer?.invalidate()
         chatUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: #selector(MPChatViewController.updateChat), userInfo: nil, repeats: true)
         NSRunLoop.mainRunLoop().addTimer(chatUpdateTimer!, forMode: NSRunLoopCommonModes)
+    }
+    
+    private func stopChatUpdateTimer()
+    {
+        chatUpdateTimer?.invalidate()
+        chatUpdateTimer = nil
+    }
+    
+    private func enableChatNotification()
+    {
+        guard self.chatNotificationToken == nil else {
+            return
+        }
+        
+        let (chatNotificationToken, results) = chatService.chatItems
+        {
+            (changes: RealmCollectionChange<Results<MPChatItem>>) in
+            
+            switch changes {
+            case .Initial(_):
+                self.tableView?.reloadData()
+            case .Update(_, let deletions, let insertions, let modifications):
+                let indexPathsToInsert = insertions.map { NSIndexPath(forRow: $0, inSection: 0) }
+                
+                self.tableView?.beginUpdates()
+                self.tableView?.insertRowsAtIndexPaths(indexPathsToInsert, withRowAnimation: .Automatic)
+                self.tableView?.deleteRowsAtIndexPaths(deletions.map { NSIndexPath(forRow: $0, inSection: 0) }, withRowAnimation: .Automatic)
+                self.tableView?.reloadRowsAtIndexPaths(modifications.map { NSIndexPath(forRow: $0, inSection: 0) }, withRowAnimation: .Automatic)
+                self.tableView?.endUpdates()
+                
+                if let indexPath = indexPathsToInsert.last {
+                    self.tableView?.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+                }
+            case .Error(let error):
+                DDLogError(error.localizedDescription)
+                break
+            }
+        }
+        
+        self.chatNotificationToken = chatNotificationToken
+        self.chatResults = results
+    }
+        
+    private func disableChatNotification()
+    {
+        chatNotificationToken?.stop()
+        chatNotificationToken = nil
     }
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
 
-        chatUpdateTimer?.invalidate()
+        stopChatUpdateTimer()
     }
 
     func updateChat() {
-        chatManager.chatList({
-            (error) -> Void in
-        }) {
-            (chats) -> Void in
-            if chats.count > 0 {
-                self.appendChats(chats)
-                self.enrichChatsWithProfileData()
-            }
-        }
+        chatService.reloadChatItemsIfNeeded(true)
+//        
+//        chatManager.chatList({
+//            (error) -> Void in
+//        }) {
+//            (chats) -> Void in
+//            if chats.count > 0 {
+//                self.appendChats(chats)
+//                self.enrichChatsWithProfileData()
+//            }
+//        }
     }
 
     // MARK: UITableViewDataSource
@@ -152,7 +217,7 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
         if tableView == self.autoCompletionView {
             numRows = self.emojis.count
         } else if section == 0 {
-            numRows = self.chats.count
+            numRows = self.chatResults?.count ?? 0
         }
 
         return numRows
@@ -164,8 +229,8 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
         var cell: UITableViewCell!
 
         if tableView == self.tableView {
-            if indexPath.section == 0 && indexPath.row < self.chats.count {
-                let chatItem = self.chats[indexPath.row]
+            if let chatResults = self.chatResults where indexPath.section == 0 && indexPath.row < chatResults.count {
+                let chatItem = chatResults[indexPath.row]
                 if chatItem.me ?? false {
                     cell = tableView.dequeueReusableCellWithIdentifier(self.ownChatCellIdentifier, forIndexPath: indexPath)
                 } else {
@@ -175,7 +240,6 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
                 if cell is MPMessageCell {
                     (cell as? MPMessageCell)?.configureWithChatItem(chatItem)
                 }
-
             }
         } else {
             cell = tableView.dequeueReusableCellWithIdentifier("autocompletion", forIndexPath: indexPath)
@@ -224,92 +288,92 @@ class MPChatViewController: SLKTextViewController, DZNEmptyDataSetSource, DZNEmp
             return
         }
 
-        chatManager.postMessage(message, completion: {
-            (chats: [MPChatItem]) -> Void in
-            self.appendChats(chats)
-            self.enrichChatsWithProfileData()
-        }) {
-            (error: NSError?) -> Void in
-            MPNotificationManager.displayStatusBarNotification("Failed sending message.")
-        }
+//        chatManager.postMessage(message, completion: {
+//            (chats: [MPChatItem]) -> Void in
+//            self.appendChats(chats)
+//            self.enrichChatsWithProfileData()
+//        }) {
+//            (error: NSError?) -> Void in
+//            MPNotificationManager.displayStatusBarNotification("Failed sending message.")
+//        }
     }
 
-    func appendChats(newChats: [MPChatItem]) {
-        if newChats.count == 0 {
-            return
-        }
-
-        tableView?.beginUpdates()
-        let numChatsToAdd = newChats.count
-        let startIndex = chats.count
-        let endIndex = startIndex + numChatsToAdd
-
-        chats += newChats
-
-        var indexPathsToAdd = [NSIndexPath]()
-        for index in startIndex ..< endIndex {
-            indexPathsToAdd.append(NSIndexPath(forRow: index, inSection: 0))
-        }
-
-        tableView?.insertRowsAtIndexPaths(indexPathsToAdd, withRowAnimation: .Automatic)
-        tableView?.endUpdates()
-
-        if let indexPath = indexPathsToAdd.last {
-            tableView?.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
-        }
-    }
+//    func appendChats(newChats: [MPChatItem]) {
+//        if newChats.count == 0 {
+//            return
+//        }
+//
+//        tableView?.beginUpdates()
+//        let numChatsToAdd = newChats.count
+//        let startIndex = chats.count
+//        let endIndex = startIndex + numChatsToAdd
+//
+//        chats += newChats
+//
+//        var indexPathsToAdd = [NSIndexPath]()
+//        for index in startIndex ..< endIndex {
+//            indexPathsToAdd.append(NSIndexPath(forRow: index, inSection: 0))
+//        }
+//
+//        tableView?.insertRowsAtIndexPaths(indexPathsToAdd, withRowAnimation: .Automatic)
+//        tableView?.endUpdates()
+//
+//        if let indexPath = indexPathsToAdd.last {
+//            tableView?.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+//        }
+//    }
 
     override func heightForAutoCompletionView() -> CGFloat {
         return 300
     }
 
-    func enrichChatsWithProfileData(animated: Bool = true) {
-        let dispatchGroup = dispatch_group_create()
-
-        var profiles: [String:MPProfile] = [String: MPProfile]()
-
-        for username in Set(self.chats.map({ $0.username ?? "" })) {
-            dispatch_group_enter(dispatchGroup)
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
-                self.profilemanager.profile(username, completion: {
-                    (profile: MPProfile) -> Void in
-                    profiles[username] = profile
-                    dispatch_group_leave(dispatchGroup)
-                })
-            })
-        }
-
-        dispatch_group_notify(dispatchGroup, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
-            for chat in self.chats where chat.username != nil {
-                if let profile: MPProfile = profiles[chat.username!] {
-                    if let _ = profile.img, imgURL = NSURL(string: profile.img!) where profile.img!.characters.count > 0 {
-                        chat.avatarURL = imgURL
-                    } else if let _ = profile.img where profile.img!.rangeOfString("@") != nil {
-                        let emailhash = profile.img!.md5()
-                        let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
-
-
-                        chat.avatarURL = avatarURL
-
-                    } else if let email = profile.email {
-                        let emailhash = email.md5()
-                        let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
-
-
-                        chat.avatarURL = avatarURL
-                    }
-                }
-            }
-
-            dispatch_sync(dispatch_get_main_queue(), {
-                self.tableView?.reloadData()
-//                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                let path: NSIndexPath = NSIndexPath(forRow: (self.tableView?.numberOfRowsInSection(0))! - 1, inSection: 0)
-                self.tableView?.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
+//    func enrichChatsWithProfileData(animated: Bool = true) {
+//        let dispatchGroup = dispatch_group_create()
+//
+//        var profiles: [String:MPProfile] = [String: MPProfile]()
+//
+//        for username in Set(self.chats.map({ $0.username ?? "" })) {
+//            dispatch_group_enter(dispatchGroup)
+//            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+//                self.profilemanager.profile(username, completion: {
+//                    (profile: MPProfile) -> Void in
+//                    profiles[username] = profile
+//                    dispatch_group_leave(dispatchGroup)
 //                })
-            })
-        })
-    }
+//            })
+//        }
+//
+//        dispatch_group_notify(dispatchGroup, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+//            for chat in self.chats where chat.username != nil {
+//                if let profile: MPProfile = profiles[chat.username!] {
+//                    if let _ = profile.img, imgURL = NSURL(string: profile.img!) where profile.img!.characters.count > 0 {
+//                        chat.avatarURL = imgURL
+//                    } else if let _ = profile.img where profile.img!.rangeOfString("@") != nil {
+//                        let emailhash = profile.img!.md5()
+//                        let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
+//
+//
+//                        chat.avatarURL = avatarURL
+//
+//                    } else if let email = profile.email {
+//                        let emailhash = email.md5()
+//                        let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
+//
+//
+//                        chat.avatarURL = avatarURL
+//                    }
+//                }
+//            }
+//
+//            dispatch_sync(dispatch_get_main_queue(), {
+//                self.tableView?.reloadData()
+////                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//                let path: NSIndexPath = NSIndexPath(forRow: (self.tableView?.numberOfRowsInSection(0))! - 1, inSection: 0)
+//                self.tableView?.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
+////                })
+//            })
+//        })
+//    }
 
     // MARK: DZNEmptyDataSetDelegate
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage! {

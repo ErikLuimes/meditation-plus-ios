@@ -93,14 +93,4 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
         application.cancelAllLocalNotifications()
     }
 
-    lazy var cdstore: MPCoreDataStore = {
-        let cdstore = MPCoreDataStore()
-        return cdstore
-    }()
-
-    lazy var cdh: MPCoreDataHelper = {
-        let cdh = MPCoreDataHelper()
-        return cdh
-    }()
-
 }
