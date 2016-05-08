@@ -25,57 +25,54 @@
 
 import Foundation
 import ObjectMapper
+import RealmSwift
 
-class MPMeditator: NSObject, Mappable
+public class MPMeditator: Object, Mappable
 {
-    var username: String = ""
-    var avatar: NSURL?
-    var start: NSDate?
-    var end: NSDate?
-    var timeDiff: NSTimeInterval?
-    var walkingMinutes: Int?
-    var sittingMinutes: Int?
-    var anumodanaMinutes: Int?
-    var country: String?
-    var me: Bool?
+    dynamic public var username: String = ""
+    dynamic public var avatar: NSURL?
+    dynamic public var start: NSDate?
+    dynamic public var end: NSDate?
+    public let timeDiff: RealmOptional<Double> = RealmOptional<Double>()
+    public let walkingMinutes: RealmOptional<Int> = RealmOptional<Int>()
+    public let sittingMinutes: RealmOptional<Int> = RealmOptional<Int>()
+    public let anumodana: RealmOptional<Int> = RealmOptional<Int>()
+    dynamic public var country: String?
+    dynamic public var me: Bool = false
 
-
-    override init()
+    required convenience public init?(_ map: Map)
     {
-        super.init()
+        self.init()
     }
-
-    // MARK: Mappable
-
-    required init?(_ map: Map)
+    
+    override public class func indexedProperties() -> [String]
     {
-        super.init()
-        self.mapping(map)
+        return ["username", "me", "country"]
     }
-
-    func mapping(map: Map)
+    
+    public func mapping(map: Map)
     {
         self.username <- map["username"]
         self.avatar <- (map["avatar"], URLTransform())
-        self.walkingMinutes <- (map["walking"], MPValueTransform.transformIntString())
-        self.sittingMinutes <- (map["sitting"], MPValueTransform.transformIntString())
-        self.anumodanaMinutes <- (map["anumodana"], MPValueTransform.transformIntString())
+        self.walkingMinutes.value <- (map["walking"], MPValueTransform.transformIntString())
+        self.sittingMinutes.value <- (map["sitting"], MPValueTransform.transformIntString())
+        self.anumodana.value <- (map["anumodana"], MPValueTransform.transformIntString())
         self.country <- map["country"]
         self.start <- (map["start"], MPValueTransform.transformDateEpochString())
         self.end <- (map["end"], MPValueTransform.transformDateEpochString())
         self.me <- (map["me"], MPValueTransform.transformBoolString())
 
         if let startDate = self.start, endDate: NSDate = self.end {
-            self.timeDiff = endDate.timeIntervalSinceDate(startDate)
+            self.timeDiff.value = endDate.timeIntervalSinceDate(startDate)
         }
     }
 
     // Meditation progress
-    var normalizedProgress: Double
+    public var normalizedProgress: Double
     {
         var progress: Double = 1.0
 
-        if let meditationTotal = self.timeDiff, meditationEndTime = self.end where meditationTotal > 0 {
+        if let meditationTotal = self.timeDiff.value, meditationEndTime = self.end where meditationTotal > 0 {
             let timeLeft = meditationEndTime.timeIntervalSinceNow
             progress = clamp((meditationTotal - timeLeft) / meditationTotal, lowerBound: 0, upperBound: 1)
         }
