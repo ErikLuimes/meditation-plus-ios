@@ -60,9 +60,6 @@ public class MPChatItem: Object, Mappable
         self.me = true
     }
 
-    override public static func ignoredProperties() -> [String] {
-        return ["attributedText", "profile", "avatarURL"]
-    }
 
     // MARK: Mappable
 
@@ -80,7 +77,10 @@ public class MPChatItem: Object, Mappable
     {
         return ["uid", "time"]
     }
-
+    
+    override public static func ignoredProperties() -> [String] {
+        return ["attributedText", "profile", "avatarURL"]
+    }
 
     public func mapping(map: Map)
     {

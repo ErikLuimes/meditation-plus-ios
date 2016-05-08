@@ -14,11 +14,7 @@ import RealmSwift
 import CocoaLumberjack
 
 class MPChatViewController: SLKTextViewController {
-    // MARK: Services and Managers
-    
-    private let chatManager = MPChatManager()
-
-    private let profilemanager = MPProfileManager.sharedInstance
+    // MARK: Services
     
     private var chatService: ChatService!
     
@@ -43,7 +39,6 @@ class MPChatViewController: SLKTextViewController {
     private var autocompletionVisible: Bool = false
 
     private var chatUpdateTimer: NSTimer?
-
 
     private var emoticonButton: UIButton!
 
@@ -119,8 +114,11 @@ class MPChatViewController: SLKTextViewController {
             (changes: RealmCollectionChange<Results<MPChatItem>>) in
             
             switch changes {
-            case .Initial(_):
+            case .Initial(let results):
                 self.tableView?.reloadData()
+                if results.count > 0 {
+                    self.tableView?.scrollToRowAtIndexPath(NSIndexPath(forRow: results.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+                }
             case .Update(_, let deletions, let insertions, let modifications):
                 let indexPathsToInsert = insertions.map { NSIndexPath(forRow: $0, inSection: 0) }
                 
@@ -142,7 +140,7 @@ class MPChatViewController: SLKTextViewController {
         self.chatNotificationToken = chatNotificationToken
         self.chatResults = results
     }
-        
+    
     private func disableChatNotification()
     {
         chatNotificationToken?.stop()
@@ -174,23 +172,23 @@ class MPChatViewController: SLKTextViewController {
     override func didPressRightButton(sender: AnyObject!) {
         self.textView.refreshFirstResponder()
 
-        let message = self.textView.text.copy() as! String
+        let message: String? = self.textView.text.copy() as? String
 
         super.didPressRightButton(sender)
 
-        if message.characters.count == 0 {
+        guard message?.characters.count ?? 0 > 0 else {
             MPNotificationManager.displayStatusBarNotification("Please enter a message.")
             return
         }
-
-//        chatManager.postMessage(message, completion: {
-//            (chats: [MPChatItem]) -> Void in
-//            self.appendChats(chats)
-//            self.enrichChatsWithProfileData()
-//        }) {
-//            (error: NSError?) -> Void in
-//            MPNotificationManager.displayStatusBarNotification("Failed sending message.")
-//        }
+        
+        chatService.postMessage(message!)
+        {
+            (result: ServiceResult) in
+            
+            if case ServiceResult.Failure(_) = result {
+                MPNotificationManager.displayStatusBarNotification("Failed sending message.")
+            }
+        }
     }
 
 

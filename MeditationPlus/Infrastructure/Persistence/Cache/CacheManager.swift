@@ -16,7 +16,8 @@ public class CacheManager
     
     public init()
     {
-        dispatch_once(&once) {
+        dispatch_once(&once)
+        {
             NSUserDefaults.standardUserDefaults().registerDefaults([self.key : [:]])
         }
     }

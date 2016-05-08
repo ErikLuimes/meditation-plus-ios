@@ -61,7 +61,7 @@ public class ChatService: ChatServiceProtocol
         
         let lastChatTimestamp: String = dataStore.chatItems.last?.timestamp ?? "0"
         
-        apiClient.loadData(username, lastChatTimestamp: lastChatTimestamp)
+        apiClient.loadChatItems(username, lastChatTimestamp: lastChatTimestamp)
         {
             (response: ApiResponse<[MPChatItem]>) in
             
@@ -69,14 +69,40 @@ public class ChatService: ChatServiceProtocol
             case ApiResponse.Success(let model):
                 self.cacheManager.updateTimestampForCacheKey(cacheKey)
                 self.dataStore.addOrUpdateObjects(model)
+            case ApiResponse.NoData(_):
                 break
             case ApiResponse.Failure(let error):
                 DDLogError(error?.localizedDescription ?? "Failed retrieving 'ChatItems'")
-                break
             }
         }
         
         return needsUpdate
+    }
+    
+    public func postMessage(message: String, completionBlock: ((ServiceResult) -> Void)? = nil)
+    {
+        
+        guard let username = authenticationManager.loggedInUser?.username else {
+            return
+        }
+        
+        let lastChatTimestamp: String = dataStore.chatItems.last?.timestamp ?? "0"
+        
+        apiClient.postMessage(username, message: message, lastChatTimestamp: lastChatTimestamp)
+        {
+            (response: ApiResponse<[MPChatItem]>) in
+            
+            switch response {
+            case ApiResponse.Success(let model):
+                self.dataStore.addOrUpdateObjects(model)
+                completionBlock?(ServiceResult.Success)
+            case ApiResponse.NoData(_):
+                completionBlock?(ServiceResult.Success)
+            case ApiResponse.Failure(let error):
+                DDLogError(error?.localizedDescription ?? "Failed retrieving 'ChatItems'")
+                completionBlock?(ServiceResult.Failure(nil))
+            }
+        }
     }
  
     /**

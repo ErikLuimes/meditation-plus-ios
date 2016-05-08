@@ -8,6 +8,7 @@
 
 import Foundation
 import ObjectMapper
+import RealmSwift
 
 /*
 {
@@ -24,20 +25,42 @@ import ObjectMapper
 }
 */
 
-public class MPProfile: NSObject, Mappable
+public class MPProfile: Object, Mappable
 {
-    public var uid: String?
-    public var username: String?
-    public var email: String?
-    public var hours: [Int]?
-    public var img: String?
-    public var country: String?
-    public var website: String?
-    public var showEmail: String?
-
-    public required init?(_ map: Map)
+    public dynamic var uid: String?
+    public dynamic var username: String?
+    public dynamic var email: String?
+    public dynamic var hoursData: NSData?
+    public dynamic var img: String?
+    public dynamic var country: String?
+    public dynamic var website: String?
+    public dynamic var showEmail: String?
+    
+    lazy public var hours: Array<Int>? = {
+        guard let data = self.hoursData else {
+            return nil
+        }
+        
+        return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? Array<Int>
+    }()
+    
+    required convenience public init?(_ map: Map)
     {
-        super.init()
+        self.init()
+    }
+    
+    override public static func primaryKey() -> String?
+    {
+        return "uid"
+    }
+    
+    override public class func indexedProperties() -> [String]
+    {
+        return ["username", "email"]
+    }
+    
+    override public static func ignoredProperties() -> [String] {
+        return ["hours"]
     }
 
     public func mapping(map: Map)
@@ -45,7 +68,7 @@ public class MPProfile: NSObject, Mappable
         uid <- map["uid"]
         username <- map["username"]
         email <- map["email"]
-        hours <- map["hours"]
+        hoursData <- (map["hours"], MPValueTransform.transformNSDataArray())
         img <- map["img"]
         country <- map["country"]
         website <- map["website"]

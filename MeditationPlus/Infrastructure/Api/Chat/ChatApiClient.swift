@@ -1,9 +1,11 @@
 //
 //  ChatApiClient.swift
 //  MeditationPlus
-//
+//  
 //  Created by Erik Luimes on 06/05/16
 //  Copyright (c) 2016 Maya Interactive. All rights reserved.
+//
+// The MIT License (MIT)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,32 +31,32 @@ import Alamofire
 
 public protocol ChatApiClientProtocol
 {
-    func loadData(username: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[MPChatItem]>) -> Void)
+    func loadChatItems(username: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[MPChatItem]>) -> Void)
+    
+    func postMessage(username: String, message: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[MPChatItem]>) -> Void)
 }
 
-public class ChatApiClient: ChatApiClientProtocol
+public class ChatApiClient: BaseApiClient, ChatApiClientProtocol
 {
-    public func loadData(username: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[MPChatItem]>) -> Void)
+    public func loadChatItems(username: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[MPChatItem]>) -> Void)
     {
         let endpoint: String = "http://meditation.sirimangalo.org/db.php"
         let parameters: [String:AnyObject] = ["username": username, "last_chat": lastChatTimestamp]
         
-        Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseArray(keyPath: "chat")
-        {
-            (response: Response<[MPChatItem], NSError>) in
-            
-            guard response.result.isSuccess else {
-                completionBlock(ApiResponse.Failure(response.result.error))
-                return
-            }
-            
-            guard let chats = response.result.value where chats.count > 0  else {
-                // No results
-                return
-            }
-            
-            completionBlock(ApiResponse.Success(chats))
-        }
+        super.loadArray(Alamofire.Method.POST, endpoint, parameters: parameters, keyPath: "chat", completionBlock: completionBlock)
+    }
+    
+    public func postMessage(username: String, message: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[MPChatItem]>) -> Void)
+    {
+        let endpoint = "http://meditation.sirimangalo.org/db.php"
+        let parameters: [String:AnyObject] = [
+            "username": username,
+            "form_id": "chatform",
+            "message": message,
+            "last_chat": MPChatManager.lastUpdateTimeStamp
+        ]
+        
+        super.loadArray(Alamofire.Method.POST, endpoint, parameters: parameters, keyPath: "chat", completionBlock: completionBlock)
     }
 }
 
