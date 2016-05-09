@@ -20,4 +20,25 @@ extension DataStore: MeditatorDataStoreProtocol
     {
         return mainRealm.objects(MPMeditator)
     }
+    
+    public func syncMeditators(meditators: [MPMeditator])
+    {
+        performWriteBlock
+        {
+            (backgroundRealm) in
+            
+            let availableMeditators = backgroundRealm.objects(MPMeditator)
+            let newMeditators       = meditators.map({ $0.sid })
+            var meditatorsToDelete  = [MPMeditator]()
+            
+            for meditator in availableMeditators {
+                if !newMeditators.contains(meditator.sid) {
+                    meditatorsToDelete.append(meditator)
+                }
+            }
+            
+            backgroundRealm.delete(meditatorsToDelete)
+            backgroundRealm.add(meditators, update: true)
+        }
+    }
 }

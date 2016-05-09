@@ -105,10 +105,18 @@ public class MeditatorService: MeditatorServiceProtocol
             return
         }
         
-        let apiResponseBlock: ((ApiResponse<Bool>) -> Void) = {
-            (response: ApiResponse<Bool>) in
-
-            completionBlock?(response.isSuccess ? ServiceResult.Success : ServiceResult.Failure(nil))
+        let cacheKey = String(MPMeditator.self).sha256()
+        
+        let apiResponseBlock: ((ApiResponse<[MPMeditator]>) -> Void) =
+        {
+            (response: ApiResponse<[MPMeditator]>) in
+            
+            if let model = response.value where model.count > 0 {
+                self.cacheManager.updateTimestampForCacheKey(cacheKey)
+                self.dataStore.syncMeditators(model)
+            } else {
+                DDLogError(response.error?.localizedDescription ?? "Failed retrieving 'Meditators'")
+            }
         }
         
         switch state {

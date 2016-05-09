@@ -15,9 +15,9 @@ public protocol MeditatorApiClientProtocol
 {
     func loadMeditators(username: String, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
     
-    func startMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<Bool>) -> Void)
+    func startMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
     
-    func cancelMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<Bool>) -> Void)
+    func cancelMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
 }
 
 public class MeditatorApiClient: BaseApiClient, MeditatorApiClientProtocol
@@ -32,7 +32,7 @@ public class MeditatorApiClient: BaseApiClient, MeditatorApiClientProtocol
     }
     
     
-    public func startMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<Bool>) -> Void)
+    public func startMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
     {
         let endpoint = "http://meditation.sirimangalo.org/db.php"
         var parameters: [String:String] = [
@@ -46,15 +46,10 @@ public class MeditatorApiClient: BaseApiClient, MeditatorApiClientProtocol
         parameters["sitting"] = sittingTimeInMinutes == nil ? "" : String(sittingTimeInMinutes!)
         parameters["walking"] = walkingTimeInMinutes == nil ? "" : String(walkingTimeInMinutes!)
 
-        Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseString()
-        {
-            (response) -> Void in
-            
-            completionBlock(response.result.isSuccess ? ApiResponse.Success(true) : ApiResponse.Failure(nil))
-        }
+        super.loadArray(Alamofire.Method.POST, endpoint, parameters: parameters, keyPath: "list", completionBlock: completionBlock)
     }
     
-    public func cancelMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<Bool>) -> Void)
+    public func cancelMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
     {
         let endpoint = "http://meditation.sirimangalo.org/db.php"
         var parameters: [String:String] = [
@@ -68,11 +63,6 @@ public class MeditatorApiClient: BaseApiClient, MeditatorApiClientProtocol
         parameters["sitting"] = sittingTimeInMinutes == nil ? "" : String(sittingTimeInMinutes!)
         parameters["walking"] = walkingTimeInMinutes == nil ? "" : String(walkingTimeInMinutes!)
         
-        Alamofire.request(.POST, endpoint, parameters: parameters).validate(contentType: ["text/html"]).responseString()
-        {
-            (response) -> Void in
-            
-            completionBlock(response.result.isSuccess ? ApiResponse.Success(true) : ApiResponse.Failure(nil))
-        }
+        super.loadArray(Alamofire.Method.POST, endpoint, parameters: parameters, keyPath: "list", completionBlock: completionBlock)
     }
 }

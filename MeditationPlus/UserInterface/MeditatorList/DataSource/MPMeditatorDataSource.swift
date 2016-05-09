@@ -144,6 +144,9 @@ public class MeditatorDataSource: NSObject, UITableViewDataSource
     
     public func updateCache()
     {
+        sections[MeditatorSectionData.Meditating.rawValue].items.removeAll()
+        sections[MeditatorSectionData.Finished.rawValue].items.removeAll()
+        
         for meditator in results {
             sections[MeditatorSectionData(meditator: meditator).rawValue].items.append(meditator)
         }

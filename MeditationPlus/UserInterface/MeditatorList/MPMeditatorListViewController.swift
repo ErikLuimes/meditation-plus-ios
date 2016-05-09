@@ -65,16 +65,13 @@ class MPMeditatorListViewController: UIViewController
     
     private var meditatorNotificationToken: NotificationToken!
 
-
     private let timer = MPMeditationTimer.sharedInstance
 
-//    private let meditatorManager = MPMeditatorManager()
     private var meditatorDataSource: MeditatorDataSource?
 
     private let timerDataSource = MPTimerDataSource()
 
     private var meditationProgressUpdateTimer: NSTimer?
-
 
     // Current meditation times
     private var sittingTimeInMinutes: Int?
@@ -104,7 +101,6 @@ class MPMeditatorListViewController: UIViewController
     {
         super.viewDidLoad()
 
-
         meditatorView.tableView.delegate = self
         meditatorView.tableView.emptyDataSetSource = self
         meditatorView.tableView.emptyDataSetDelegate = self
@@ -122,19 +118,7 @@ class MPMeditatorListViewController: UIViewController
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("walkingMeditationTimeId"), inComponent: 0, animated: true)
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("sittingMeditationTimeId"), inComponent: 2, animated: true)
     }
-
-    func refreshMeditators(refreshControl: UIRefreshControl)
-    {
-        meditatorService.reloadMeditatorsIfNeeded(true)
-//        meditatorManager.meditatorList
-//        {
-//            (meditators) -> Void in
-//            refreshControl.endRefreshing()
-//            self.meditatorDataSource.updateMeditators(meditators)
-//            self.meditatorView.tableView.reloadData()
-//        }
-    }
-
+    
     override func viewWillAppear(animated: Bool)
     {
         super.viewWillAppear(animated)
@@ -155,13 +139,6 @@ class MPMeditatorListViewController: UIViewController
 
         meditatorService.reloadMeditatorsIfNeeded()
         enableMeditatorNotification()
-        
-//        meditatorManager.meditatorList
-//        {
-//            (meditators) -> Void in
-//            self.meditatorDataSource.updateMeditators(meditators)
-//            self.meditatorView.tableView.reloadData()
-//        }
     }
 
     override func viewWillDisappear(animated: Bool)
@@ -174,8 +151,6 @@ class MPMeditatorListViewController: UIViewController
         meditationProgressUpdateTimer = nil
         
         disableMeditatorNotification()
-
-        
     }
     
     private func enableMeditatorNotification()
@@ -187,7 +162,6 @@ class MPMeditatorListViewController: UIViewController
         let (meditatorNotificationToken, results) = meditatorService.meditators()
         {
             (changes: RealmCollectionChange<Results<MPMeditator>>) in
-            
             
             self.meditatorView.refreshControl.endRefreshing()
             
@@ -216,8 +190,13 @@ class MPMeditatorListViewController: UIViewController
 
     private func disableMeditatorNotification()
     {
-        meditatorNotificationToken.stop()
+        meditatorNotificationToken?.stop()
         meditatorNotificationToken = nil
+    }
+
+    func refreshMeditators(refreshControl: UIRefreshControl)
+    {
+        meditatorService.reloadMeditatorsIfNeeded(true)
     }
     
     func meditationProgressTimerTick()
@@ -265,7 +244,6 @@ class MPMeditatorListViewController: UIViewController
             timer.cancelTimer()
         }
     }
-
 
     func toggleSelectionView()
     {
@@ -371,14 +349,14 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
         if state == MPMeditationState.Preparation {
             meditatorView.setSelectionViewHidden(true, animated: true)
         } else if state == MPMeditationState.Meditation {
-//            meditatorService.startMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes)
-//            {
-//                (response) -> Void in
-//                
-//                if response.isSuccess() {
-//                    self.meditatorService.reloadMeditatorsIfNeeded(true)
-//                }
-//            }
+            meditatorService.startMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes)
+            {
+                (response) -> Void in
+                
+                if response.isSuccess() {
+                    // self.meditatorService.reloadMeditatorsIfNeeded(true)
+                }
+            }
         }
     }
 
@@ -428,14 +406,14 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
         walkingTimeInMinutes = nil
 
         meditatorView.setSelectionViewHidden(false, animated: true)
-//        meditatorService.cancelMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes)
-//        {
-//            (response) -> Void in
-//            
-//            if response.isSuccess() {
-//                self.meditatorService.reloadMeditatorsIfNeeded(true)
-//            }
-//        }
+        meditatorService.cancelMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes)
+        {
+            (response) -> Void in
+            
+            if response.isSuccess() {
+                // self.meditatorService.reloadMeditatorsIfNeeded(true)
+            }
+        }
     }
 }
 
