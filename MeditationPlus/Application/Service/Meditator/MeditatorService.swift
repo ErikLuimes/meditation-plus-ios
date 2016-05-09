@@ -12,7 +12,7 @@ import CocoaLumberjack
 
 protocol MeditatorServiceProtocol
 {
-    func reloadMeditatorsIfNeeded(name: String, forceReload: Bool) -> Bool
+    func reloadMeditatorsIfNeeded(forceReload: Bool) -> Bool
     
     func meditators(notificationBlock: (RealmCollectionChange<Results<MPMeditator>> -> Void)) -> (NotificationToken, Results<MPMeditator>)
 }
@@ -51,7 +51,7 @@ public class MeditatorService: MeditatorServiceProtocol
      
      - parameter forceReload: force reload of chat items
      */
-    public func reloadMeditatorsIfNeeded(name: String, forceReload: Bool = false) -> Bool
+    public func reloadMeditatorsIfNeeded(forceReload: Bool = false) -> Bool
     {
         let cacheKey    = String(MPMeditator.self).sha256()
         let needsUpdate = forceReload ? forceReload : cacheManager.needsUpdate(cacheKey, timeout: 360)

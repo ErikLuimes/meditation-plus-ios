@@ -25,109 +25,143 @@
 
 import Foundation
 import UIKit
+import RealmSwift
 
-struct MPMeditatorsResultsCache
-{
-    var sections: [[MPMeditator]] = Array(count: MPMeditatorSectionData.numberOfSections, repeatedValue: [])
+//struct MPMeditatorsResultsCache
+//{
+//    var sections: [[MPMeditator]] = Array(count: MPMeditatorSectionData.numberOfSections, repeatedValue: [])
+//
+//    init(initialMeditators: [MPMeditator])
+//    {
+//        for meditator in initialMeditators {
+//            sections[sectionIndexForMeditator(meditator)].append(meditator)
+//        }
+//    }
+//
+//    mutating func insertMeditator(meditator: MPMeditator) -> NSIndexPath
+//    {
+//        let sectionIndex = sectionIndexForMeditator(meditator)
+//        sections[sectionIndex].insert(meditator, atIndex: 0)
+//
+//        return NSIndexPath(forRow: 0, inSection: sectionIndex)
+//    }
+//
+//    mutating func deleteMeditator(meditator: MPMeditator) -> NSIndexPath?
+//    {
+//        if let deletedTaskIndex = (sections[0] as [MPMeditator]).indexOf(meditator) {
+//            sections[0].removeAtIndex(deletedTaskIndex)
+//            return NSIndexPath(forRow: deletedTaskIndex, inSection: 0)
+//        }
+//
+//        return nil
+//    }
+//
+//    private func sectionIndexForMeditator(meditator: MPMeditator) -> Int
+//    {
+//        return MPMeditatorSectionData(progress: meditator.normalizedProgress).rawValue
+//    }
+//}
 
-    init(initialMeditators: [MPMeditator])
-    {
-        for meditator in initialMeditators {
-            sections[sectionIndexForMeditator(meditator)].append(meditator)
-        }
-    }
+//enum MPMeditatorSectionData: Int
+//{
+//    case Meditating
+//    case Finished
+//
+//    init(progress: Double)
+//    {
+//        self = progress < 1.0 ? .Meditating : .Finished
+//    }
+//
+//    var title: String
+//    {
+//        switch self {
+//            case .Meditating: return "Currently meditating"
+//            case .Finished: return "Finished meditating"
+//        }
+//    }
+//
+//    static var numberOfSections: Int
+//    {
+//        return 2
+//    }
+//}
 
-    mutating func insertMeditator(meditator: MPMeditator) -> NSIndexPath
-    {
-        let sectionIndex = sectionIndexForMeditator(meditator)
-        sections[sectionIndex].insert(meditator, atIndex: 0)
-
-        return NSIndexPath(forRow: 0, inSection: sectionIndex)
-    }
-
-    mutating func deleteMeditator(meditator: MPMeditator) -> NSIndexPath?
-    {
-        if let deletedTaskIndex = (sections[0] as [MPMeditator]).indexOf(meditator) {
-            sections[0].removeAtIndex(deletedTaskIndex)
-            return NSIndexPath(forRow: deletedTaskIndex, inSection: 0)
-        }
-
-        return nil
-    }
-
-    private func sectionIndexForMeditator(meditator: MPMeditator) -> Int
-    {
-        return MPMeditatorSectionData(progress: meditator.normalizedProgress).rawValue
-    }
-}
-
-enum MPMeditatorSectionData: Int
+public enum MeditatorSectionData: Int
 {
     case Meditating
     case Finished
-
-    init(progress: Double)
-    {
-        self = progress < 1.0 ? .Meditating : .Finished
-    }
-
-    var title: String
+    
+    public var title: String
     {
         switch self {
-            case .Meditating: return "Currently meditating"
-            case .Finished: return "Finished meditating"
+        case .Meditating: return "Currently meditating"
+        case .Finished: return "Finished meditating"
         }
     }
-
-    static var numberOfSections: Int
+    
+    public static var numberOfSections: Int
     {
         return 2
     }
+    
 }
 
-struct MPMeditatorSection
+extension MeditatorSectionData
+{
+    public init(meditator: MPMeditator)
+    {
+        self = meditator.normalizedProgress < 1.0 ? .Meditating : .Finished
+    }
+}
+
+private struct MeditatorSection
 {
     let title: String
-    let items: [MPMeditator]
+    var items: [MPMeditator] = [MPMeditator]()
+    
+    private init(title: String)
+    {
+        self.title = title
+    }
 }
 
-class MPMeditatorDataSource: NSObject, UITableViewDataSource
+public class MeditatorDataSource: NSObject, UITableViewDataSource
 {
-    var cache: MPMeditatorsResultsCache
-
-    var meditatorSections: [MPMeditatorSection]
+    private var results: Results<MPMeditator>!
+    
+    private var sections: [MeditatorSection] = []
+    
+    required public init(results: Results<MPMeditator>)
     {
-        return cache.sections.enumerate().map
-        {
-            index, meditators in
-            return MPMeditatorSection(
-            title: MPMeditatorSectionData(rawValue: index)!.title,
-            items: meditators
-            )
+        self.results = results
+
+        // Setup sections
+        for i in 0..<MeditatorSectionData.numberOfSections {
+            let section = MeditatorSection(title: MeditatorSectionData(rawValue: i)!.title)
+            sections.append(section)
         }
     }
-
-    static let MPMeditatorCellIdentifier: String = "MPMeditatorCellIdentifier"
-
-    override init()
+    
+    public func updateCache()
     {
-        cache = MPMeditatorsResultsCache(initialMeditators: [])
-        super.init()
+        for meditator in results {
+            sections[MeditatorSectionData(meditator: meditator).rawValue].items.append(meditator)
+        }
+    }
+    
+    public func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    {
+        return self.sections.count
     }
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return self.meditatorSections.count
+        return sections[section].items.count
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        return meditatorSections[section].items.count
-    }
-
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
-    {
-        let cell: UITableViewCell = tableView.dequeueReusableCellWithIdentifier(MPMeditatorDataSource.MPMeditatorCellIdentifier)!
+        let cell: UITableViewCell = tableView.dequeueReusableCellWithIdentifier("MPMeditatorCellIdentifier")!
 
         if let meditator = self.meditatorForIndexPath(indexPath), meditatorCell = cell as? MPMeditatorCell {
             meditatorCell.configureWithMeditator(meditator, displayProgress: indexPath.section == 0)
@@ -136,59 +170,26 @@ class MPMeditatorDataSource: NSObject, UITableViewDataSource
         return cell
     }
 
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+    public func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
     {
-        return meditatorSections[section].title
+        guard section < sections.count else {
+            return nil
+        }
+        return sections[section].title
     }
 
     func meditatorForIndexPath(indexPath: NSIndexPath) -> MPMeditator?
     {
-        return meditatorSections[indexPath.section].items[indexPath.row]
+        return sections[indexPath.section].items[indexPath.row]
     }
-
-    func updateMeditators(newMeditators: [MPMeditator])
-    {
-//        var meditators: [MPMeditator] = [MPMeditator]()
-//        let calendar = NSCalendar.currentCalendar()
-//        let futureDate = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 5, toDate: NSDate(), options: [])
-//        let pastDate = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: -55, toDate: NSDate(), options: [])
-//        
-//        let meditator: MPMeditator = MPMeditator()
-//        meditator.username = "Henk"
-//        meditator.start = pastDate
-//        meditator.end   = futureDate
-//        meditator.timeDiff = 60
-//        meditator.walkingMinutes = 1
-//        meditators.append(meditator)
-//        
-//        let meditator1: MPMeditator = MPMeditator()
-//        meditator1.username = "Henk 1"
-//        meditator1.start = pastDate
-//        meditator1.end   = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 9, toDate: NSDate(), options: [])
-//        meditator1.timeDiff = 60
-//        meditator1.walkingMinutes = 1
-//        meditators.append(meditator1)
-//        
-//        let meditator2: MPMeditator = MPMeditator()
-//        meditator2.username = "Henk 2"
-//        meditator2.start = pastDate
-//        meditator2.end   = calendar.dateByAddingUnit(NSCalendarUnit.Second, value: 6, toDate: NSDate(), options: [])
-//        meditator2.timeDiff = 61
-//        meditator2.walkingMinutes = 1
-//        meditators.append(meditator2)
-//        
-//        meditators += newMeditators
-
-        cache = MPMeditatorsResultsCache(initialMeditators: newMeditators)
-    }
-
+    
     func checkMeditatorProgress(tableView: UITableView)
     {
         var indexPathsToDelete: [NSIndexPath] = [NSIndexPath]()
-        var meditatorsToMove: [MPMeditator] = [MPMeditator]()
-        var indexPathsToAdd: [NSIndexPath] = [NSIndexPath]()
+        var meditatorsToMove: [MPMeditator]   = [MPMeditator]()
+        var indexPathsToAdd: [NSIndexPath]    = [NSIndexPath]()
 
-        for (index, currentlyMeditating) in cache.sections[0].enumerate() {
+        for (index, currentlyMeditating) in sections[0].items.enumerate() {
             if currentlyMeditating.normalizedProgress >= 1.0 {
                 meditatorsToMove.append(currentlyMeditating)
                 indexPathsToDelete.append(NSIndexPath(forRow: index, inSection: 0))
@@ -196,11 +197,11 @@ class MPMeditatorDataSource: NSObject, UITableViewDataSource
         }
 
         for finischedMeditator in meditatorsToMove {
-            cache.deleteMeditator(finischedMeditator)
-            cache.insertMeditator(finischedMeditator)
+            deleteMeditator(finischedMeditator)
+            insertMeditator(finischedMeditator)
         }
 
-        for (index, finishedMeditating) in cache.sections[1].enumerate() {
+        for (index, finishedMeditating) in sections[1].items.enumerate() {
             if meditatorsToMove.contains(finishedMeditating) {
                 indexPathsToAdd.append(NSIndexPath(forRow: index, inSection: 1))
             }
@@ -211,4 +212,113 @@ class MPMeditatorDataSource: NSObject, UITableViewDataSource
         tableView.insertRowsAtIndexPaths(indexPathsToAdd, withRowAnimation: .Automatic)
         tableView.endUpdates()
     }
+    
+    private func insertMeditator(meditator: MPMeditator) -> NSIndexPath
+    {
+        let sectionIndex = MeditatorSectionData(meditator: meditator).rawValue
+        sections[sectionIndex].items.insert(meditator, atIndex: 0)
+
+        return NSIndexPath(forRow: 0, inSection: sectionIndex)
+    }
+
+    private func deleteMeditator(meditator: MPMeditator) -> NSIndexPath?
+    {
+        if let deletedTaskIndex = sections[0].items.indexOf(meditator) {
+            sections[0].items.removeAtIndex(deletedTaskIndex)
+            return NSIndexPath(forRow: deletedTaskIndex, inSection: 0)
+        }
+
+        return nil
+    }
 }
+
+//class MPMeditatorDataSource: NSObject, UITableViewDataSource
+//{
+//    var cache: MPMeditatorsResultsCache
+//
+//    var meditatorSections: [MPMeditatorSection]
+//    {
+//        return cache.sections.enumerate().map
+//        {
+//            index, meditators in
+//            return MPMeditatorSection(
+//            title: MPMeditatorSectionData(rawValue: index)!.title,
+//            items: meditators
+//            )
+//        }
+//    }
+//
+//    static let MPMeditatorCellIdentifier: String = "MPMeditatorCellIdentifier"
+//
+//    override init()
+//    {
+//        cache = MPMeditatorsResultsCache(initialMeditators: [])
+//        super.init()
+//    }
+//
+//    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+//    {
+//        return self.meditatorSections.count
+//    }
+//
+//    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+//    {
+//        return meditatorSections[section].items.count
+//    }
+//
+//    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+//    {
+//        let cell: UITableViewCell = tableView.dequeueReusableCellWithIdentifier(MPMeditatorDataSource.MPMeditatorCellIdentifier)!
+//
+//        if let meditator = self.meditatorForIndexPath(indexPath), meditatorCell = cell as? MPMeditatorCell {
+//            meditatorCell.configureWithMeditator(meditator, displayProgress: indexPath.section == 0)
+//        }
+//
+//        return cell
+//    }
+//
+//    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+//    {
+//        return meditatorSections[section].title
+//    }
+//
+//    func meditatorForIndexPath(indexPath: NSIndexPath) -> MPMeditator?
+//    {
+//        return meditatorSections[indexPath.section].items[indexPath.row]
+//    }
+//
+//    func updateMeditators(newMeditators: [MPMeditator])
+//    {
+//        cache = MPMeditatorsResultsCache(initialMeditators: newMeditators)
+//    }
+//
+//    func checkMeditatorProgress(tableView: UITableView)
+//    {
+//        var indexPathsToDelete: [NSIndexPath] = [NSIndexPath]()
+//        var meditatorsToMove: [MPMeditator] = [MPMeditator]()
+//        var indexPathsToAdd: [NSIndexPath] = [NSIndexPath]()
+//
+//        for (index, currentlyMeditating) in cache.sections[0].enumerate() {
+//            if currentlyMeditating.normalizedProgress >= 1.0 {
+//                meditatorsToMove.append(currentlyMeditating)
+//                indexPathsToDelete.append(NSIndexPath(forRow: index, inSection: 0))
+//            }
+//        }
+//
+//        for finischedMeditator in meditatorsToMove {
+//            cache.deleteMeditator(finischedMeditator)
+//            cache.insertMeditator(finischedMeditator)
+//        }
+//
+//        for (index, finishedMeditating) in cache.sections[1].enumerate() {
+//            if meditatorsToMove.contains(finishedMeditating) {
+//                indexPathsToAdd.append(NSIndexPath(forRow: index, inSection: 1))
+//            }
+//        }
+//
+//        tableView.beginUpdates()
+//        tableView.deleteRowsAtIndexPaths(indexPathsToDelete, withRowAnimation: .Automatic)
+//        tableView.insertRowsAtIndexPaths(indexPathsToAdd, withRowAnimation: .Automatic)
+//        tableView.endUpdates()
+//    }
+//}

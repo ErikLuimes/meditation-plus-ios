@@ -29,8 +29,9 @@ import RealmSwift
 
 public class MPMeditator: Object, Mappable
 {
+    dynamic public var sid: String = ""
     dynamic public var username: String = ""
-    dynamic public var avatar: NSURL?
+    public var avatar: NSURL?
     dynamic public var start: NSDate?
     dynamic public var end: NSDate?
     public let timeDiff: RealmOptional<Double> = RealmOptional<Double>()
@@ -45,13 +46,24 @@ public class MPMeditator: Object, Mappable
         self.init()
     }
     
+    override public class func primaryKey() -> String
+    {
+        return "sid"
+    }
+    
     override public class func indexedProperties() -> [String]
     {
         return ["username", "me", "country"]
     }
     
+    override public class func ignoredProperties() -> [String]
+    {
+        return ["avatar"]
+    }
+    
     public func mapping(map: Map)
     {
+        self.sid <- map["sid"]
         self.username <- map["username"]
         self.avatar <- (map["avatar"], URLTransform())
         self.walkingMinutes.value <- (map["walking"], MPValueTransform.transformIntString())

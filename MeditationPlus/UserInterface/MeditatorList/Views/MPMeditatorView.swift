@@ -63,7 +63,7 @@ class MPMeditatorView: UIView
     {
         super.awakeFromNib()
 
-        tableView.registerNib(UINib(nibName: "MPMeditatorCell", bundle: nil), forCellReuseIdentifier: MPMeditatorDataSource.MPMeditatorCellIdentifier)
+        tableView.registerNib(UINib(nibName: "MPMeditatorCell", bundle: nil), forCellReuseIdentifier: "MPMeditatorCellIdentifier")
         tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 49, 0.0)
         tableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 49, 0.0)
         tableView.tableFooterView = UIView()
