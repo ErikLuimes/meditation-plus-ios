@@ -26,6 +26,8 @@ public class TabBarTransition: NSObject, UIViewControllerAnimatedTransitioning
         let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
         let toView = toViewController.view!
         
+        let yTranslation = UIScreen.mainScreen().bounds.height * 0.33
+        
         containerView.addSubview(toView)
         
         // From View
@@ -40,12 +42,12 @@ public class TabBarTransition: NSObject, UIViewControllerAnimatedTransitioning
         
         // To View
         toView.frame = initialFrame
-        toView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.9, 0.9), CGAffineTransformMakeTranslation(0, 200))
+        toView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.9, 0.9), CGAffineTransformMakeTranslation(0, yTranslation))
         
         UIView.animateWithDuration(transitionDuration(transitionContext), delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.3, options: .CurveEaseInOut, animations:
             {
                 toView.transform = CGAffineTransformIdentity
-                fromView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.9, 0.9), CGAffineTransformMakeTranslation(0, 200))
+                fromView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.9, 0.9), CGAffineTransformMakeTranslation(0, yTranslation))
                 overlayView.alpha = 0.6
                 
             })
