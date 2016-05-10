@@ -27,6 +27,8 @@ import UIKit
 
 class MPTabBarController: UITabBarController
 {
+    private var tabBarTransition: TabBarTransition!
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -50,11 +52,19 @@ class MPTabBarController: UITabBarController
         UITabBar.appearance().tintColor = UIColor.orangeColor()
 
         title = "Meditation+"
+        
+        tabBarTransition = TabBarTransition()
     }
 
     required init?(coder aDecoder: NSCoder)
     {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.delegate = self
     }
 
     override func viewWillAppear(animated: Bool)
@@ -62,5 +72,13 @@ class MPTabBarController: UITabBarController
         super.viewWillAppear(animated)
 
         self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+}
+
+extension MPTabBarController: UITabBarControllerDelegate
+{
+    func tabBarController(tabBarController: UITabBarController, animationControllerForTransitionFromViewController fromVC: UIViewController, toViewController toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
+    {
+        return tabBarTransition
     }
 }
