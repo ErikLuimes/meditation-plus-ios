@@ -20,6 +20,8 @@ public protocol DataStoreProtocol
 public struct DataStore: DataStoreProtocol
 {
     private (set) var writeQueue = dispatch_queue_create("org.meditationplus.realm.write", DISPATCH_QUEUE_SERIAL)
+    
+    private (set) var backgroundQueue = dispatch_queue_create("org.meditationplus.realm.background", DISPATCH_QUEUE_CONCURRENT)
 
     private (set) var mainRealm: Realm
     
@@ -33,20 +35,38 @@ public struct DataStore: DataStoreProtocol
         dispatch_async(self.writeQueue)
         {
             autoreleasepool
-                {
-                    do {
-                        let realm = try Realm()
-                        
-                        try realm.write()
-                            {
-                                writeBlock(backgroundRealm: realm)
-                                try! realm.commitWrite()
-                        }
-                    } catch let error as NSError {
-                        DDLogError("DB Error: \(error.localizedDescription)")
-                    } catch {
-                        DDLogError("DB Error: Generic Error")
+            {
+                do {
+                    let realm = try Realm()
+                    
+                    try realm.write()
+                        {
+                            writeBlock(backgroundRealm: realm)
+                            try! realm.commitWrite()
                     }
+                } catch let error as NSError {
+                    DDLogError("DB Error: \(error.localizedDescription)")
+                } catch {
+                    DDLogError("DB Error: Generic Error")
+                }
+            }
+        }
+    }
+    
+    internal func performBackgroundBlock(backgroundBlock: (backgroundRealm:Realm) -> Void)
+    {
+        dispatch_async(self.backgroundQueue)
+        {
+            autoreleasepool
+            {
+                do {
+                    let realm = try Realm()
+                    backgroundBlock(backgroundRealm: realm)
+                } catch let error as NSError {
+                    DDLogError("DB Error: \(error.localizedDescription)")
+                } catch {
+                    DDLogError("DB Error: Generic Error")
+                }
             }
         }
     }

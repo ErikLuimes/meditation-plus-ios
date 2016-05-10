@@ -45,6 +45,17 @@ extension RealmCollectionChange
         return !isSuccess()
     }
     
+    public var results: T? {
+        switch self {
+        case .Initial(let results):
+            return results
+        case .Update(let results, _, _, _):
+            return results
+        default:
+            return nil
+        }
+    }
+    
     public var error: NSError? {
         if case .Error(let error) = self {
             return error
@@ -350,13 +361,6 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
             meditatorView.setSelectionViewHidden(true, animated: true)
         } else if state == MPMeditationState.Meditation {
             meditatorService.startMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes)
-            {
-                (response) -> Void in
-                
-                if response.isSuccess() {
-                    // self.meditatorService.reloadMeditatorsIfNeeded(true)
-                }
-            }
         }
     }
 
@@ -407,13 +411,6 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
 
         meditatorView.setSelectionViewHidden(false, animated: true)
         meditatorService.cancelMeditation(sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes)
-        {
-            (response) -> Void in
-            
-            if response.isSuccess() {
-                // self.meditatorService.reloadMeditatorsIfNeeded(true)
-            }
-        }
     }
 }
 

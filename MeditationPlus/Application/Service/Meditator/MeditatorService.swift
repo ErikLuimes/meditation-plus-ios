@@ -79,17 +79,17 @@ public class MeditatorService: MeditatorServiceProtocol
         return needsUpdate
     }
     
-    public func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: ((ServiceResult) -> Void)?)
+    public func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: ((ServiceResult) -> Void)? = nil)
     {
         updateMeditationTime(MeditationState.Start, sittingTimeInMinutes: sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completionBlock: completionBlock)
     }
     
-    public func cancelMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: ((ServiceResult) -> Void)?)
+    public func cancelMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: ((ServiceResult) -> Void)? = nil)
     {
         updateMeditationTime(MeditationState.Cancel, sittingTimeInMinutes: sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completionBlock: completionBlock)
     }
     
-    private func updateMeditationTime(state: MeditationState, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: ((ServiceResult) -> Void)?)
+    private func updateMeditationTime(state: MeditationState, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: ((ServiceResult) -> Void)? = nil)
     {
        if sittingTimeInMinutes == nil && walkingTimeInMinutes == nil {
             completionBlock?(ServiceResult.Failure(nil))

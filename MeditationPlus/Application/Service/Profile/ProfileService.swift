@@ -20,22 +20,72 @@ protocol ProfileServiceProtocol
 
 public class ProfileService: ProfileServiceProtocol
 {
+    public static let sharedInstance = ProfileService()
+    
     private var apiClient: ProfileApiClientProtocol!
     
     private var dataStore: DataStore!
     
     private var cacheManager: CacheManager!
     
+    private var queue: NSOperationQueue!
+    
+    private var chatNotificationToken: NotificationToken!
+    
+    deinit
+    {
+        chatNotificationToken.stop()
+    }
+    
     convenience init()
     {
         self.init(apiClient: ProfileApiClient(), dataStore: DataStore(), cacheManager: CacheManager())
     }
     
-    public init(apiClient: ProfileApiClientProtocol, dataStore: DataStore, cacheManager: CacheManager)
+    required public init(apiClient: ProfileApiClientProtocol, dataStore: DataStore, cacheManager: CacheManager)
     {
         self.apiClient = apiClient
         self.dataStore = dataStore
         self.cacheManager = cacheManager
+        
+        queue = NSOperationQueue()
+        queue.qualityOfService = NSQualityOfService.Background
+        queue.maxConcurrentOperationCount = 1
+        
+        setupChatNotification()
+    }
+    
+    private func setupChatNotification()
+    {
+        guard chatNotificationToken == nil else {
+            return
+        }
+        
+        chatNotificationToken = dataStore.chatItems.addNotificationBlock
+        {
+            (changes: RealmCollectionChange<Results<MPChatItem>>) in
+            
+            if changes.isSuccess() {
+                self.retrieveMisscingProfiles()
+            }
+        }
+    }
+    
+    private func retrieveMisscingProfiles()
+    {
+        dataStore.usernamesWithoutProfile
+        {
+            (usernames: Set<String>) in
+            
+            for username in usernames {
+                self.queue.addOperationWithBlock
+                {
+                    () -> Void in
+                    
+                    self.reloadProfileIfNeeded(username, forceReload: true)
+                }
+            }
+        }
     }
     
     /**
@@ -63,7 +113,7 @@ public class ProfileService: ProfileServiceProtocol
             case ApiResponse.NoData(_):
                 break
             case ApiResponse.Failure(let error):
-                DDLogError(error?.localizedDescription ?? "Failed retrieving 'ChatItems'")
+                DDLogError(error?.localizedDescription ?? "Failed retrieving 'MPProfile'")
             }
         }
         

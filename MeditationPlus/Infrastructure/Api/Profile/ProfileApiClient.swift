@@ -20,9 +20,9 @@ public class ProfileApiClient: BaseApiClient, ProfileApiClientProtocol
 {
     public func loadProfile(username: String, completionBlock: (ApiResponse<MPProfile>) -> Void)
     {
-        let endpoint: String               = "http://meditation.sirimangalo.org/db.php"
+        let endpoint: String               = "http://meditation.sirimangalo.org/post.php"
         let parameters: [String:AnyObject] = ["profile": username, "submit": "Profile"]
         
-        super.loadObject(Alamofire.Method.POST, endpoint, parameters: parameters, keyPath: "chat", completionBlock: completionBlock)
+        super.loadObject(Alamofire.Method.POST, endpoint, parameters: parameters, keyPath: nil, completionBlock: completionBlock)
     }
 }

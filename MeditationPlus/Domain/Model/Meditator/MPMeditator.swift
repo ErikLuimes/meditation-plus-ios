@@ -31,7 +31,7 @@ public class MPMeditator: Object, Mappable
 {
     dynamic public var sid: String = ""
     dynamic public var username: String = ""
-    public var avatar: NSURL?
+    dynamic public var avatarString: String?
     dynamic public var start: NSDate?
     dynamic public var end: NSDate?
     public let timeDiff: RealmOptional<Double> = RealmOptional<Double>()
@@ -40,6 +40,14 @@ public class MPMeditator: Object, Mappable
     public let anumodana: RealmOptional<Int> = RealmOptional<Int>()
     dynamic public var country: String?
     dynamic public var me: Bool = false
+    
+    lazy public var avatar: NSURL? = {
+        guard self.avatarString != nil else {
+           return nil
+        }
+        
+        return NSURL(string: self.avatarString!)
+    }()
 
     required convenience public init?(_ map: Map)
     {
@@ -65,7 +73,7 @@ public class MPMeditator: Object, Mappable
     {
         self.sid <- map["sid"]
         self.username <- map["username"]
-        self.avatar <- (map["avatar"], URLTransform())
+        self.avatarString <- map["avatar"]
         self.walkingMinutes.value <- (map["walking"], MPValueTransform.transformIntString())
         self.sittingMinutes.value <- (map["sitting"], MPValueTransform.transformIntString())
         self.anumodana.value <- (map["anumodana"], MPValueTransform.transformIntString())

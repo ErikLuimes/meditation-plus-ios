@@ -30,15 +30,18 @@ import RealmSwift
 
 public class MPChatItem: Object, Mappable
 {
-    dynamic public var uid: String?
-    dynamic public var cid: String?
-    dynamic public var username: String?
+    dynamic public var uid: String!
+    dynamic public var cid: String!
+    dynamic public var username: String!
     dynamic public var message: String?
     dynamic public var time: NSDate?
     dynamic public var timestamp: String?
     dynamic public var country: String?
     dynamic public var me: Bool = false
     dynamic public var attributedTextData: NSData?
+    lazy public var profile: Results<MPProfile> = {
+        return dataStore.mainRealm.objects(MPProfile.self).filter("username = %@", self.username)
+    }()
     
     lazy public var attributedText: NSAttributedString? = {
         guard let data = self.attributedTextData else {
@@ -48,8 +51,10 @@ public class MPChatItem: Object, Mappable
         return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSAttributedString
     }()
     
-    public var profile: MPProfile?
-    public var avatarURL: NSURL?
+//    public var profile: MPProfile?
+    lazy public var avatarURL: NSURL? = {
+        return self.profile.first?.avatar
+    }()
 
     convenience public init(username: String, message: String)
     {
@@ -79,7 +84,7 @@ public class MPChatItem: Object, Mappable
     }
     
     override public static func ignoredProperties() -> [String] {
-        return ["attributedText", "profile", "avatarURL"]
+        return ["attributedText", "avatarURL"]
     }
 
     public func mapping(map: Map)

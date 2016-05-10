@@ -18,6 +18,8 @@ class MPChatViewController: SLKTextViewController {
     
     private var chatService: ChatService!
     
+    private var profileService: ProfileService!
+    
     // MARK: Data
     
     private var chatNotificationToken: NotificationToken?
@@ -48,6 +50,8 @@ class MPChatViewController: SLKTextViewController {
         super.init(tableViewStyle: UITableViewStyle.Plain)
 
         chatService = ChatService()
+        
+        profileService = ProfileService.sharedInstance
         
         tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "chat-icon"), tag: 0)
 
