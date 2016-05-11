@@ -55,7 +55,6 @@ class MPChatViewController: SLKTextViewController {
         
         tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "chat-icon"), tag: 0)
 
-        edgesForExtendedLayout = .None
         tableView?.separatorStyle = .None
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "orange_q"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPChatViewController.didPressQuestionButton(_:)))

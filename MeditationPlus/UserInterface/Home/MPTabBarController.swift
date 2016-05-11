@@ -84,5 +84,6 @@ extension MPTabBarController: UITabBarControllerDelegate
     func tabBarController(tabBarController: UITabBarController, animationControllerForTransitionFromViewController fromVC: UIViewController, toViewController toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
         return tabBarTransition
+//        return nil
     }
 }
