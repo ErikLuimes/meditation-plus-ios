@@ -48,6 +48,10 @@ class MPTabBarController: UITabBarController
         viewControllers.append(quoteViewController)
 
         self.viewControllers = viewControllers
+        
+        for viewController in viewControllers {
+            viewController.tabBarItem.imageInsets = UIEdgeInsets(top: 5, left: 0, bottom: -5, right: 0)
+        }
 
         UITabBar.appearance().tintColor = UIColor.orangeColor()
 
@@ -79,7 +83,6 @@ extension MPTabBarController: UITabBarControllerDelegate
 {
     func tabBarController(tabBarController: UITabBarController, animationControllerForTransitionFromViewController fromVC: UIViewController, toViewController toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-//        return tabBarTransition
-        return nil
+        return tabBarTransition
     }
 }

@@ -53,7 +53,7 @@ class MPChatViewController: SLKTextViewController {
         
         profileService = ProfileService.sharedInstance
         
-        tabBarItem = UITabBarItem(title: "Chat", image: UIImage(named: "chat-icon"), tag: 0)
+        tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "chat-icon"), tag: 0)
 
         edgesForExtendedLayout = .None
         tableView?.separatorStyle = .None
@@ -296,6 +296,8 @@ extension MPChatViewController
         
         tableView?.emptyDataSetSource = self
         tableView?.emptyDataSetDelegate = self
+        
+        self.view.clipsToBounds = true
     }
 }
 

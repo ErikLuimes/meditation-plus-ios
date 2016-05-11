@@ -12,7 +12,7 @@ public class TabBarTransition: NSObject, UIViewControllerAnimatedTransitioning
 {
     public func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval
     {
-        return 0.6
+        return 0.55
     }
     
     public func animateTransition(transitionContext: UIViewControllerContextTransitioning)
@@ -20,13 +20,16 @@ public class TabBarTransition: NSObject, UIViewControllerAnimatedTransitioning
         let containerView = transitionContext.containerView()!
         containerView.backgroundColor = UIColor.whiteColor()
         
+        var transform     = CATransform3DIdentity
+        transform.m34 = -1.0 / 850
+        
         let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)!
         let fromView = fromViewController.view!
         
         let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
         let toView = toViewController.view!
         
-        let yTranslation = UIScreen.mainScreen().bounds.height * 0.33
+        let yTranslation = UIScreen.mainScreen().bounds.height * 0.5
         
         containerView.addSubview(toView)
         
@@ -42,13 +45,14 @@ public class TabBarTransition: NSObject, UIViewControllerAnimatedTransitioning
         
         // To View
         toView.frame = initialFrame
-        toView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.9, 0.9), CGAffineTransformMakeTranslation(0, yTranslation))
+        toView.layer.transform = CATransform3DTranslate(transform, 0, yTranslation, 0)
         
-        UIView.animateWithDuration(transitionDuration(transitionContext), delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.3, options: .CurveEaseInOut, animations:
+        UIView.animateWithDuration(transitionDuration(transitionContext), delay: 0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0.0, options: .CurveEaseOut, animations:
             {
                 toView.transform = CGAffineTransformIdentity
-                fromView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.9, 0.9), CGAffineTransformMakeTranslation(0, yTranslation))
+                fromView.layer.transform = CATransform3DTranslate(transform, 0, 25, -90)
                 overlayView.alpha = 0.6
+                fromView.alpha = 0.0
                 
             })
         {
