@@ -75,7 +75,7 @@ class MPMeditatorCell: UITableViewCell
         circlePathLayer.strokeEnd = 0
         avatarImageView.layer.addSublayer(circlePathLayer)
 
-        selectionStyle = .None
+        selectionStyle = .Default
     }
 
     override func setSelected(selected: Bool, animated: Bool)

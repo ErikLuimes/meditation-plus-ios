@@ -88,6 +88,10 @@ class MPMeditatorListViewController: UIViewController
     private var sittingTimeInMinutes: Int?
 
     private var walkingTimeInMinutes: Int?
+    
+    // View
+    
+    private var blurView = UIVisualEffectView(frame: UIScreen.mainScreen().bounds)
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
     {
@@ -96,6 +100,7 @@ class MPMeditatorListViewController: UIViewController
         tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "BuddhaIcon"), tag: 0)
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MPMeditatorListViewController.willEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        
     }
 
     required init?(coder aDecoder: NSCoder)
@@ -128,6 +133,12 @@ class MPMeditatorListViewController: UIViewController
 
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("walkingMeditationTimeId"), inComponent: 0, animated: true)
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("sittingMeditationTimeId"), inComponent: 2, animated: true)
+        
+//        if #available(iOS 9, *) {
+//            if traitCollection.forceTouchCapability == .Available {
+                registerForPreviewingWithDelegate(self, sourceView: meditatorView.tableView)
+//            }
+//        }
     }
     
     override func viewWillAppear(animated: Bool)
@@ -304,6 +315,34 @@ extension MPMeditatorListViewController: UITableViewDelegate
         view.textLabel?.textColor = UIColor.darkGrayColor()
         return view
     }
+    
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//        self.view.addSubview(blurView)
+//
+//        UIView.animateWithDuration(0.5, delay: 0, options: .CurveEaseInOut, animations: {
+//            self.blurView.effect = UIBlurEffect(style: .Dark)
+//        }) { (finished) in
+//                //
+//        }
+        
+            if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath) {
+                //This will show the cell clearly and blur the rest of the screen for our peek.
+                var viewController = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, meditator: meditator)
+                self.navigationController?.pushViewController(viewController, animated: true)
+                
+                
+            }
+    }
+    
+    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+//        UIView.animateWithDuration(0.5, delay: 0, options: .CurveEaseInOut, animations: {
+//            self.blurView.effect = nil
+//        }) { (finished) in
+//            self.blurView.removeFromSuperview()
+//        }
+        
+    }
 }
 
 extension MPMeditatorListViewController: UIPickerViewDelegate
@@ -441,4 +480,53 @@ extension MPMeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetD
     {
         return true
     }
+}
+
+extension MPMeditatorListViewController: UIViewControllerPreviewingDelegate
+{
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        if let indexPath = meditatorView.tableView.indexPathForRowAtPoint(location) {
+            if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath) {
+                //This will show the cell clearly and blur the rest of the screen for our peek.
+                previewingContext.sourceRect = meditatorView.tableView.rectForRowAtIndexPath(indexPath)
+                var viewController = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, meditator: meditator)
+//                var navigationController = UINavigationController(rootViewController: viewController)
+                
+                return viewController
+                
+            } else {
+                return nil
+            }
+        }
+        return nil
+    }
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+        //Here's where you commit (pop)
+        navigationController?.pushViewController(viewControllerToCommit, animated: true)
+//        presentViewController(viewControllerToCommit, animated: true, completion: nil)
+    }
+    
+//    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+//        let viewController = UIViewController()
+//        
+//        
+//        viewController.preferredContentSize = CGSize(width: 0, height: 0)
+//        
+//        return viewController
+//    }
+//    
+//    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+//        showViewController(viewControllerToCommit, sender: self)
+//    }
+    
+//    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+//        
+//        guard let indexPath = self.meditarorView.tableView?.indexPathForItemAtPoint(location) else { return nil }
+//        
+//        guard let cell = self.meditarorView.tableView?.cellForItemAtIndexPath(indexPath) else { return nil }
+//        
+//        //...
+//        
+//    }
 }
