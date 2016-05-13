@@ -29,30 +29,33 @@ public class TabBarTransition: NSObject, UIViewControllerAnimatedTransitioning
         let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
         let toView = toViewController.view!
         
-        let yTranslation = UIScreen.mainScreen().bounds.height * 0.5
+        let yTranslation = UIScreen.mainScreen().bounds.height
         
-        containerView.addSubview(toView)
+        containerView.insertSubview(toView, atIndex:0)
+        containerView.addSubview(fromView)
         
         // From View
         let initialFrame = transitionContext.initialFrameForViewController(fromViewController)
         fromView.frame = initialFrame
         
         // Overlay view
-        let overlayView = UIView(frame: initialFrame)
-        overlayView.backgroundColor = UIColor.blackColor()
-        overlayView.alpha = 0.0
-        containerView.insertSubview(overlayView, belowSubview: toView)
+//        let overlayView = UIView(frame: initialFrame)
+        let overlayView = UIVisualEffectView(frame: initialFrame)
+        overlayView.effect = UIBlurEffect(style: UIBlurEffectStyle.ExtraLight)
+//        overlayView.backgroundColor = UIColor.whiteColor()
+//        overlayView.alpha = 1.0
+        containerView.insertSubview(overlayView, belowSubview: fromView)
         
         // To View
         toView.frame = initialFrame
-        toView.layer.transform = CATransform3DTranslate(transform, 0, yTranslation, 0)
+        toView.layer.transform = CATransform3DTranslate(transform, 0, 0, -100)
         
-        UIView.animateWithDuration(transitionDuration(transitionContext), delay: 0, usingSpringWithDamping: 0.85, initialSpringVelocity: 0.0, options: .CurveEaseOut, animations:
+        UIView.animateWithDuration(transitionDuration(transitionContext), delay: 0, options: .CurveEaseInOut, animations:
             {
                 toView.transform = CGAffineTransformIdentity
-                fromView.layer.transform = CATransform3DTranslate(transform, 0, 25, -90)
-                overlayView.alpha = 0.6
-                fromView.alpha = 0.0
+                fromView.layer.transform = CATransform3DTranslate(transform, 0, yTranslation, 0)
+//                overlayView.alpha = 0.0
+                overlayView.effect = nil
                 
             })
         {

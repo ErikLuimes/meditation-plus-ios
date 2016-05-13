@@ -32,6 +32,7 @@ PODS:
   - Locksmith (2.0.8)
   - ObjectMapper (1.2.0)
   - PDTSimpleCalendar (0.9.1)
+  - PureLayout (3.0.1)
   - Realm (0.101.0):
     - Realm/Headers (= 0.101.0)
   - Realm/Headers (0.101.0)
@@ -59,6 +60,7 @@ DEPENDENCIES:
   - Locksmith (= 2.0.8)
   - ObjectMapper
   - PDTSimpleCalendar (= 0.9.1)
+  - PureLayout
   - RealmSwift (= 0.101.0)
   - SDWebImage (= 3.7.5)
   - SlackTextViewController (= 1.9.2)
@@ -81,6 +83,7 @@ SPEC CHECKSUMS:
   Locksmith: a8ed41ac4c06506ea8cb199d8ec8a8d3d108eb2a
   ObjectMapper: b1e9c7c8a9f6400b72690c80072c131504caa66f
   PDTSimpleCalendar: d1c03387678422715dc021aa1a85d70f4d1014f2
+  PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   Realm: b21596d6d7e1c054f6fae967d27263d2593ca309
   RealmSwift: 5247501bcd68b9db3a718cba808e1ce45ba67034
   SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
@@ -88,6 +91,6 @@ SPEC CHECKSUMS:
   UIImage+Additions: 6181430b139099649e56171d58a52d6c37d57e42
   youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-PODFILE CHECKSUM: d4f5a75fb4fea27f5f169865a834a38cc8c4c537
+PODFILE CHECKSUM: 49fb8edb1ad08208a7cab0bd46fb277ad70b1dfa
 
 COCOAPODS: 1.0.0.rc.2

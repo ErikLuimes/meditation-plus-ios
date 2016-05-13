@@ -12,6 +12,7 @@ import DZNEmptyDataSet
 import MessageUI
 import RealmSwift
 import CocoaLumberjack
+import PureLayout
 
 class MPChatViewController: SLKTextViewController {
     // MARK: Services
@@ -57,7 +58,8 @@ class MPChatViewController: SLKTextViewController {
 
         tableView?.separatorStyle = .None
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "orange_q"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPChatViewController.didPressQuestionButton(_:)))
+        self.textInputbar.contentInset = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 40)
+        //navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "orange_q"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPChatViewController.didPressQuestionButton(_:)))
     }
 
     required init(coder decoder: NSCoder) {
@@ -74,6 +76,12 @@ class MPChatViewController: SLKTextViewController {
         super.viewDidLoad()
 
         configure()
+//        self.leftButton.removeConstraints(self.leftButton.constraints)
+//        self.leftButton.autoPinEdgeToSuperviewEdge(.Leading, withInset: 20)
+//        self.textInputbar.slk_constraintsForAttribute(NSLayoutAttribute.Leading)?.first?.constant = 40
+//        [self slk_constraintsForAttribute:NSLayoutAttributeLeading][0];
+//        self.textInputbar.
+//        leftMarginWC
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -167,9 +175,12 @@ class MPChatViewController: SLKTextViewController {
         self.showAutoCompletionView(autocompletionVisible)
     }
 
-    func didPressEmoticonButton(sener: UIButton) {
-        autocompletionVisible = !autocompletionVisible
-        self.showAutoCompletionView(autocompletionVisible)
+    func didPressEmoticonButton(sener: UIButton)
+    {
+        if let originalText = self.textView.text, regex = try? NSRegularExpression(pattern: "^\\s*q:\\s*", options: .CaseInsensitive) {
+            let modifiedText   = regex.stringByReplacingMatchesInString(originalText, options: .WithTransparentBounds, range: NSMakeRange(0, originalText.characters.count), withTemplate: "")
+            self.textView.text = "Q: " + modifiedText
+        }
     }
 
     override func didPressRightButton(sender: AnyObject!) {
@@ -262,7 +273,7 @@ extension MPChatViewController
         autoCompletionView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "autocompletion")
         registerPrefixesForAutoCompletion([":"])
         
-        shouldScrollToBottomAfterKeyboardShows = false
+        shouldScrollToBottomAfterKeyboardShows = true
         
         leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
         leftButton.tintColor = UIColor.grayColor()
@@ -270,11 +281,26 @@ extension MPChatViewController
         rightButton.setTitle("Send", forState: UIControlState.Normal)
         rightButton.tintColor = UIColor.orangeColor()
         
+//        leftButton.removeConstraints(leftButton.constraints)
+//        leftButton.autoPinEdgeToSuperviewEdge(.Leading, withInset: 20)
+//        leftButton.autoAlignAxisToSuperviewAxis(.Horizontal)
+        
+        
         emoticonButton = UIButton(type: UIButtonType.Custom)
+        emoticonButton.translatesAutoresizingMaskIntoConstraints = false
         emoticonButton.setImage(UIImage(named: "orange_q"), forState: .Normal)
         emoticonButton.addTarget(self, action: #selector(MPChatViewController.didPressEmoticonButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         textInputbar.insertSubview(emoticonButton, atIndex: 0)
-        emoticonButton.sizeToFit()
+        emoticonButton.autoPinEdgeToSuperviewEdge(.Trailing)
+//        emoticonButton.autoAlignAxisToSuperviewAxis(ALAxis.Horizontal)
+        emoticonButton.autoPinEdgeToSuperviewEdge(.Top)
+        emoticonButton.autoPinEdgeToSuperviewEdge(.Bottom)
+        emoticonButton.autoSetDimensionsToSize(CGSize(width: 20, height: 20))
+        //emoticonButton.sizeToFit()
+        
+        
+//        self.rightButton.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 20)
+        
         
         textView.placeholder = "Message"
         textView.placeholderColor = UIColor.lightGrayColor()

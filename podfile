@@ -33,7 +33,7 @@ target 'MeditationPlus' do
     
     pod 'CocoaLumberjack/Swift', '2.2.0'
     
-#    pod 'PureLayout',            '3.0.1'
+    pod 'PureLayout'
 #    pod 'SwiftyJSON',            '2.3.2'
     pod 'CryptoSwift',           '0.3.1'
 end
