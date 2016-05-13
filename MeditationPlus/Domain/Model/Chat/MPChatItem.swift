@@ -26,23 +26,39 @@
 import Foundation
 import ObjectMapper
 import DTCoreText
+import RealmSwift
 
-class MPChatItem: NSObject, Mappable
+public class MPChatItem: Object, Mappable
 {
-    var uid: String?
-    var cid: String?
-    var username: String?
-    var message: String?
-    var time: NSDate?
-    var timestamp: String?
-    var country: String?
-    var me: Bool?
-    var attributedText: NSAttributedString?
-    var profile: MPProfile?
-    var avatarURL: NSURL?
+    dynamic public var uid: String!
+    dynamic public var cid: String!
+    dynamic public var username: String!
+    dynamic public var message: String?
+    dynamic public var time: NSDate?
+    dynamic public var timestamp: String?
+    dynamic public var country: String?
+    dynamic public var me: Bool = false
+    dynamic public var attributedTextData: NSData?
+    lazy public var profile: Results<MPProfile> = {
+        return dataStore.mainRealm.objects(MPProfile.self).filter("username = %@", self.username)
+    }()
+    
+    lazy public var attributedText: NSAttributedString? = {
+        guard let data = self.attributedTextData else {
+            return nil
+        }
+        
+        return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSAttributedString
+    }()
+    
+//    public var profile: MPProfile?
+    lazy public var avatarURL: NSURL? = {
+        return self.profile.first?.avatar
+    }()
 
-    init(username: String, message: String)
+    convenience public init(username: String, message: String)
     {
+        self.init()
         self.username = username
         self.message = message
         self.time = NSDate()
@@ -52,13 +68,26 @@ class MPChatItem: NSObject, Mappable
 
     // MARK: Mappable
 
-    required init?(_ map: Map)
+    required convenience public init?(_ map: Map)
     {
-        super.init()
-        self.mapping(map)
+        self.init()
+    }
+    
+    override public static func primaryKey() -> String?
+    {
+        return "cid"
     }
 
-    func mapping(map: Map)
+    override public class func indexedProperties() -> [String]
+    {
+        return ["uid", "time"]
+    }
+    
+    override public static func ignoredProperties() -> [String] {
+        return ["attributedText", "avatarURL"]
+    }
+
+    public func mapping(map: Map)
     {
         uid <- map["uid"]
         cid <- map["cid"]
@@ -72,7 +101,7 @@ class MPChatItem: NSObject, Mappable
         createAttributedText()
     }
 
-    func createAttributedText()
+    public func createAttributedText()
     {
         let regExp = MPTextManager.sharedInstance.regExp
 
@@ -97,7 +126,7 @@ class MPChatItem: NSObject, Mappable
                 attributedString.replaceCharactersInRange(result.range, withAttributedString: replacementForTemplate)
             }
 
-            attributedText = attributedString
+            attributedTextData = NSKeyedArchiver.archivedDataWithRootObject(attributedString)
         }
 
     }

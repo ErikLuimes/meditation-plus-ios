@@ -131,11 +131,11 @@ class MPMeditatorCell: UITableViewCell
 
         var meditations: [String] = [String]()
 
-        if let walkingMinutes: Int = meditator.walkingMinutes where walkingMinutes > 0 {
+        if let walkingMinutes: Int = meditator.walkingMinutes.value where walkingMinutes > 0 {
             meditations.append("walking \(walkingMinutes)m")
         }
 
-        if let sittingMinutes: Int = meditator.sittingMinutes where sittingMinutes > 0 {
+        if let sittingMinutes: Int = meditator.sittingMinutes.value where sittingMinutes > 0 {
             meditations.append("sitting \(sittingMinutes)m")
         }
 

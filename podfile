@@ -6,6 +6,8 @@ use_frameworks!
 target 'MeditationPlus' do
     pod 'Alamofire', '3.3.1'
     pod 'AlamofireObjectMapper', '3.0.0'
+    pod 'ObjectMapper'
+    
     pod 'KGFloatingDrawer', '0.2.0'
     pod 'Locksmith', '2.0.8'
     pod 'UIImage+Additions', '2.1.0'
@@ -26,4 +28,18 @@ target 'MeditationPlus' do
     pod 'youtube-ios-player-helper', '0.1.6'
 
     pod 'DateTools', '1.7.0'
+    
+    pod 'RealmSwift', '0.101.0'
+    
+    pod 'CocoaLumberjack/Swift', '2.2.0'
+    
+    pod 'PureLayout'
+#    pod 'SwiftyJSON',            '2.3.2'
+    pod 'CryptoSwift',           '0.3.1'
 end
+
+# Display license information of used pods in settings pane
+#post_install do | installer |
+#    require 'fileutils'
+#    FileUtils.cp_r('Pods/Target Support Files/Pods/Pods-Acknowledgements.plist', 'Resources/Settings.bundle/Acknowledgements.plist', :remove_destination => true)
+#end

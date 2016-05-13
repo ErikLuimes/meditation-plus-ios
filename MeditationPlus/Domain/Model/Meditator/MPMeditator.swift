@@ -25,57 +25,74 @@
 
 import Foundation
 import ObjectMapper
+import RealmSwift
 
-class MPMeditator: NSObject, Mappable
+public class MPMeditator: Object, Mappable
 {
-    var username: String = ""
-    var avatar: NSURL?
-    var start: NSDate?
-    var end: NSDate?
-    var timeDiff: NSTimeInterval?
-    var walkingMinutes: Int?
-    var sittingMinutes: Int?
-    var anumodanaMinutes: Int?
-    var country: String?
-    var me: Bool?
+    dynamic public var sid: String = ""
+    dynamic public var username: String = ""
+    dynamic public var avatarString: String?
+    dynamic public var start: NSDate?
+    dynamic public var end: NSDate?
+    public let timeDiff: RealmOptional<Double> = RealmOptional<Double>()
+    public let walkingMinutes: RealmOptional<Int> = RealmOptional<Int>()
+    public let sittingMinutes: RealmOptional<Int> = RealmOptional<Int>()
+    public let anumodana: RealmOptional<Int> = RealmOptional<Int>()
+    dynamic public var country: String?
+    dynamic public var me: Bool = false
+    
+    lazy public var avatar: NSURL? = {
+        guard self.avatarString != nil else {
+           return nil
+        }
+        
+        return NSURL(string: self.avatarString!)
+    }()
 
-
-    override init()
+    required convenience public init?(_ map: Map)
     {
-        super.init()
+        self.init()
     }
-
-    // MARK: Mappable
-
-    required init?(_ map: Map)
+    
+    override public class func primaryKey() -> String
     {
-        super.init()
-        self.mapping(map)
+        return "sid"
     }
-
-    func mapping(map: Map)
+    
+    override public class func indexedProperties() -> [String]
     {
+        return ["username", "me", "country"]
+    }
+    
+    override public class func ignoredProperties() -> [String]
+    {
+        return ["avatar"]
+    }
+    
+    public func mapping(map: Map)
+    {
+        self.sid <- map["sid"]
         self.username <- map["username"]
-        self.avatar <- (map["avatar"], URLTransform())
-        self.walkingMinutes <- (map["walking"], MPValueTransform.transformIntString())
-        self.sittingMinutes <- (map["sitting"], MPValueTransform.transformIntString())
-        self.anumodanaMinutes <- (map["anumodana"], MPValueTransform.transformIntString())
+        self.avatarString <- map["avatar"]
+        self.walkingMinutes.value <- (map["walking"], MPValueTransform.transformIntString())
+        self.sittingMinutes.value <- (map["sitting"], MPValueTransform.transformIntString())
+        self.anumodana.value <- (map["anumodana"], MPValueTransform.transformIntString())
         self.country <- map["country"]
         self.start <- (map["start"], MPValueTransform.transformDateEpochString())
         self.end <- (map["end"], MPValueTransform.transformDateEpochString())
         self.me <- (map["me"], MPValueTransform.transformBoolString())
 
         if let startDate = self.start, endDate: NSDate = self.end {
-            self.timeDiff = endDate.timeIntervalSinceDate(startDate)
+            self.timeDiff.value = endDate.timeIntervalSinceDate(startDate)
         }
     }
 
     // Meditation progress
-    var normalizedProgress: Double
+    public var normalizedProgress: Double
     {
         var progress: Double = 1.0
 
-        if let meditationTotal = self.timeDiff, meditationEndTime = self.end where meditationTotal > 0 {
+        if let meditationTotal = self.timeDiff.value, meditationEndTime = self.end where meditationTotal > 0 {
             let timeLeft = meditationEndTime.timeIntervalSinceNow
             progress = clamp((meditationTotal - timeLeft) / meditationTotal, lowerBound: 0, upperBound: 1)
         }

@@ -88,17 +88,17 @@ public class MPValueTransform
             if let minuteInt = Int(stringValue) {
                 return NSTimeInterval(Double(minuteInt * 60))
             }
-        return nil
-    }, toJSON: {
-        (value: NSTimeInterval?) -> String? in
-        // transform value from NSTimeInterval? to String?
-        if let minuteInterval: NSTimeInterval = value {
-            return String(Int(minuteInterval / 60))
-        }
+            return nil
+        }, toJSON: {
+            (value: NSTimeInterval?) -> String? in
+            // transform value from NSTimeInterval? to String?
+            if let minuteInterval: NSTimeInterval = value {
+                return String(Int(minuteInterval / 60))
+            }
 
-        return nil
-    })
-}
+            return nil
+        })
+    }
 
     class public func transformDateEpochString() -> TransformOf<NSDate, String>
     {
@@ -124,6 +124,27 @@ public class MPValueTransform
             }
 
             return epochString
+        })
+    }
+    
+    class public func transformNSDataArray() -> TransformOf<NSData, Array<Int>>
+    {
+        return TransformOf<NSData, Array<Int>>(fromJSON: {
+            (value: Array<Int>?) -> NSData? in
+            // transform value from String? to NSTimeInterval?
+            guard let arrayValue = value else {
+                return nil
+            }
+
+            return NSKeyedArchiver.archivedDataWithRootObject(arrayValue)
+        }, toJSON: {
+            (value: NSData?) -> Array<Int>? in
+            
+            guard let nsdataValue = value else {
+                return nil
+            }
+
+            return NSKeyedUnarchiver.unarchiveObjectWithData(nsdataValue) as? Array<Int>
         })
     }
 }

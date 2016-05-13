@@ -22,7 +22,7 @@ class MPDhammaViewController: UIViewController
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        tabBarItem = UITabBarItem(title: "Dhamma", image: UIImage(named: "dhamma-wheel"), tag: 0)
+        tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "dhamma-wheel"), tag: 0)
     }
 
     required init?(coder aDecoder: NSCoder)

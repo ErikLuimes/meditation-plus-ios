@@ -37,7 +37,7 @@ class MPQuoteViewController: UIViewController
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        tabBarItem = UITabBarItem(title: "Quote", image: UIImage(named: "BookIcon"), tag: 0)
+        tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "BookIcon"), tag: 0)
     }
 
     required init?(coder aDecoder: NSCoder)

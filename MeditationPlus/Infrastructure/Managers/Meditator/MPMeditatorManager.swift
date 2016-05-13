@@ -43,7 +43,7 @@ class MPMeditatorManager {
                 if let meditators = response.result.value?.meditators {
                     dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
                         for m in meditators {
-                            if let isMe = m.me, avatar = m.avatar where isMe == true {
+                            if let avatar = m.avatar where m.me == true {
                                 NSUserDefaults.standardUserDefaults().setURL(avatar, forKey: "avatar")
                             }
                         }
@@ -67,11 +67,11 @@ class MPMeditatorManager {
         if let username = self.authenticationManager.loggedInUser?.username, token = self.authenticationManager.token?.token {
             let endpoint = "http://meditation.sirimangalo.org/db.php"
             var parameters: [String:String] = [
-                    "username": username,
-                    "token": token,
-                    "form_id": "timeform",
-                    "last_chat": String(UInt(NSDate().timeIntervalSince1970)),
-                    "source": "ios"
+                "username"  : username,
+                "token"     : token,
+                "form_id"   : "timeform",
+                "last_chat" : String(UInt(NSDate().timeIntervalSince1970)),
+                "source"    : "ios"
             ]
 
             parameters["sitting"] = sittingTimeInMinutes == nil ? "" : String(sittingTimeInMinutes!)
@@ -98,11 +98,11 @@ class MPMeditatorManager {
         if let username = self.authenticationManager.loggedInUser?.username, token = self.authenticationManager.token?.token {
             let endpoint = "http://meditation.sirimangalo.org/db.php"
             var parameters: [String:String] = [
-                    "username": username,
-                    "token": token,
-                    "form_id": "cancelform",
-                    "last_chat": String(UInt(NSDate().timeIntervalSince1970)),
-                    "source": "ios"
+                "username"  : username,
+                "token"     : token,
+                "form_id"   : "cancelform",
+                "last_chat" : String(UInt(NSDate().timeIntervalSince1970)),
+                "source"    : "ios"
             ]
 
             parameters["sitting"] = sittingTimeInMinutes == nil ? "" : String(sittingTimeInMinutes!)
@@ -114,6 +114,5 @@ class MPMeditatorManager {
                 response.result.isSuccess ? completion?() : failure?(nil)
             })
         }
-
     }
 }
