@@ -70,7 +70,7 @@ public class MeditatorService: MeditatorServiceProtocol
             
             if let model = response.value where model.count > 0 {
                 self.cacheManager.updateTimestampForCacheKey(cacheKey)
-                self.dataStore.addOrUpdateObjects(model)
+                self.dataStore.syncMeditators(model)
             } else {
                 DDLogError(response.error?.localizedDescription ?? "Failed retrieving 'Meditators'")
             }

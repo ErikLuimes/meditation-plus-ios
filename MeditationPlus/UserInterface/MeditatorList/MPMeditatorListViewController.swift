@@ -72,9 +72,11 @@ class MPMeditatorListViewController: UIViewController
         return view as! MPMeditatorView
     }
     
+    private var meditatorContentProvider: MeditatorContentProvider!
+    
     private let meditatorService: MeditatorService = MeditatorService()
     
-    private var meditatorNotificationToken: NotificationToken!
+//    private var meditatorNotificationToken: NotificationToken!
 
     private let timer = MPMeditationTimer.sharedInstance
 
@@ -101,6 +103,7 @@ class MPMeditatorListViewController: UIViewController
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MPMeditatorListViewController.willEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
         
+        meditatorContentProvider = MeditatorContentProvider(meditatorService: meditatorService)
     }
 
     required init?(coder aDecoder: NSCoder)
@@ -134,11 +137,42 @@ class MPMeditatorListViewController: UIViewController
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("walkingMeditationTimeId"), inComponent: 0, animated: true)
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("sittingMeditationTimeId"), inComponent: 2, animated: true)
         
+        
 //        if #available(iOS 9, *) {
 //            if traitCollection.forceTouchCapability == .Available {
                 registerForPreviewingWithDelegate(self, sourceView: meditatorView.tableView)
 //            }
 //        }
+        
+        meditatorContentProvider.resultsBlock = {
+            (results: Results<MPMeditator>) in
+            
+            if self.meditatorDataSource == nil {
+                self.meditatorDataSource = MeditatorDataSource(results: results)
+                self.meditatorView.tableView.dataSource = self.meditatorDataSource
+            }
+        }
+        
+        meditatorContentProvider.notificationBlock = {
+            (changes:  RealmCollectionChange<Results<MPMeditator>>) in
+            
+            self.meditatorView.refreshControl.endRefreshing()
+
+            switch changes {
+            case .Initial(_):
+                self.meditatorDataSource?.updateCache()
+                self.meditatorView.tableView.reloadData()
+            case .Update(_ , _, _, _):
+                self.meditatorDataSource?.checkMeditatorProgress(self.meditatorView.tableView)
+                for cell in self.meditatorView.tableView.visibleCells where cell is MPMeditatorCell
+                {
+                    (cell as! MPMeditatorCell).updateProgressIndicatorIfNeeded()
+                }
+            case .Error(let error):
+                DDLogError(error.localizedDescription)
+            }
+        }
+        
     }
     
     override func viewWillAppear(animated: Bool)
@@ -159,8 +193,9 @@ class MPMeditatorListViewController: UIViewController
 
         meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(MPMeditatorListViewController.meditationProgressTimerTick), userInfo: nil, repeats: true)
 
-        meditatorService.reloadMeditatorsIfNeeded()
-        enableMeditatorNotification()
+        meditatorContentProvider.fetchContentIfNeeded()
+//        enableMeditatorNotification()
+//        meditatorService.reloadMeditatorsIfNeeded()
     }
 
     override func viewWillDisappear(animated: Bool)
@@ -172,53 +207,54 @@ class MPMeditatorListViewController: UIViewController
         meditationProgressUpdateTimer?.invalidate()
         meditationProgressUpdateTimer = nil
         
-        disableMeditatorNotification()
+        meditatorContentProvider.disableNotification()
+//        disableMeditatorNotification()
     }
     
-    private func enableMeditatorNotification()
-    {
-        guard self.meditatorNotificationToken == nil else {
-            return
-        }
-        
-        let (meditatorNotificationToken, results) = meditatorService.meditators()
-        {
-            (changes: RealmCollectionChange<Results<MPMeditator>>) in
-            
-            self.meditatorView.refreshControl.endRefreshing()
-            
-            switch changes {
-            case .Initial(_):
-                self.meditatorDataSource?.updateCache()
-                self.meditatorView.tableView.reloadData()
-            case .Update(_ , _, _, _):
-                self.meditatorDataSource?.checkMeditatorProgress(self.meditatorView.tableView)
-                for cell in self.meditatorView.tableView.visibleCells where cell is MPMeditatorCell
-                {
-                    (cell as! MPMeditatorCell).updateProgressIndicatorIfNeeded()
-                }
-            case .Error(let error):
-                DDLogError(error.localizedDescription)
-            }
-        }
-        
-        self.meditatorNotificationToken = meditatorNotificationToken
-        
-        if meditatorDataSource == nil {
-            meditatorDataSource = MeditatorDataSource(results: results)
-            meditatorView.tableView.dataSource = meditatorDataSource
-        }
-    }
+//    private func enableMeditatorNotification()
+//    {
+//        guard self.meditatorNotificationToken == nil else {
+//            return
+//        }
+//        
+//        let (meditatorNotificationToken, results) = meditatorService.meditators()
+//        {
+//            (changes: RealmCollectionChange<Results<MPMeditator>>) in
+//            
+//            self.meditatorView.refreshControl.endRefreshing()
+//            
+//            switch changes {
+//            case .Initial(_):
+//                self.meditatorDataSource?.updateCache()
+//                self.meditatorView.tableView.reloadData()
+//            case .Update(_ , _, _, _):
+//                self.meditatorDataSource?.checkMeditatorProgress(self.meditatorView.tableView)
+//                for cell in self.meditatorView.tableView.visibleCells where cell is MPMeditatorCell
+//                {
+//                    (cell as! MPMeditatorCell).updateProgressIndicatorIfNeeded()
+//                }
+//            case .Error(let error):
+//                DDLogError(error.localizedDescription)
+//            }
+//        }
+//        
+//        self.meditatorNotificationToken = meditatorNotificationToken
+//        
+//        if meditatorDataSource == nil {
+//            meditatorDataSource = MeditatorDataSource(results: results)
+//            meditatorView.tableView.dataSource = meditatorDataSource
+//        }
+//    }
 
-    private func disableMeditatorNotification()
-    {
-        meditatorNotificationToken?.stop()
-        meditatorNotificationToken = nil
-    }
+//    private func disableMeditatorNotification()
+//    {
+//        meditatorNotificationToken?.stop()
+//        meditatorNotificationToken = nil
+//    }
 
     func refreshMeditators(refreshControl: UIRefreshControl)
     {
-        meditatorService.reloadMeditatorsIfNeeded(true)
+//        meditatorService.reloadMeditatorsIfNeeded(true)
     }
     
     func meditationProgressTimerTick()
