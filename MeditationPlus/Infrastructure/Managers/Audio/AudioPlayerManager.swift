@@ -28,9 +28,9 @@ import AVFoundation
 import AudioToolbox
 import UIKit
 
-class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
+class AudioPlayerManager: NSObject, MeditationTimerDelegate
 {
-    static let sharedInstance = MPAudioPlayerManager()
+    static let sharedInstance = AudioPlayerManager()
 
     private var audioPlayer: AVAudioPlayer!
 
@@ -46,25 +46,25 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
         try! AVAudioSession.sharedInstance().setActive(true)
     }
 
-    // MARK: MPMeditationTimerDelegate
+    // MARK: MeditationTimerDelegate
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
+    func meditationTimer(meditationTimer: MeditationTimer, didStartWithState state: MeditationState)
     {
-        if state == MPMeditationState.Meditation && UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
+        if state == MeditationState.Meditation && UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
             audioPlayer = try? AVAudioPlayer(contentsOfURL: bell)
             audioPlayer.play()
         }
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+    func meditationTimer(meditationTimer: MeditationTimer, didProgress progress: Double, withState state: MeditationState, timeLeft: NSTimeInterval)
     {
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
+    func meditationTimer(meditationTimer: MeditationTimer, withState state: MeditationState, type: MeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
     {
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
+    func meditationTimer(meditationTimer: MeditationTimer, didChangeMeditationFromType fromType: MeditationType, toType: MeditationType)
     {
         if UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
             audioPlayer = try? AVAudioPlayer(contentsOfURL: bowl)
@@ -72,7 +72,7 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
         }
     }
 
-    func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
+    func meditationTimerWasCancelled(meditationTimer: MeditationTimer)
     {
         if UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
             audioPlayer = try? AVAudioPlayer(contentsOfURL: gong)
@@ -80,9 +80,9 @@ class MPAudioPlayerManager: NSObject, MPMeditationTimerDelegate
         }
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
+    func meditationTimer(meditationTimer: MeditationTimer, didStopWithState state: MeditationState)
     {
-        if state == MPMeditationState.Meditation && UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
+        if state == MeditationState.Meditation && UIApplication.sharedApplication().applicationState == UIApplicationState.Active {
             audioPlayer = try? AVAudioPlayer(contentsOfURL: bell)
             audioPlayer.play()
         }

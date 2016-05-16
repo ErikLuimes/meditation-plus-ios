@@ -28,11 +28,11 @@ import DZNEmptyDataSet
 import RealmSwift
 import CocoaLumberjack
 
-class MPMeditatorListViewController: UIViewController
+class MeditatorListViewController: UIViewController
 {
-    private var meditatorView: MPMeditatorView
+    private var meditatorView: MeditatorView
     {
-        return view as! MPMeditatorView
+        return view as! MeditatorView
     }
     
     // MARK: Service content providers
@@ -49,7 +49,7 @@ class MPMeditatorListViewController: UIViewController
     
     private let timer = MeditationTimer.sharedInstance
 
-    private let timerDataSource = MPTimerDataSource()
+    private let timerDataSource = TimerDataSource()
 
     // Current meditation times
     
@@ -66,7 +66,7 @@ class MPMeditatorListViewController: UIViewController
 
         tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "BuddhaIcon"), tag: 0)
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MPMeditatorListViewController.willEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MeditatorListViewController.willEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
         
         meditatorContentProvider = MeditatorContentProvider(meditatorService: meditatorService)
     }
@@ -90,7 +90,7 @@ class MPMeditatorListViewController: UIViewController
         meditatorView.tableView.delegate             = self
         meditatorView.tableView.emptyDataSetSource   = self
         meditatorView.tableView.emptyDataSetDelegate = self
-        meditatorView.refreshControl.addTarget(self, action: #selector(MPMeditatorListViewController.refreshMeditators(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        meditatorView.refreshControl.addTarget(self, action: #selector(MeditatorListViewController.refreshMeditators(_:)), forControlEvents: UIControlEvents.ValueChanged)
 
         meditatorView.meditationPickerView.dataSource = timerDataSource
         meditatorView.meditationPickerView.delegate   = self
@@ -125,7 +125,7 @@ class MPMeditatorListViewController: UIViewController
             meditatorView.setSelectionViewHidden(false, animated: true)
         }
 
-        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(MPMeditatorListViewController.meditationProgressTimerTick), userInfo: nil, repeats: true)
+        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(MeditatorListViewController.meditationProgressTimerTick), userInfo: nil, repeats: true)
 
         meditatorContentProvider.fetchContentIfNeeded()
     }
@@ -172,9 +172,9 @@ class MPMeditatorListViewController: UIViewController
                     self.meditatorView.tableView.reloadData()
                 }
                 
-                for cell in self.meditatorView.tableView.visibleCells where cell is MPMeditatorCell
+                for cell in self.meditatorView.tableView.visibleCells where cell is MeditatorCell
                 {
-                    (cell as! MPMeditatorCell).updateProgressIndicatorIfNeeded()
+                    (cell as! MeditatorCell).updateProgressIndicatorIfNeeded()
                 }
             case .Error(let error):
                 DDLogError(error.localizedDescription)
@@ -190,9 +190,9 @@ class MPMeditatorListViewController: UIViewController
     func meditationProgressTimerTick()
     {
         meditatorDataSource?.checkMeditatorProgress(meditatorView.tableView)
-        for cell in meditatorView.tableView.visibleCells where cell is MPMeditatorCell
+        for cell in meditatorView.tableView.visibleCells where cell is MeditatorCell
         {
-            (cell as! MPMeditatorCell).updateProgressIndicatorIfNeeded()
+            (cell as! MeditatorCell).updateProgressIndicatorIfNeeded()
         }
     }
 
@@ -254,7 +254,7 @@ class MPMeditatorListViewController: UIViewController
 
 // MARK: - UITableViewDelegate
 
-extension MPMeditatorListViewController: UITableViewDelegate
+extension MeditatorListViewController: UITableViewDelegate
 {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
     {
@@ -292,23 +292,23 @@ extension MPMeditatorListViewController: UITableViewDelegate
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
         if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath) {
-            let viewController = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, username: meditator.username)
+            let viewController = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: meditator.username)
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        (cell as? MPMeditatorCell)?.delegate = self
+        (cell as? MeditatorCell)?.delegate = self
     }
     
     func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        (cell as? MPMeditatorCell)?.delegate = nil
+        (cell as? MeditatorCell)?.delegate = nil
     }
 }
 
 // MARK: - UIPickerViewDelegate
 
-extension MPMeditatorListViewController: UIPickerViewDelegate
+extension MeditatorListViewController: UIPickerViewDelegate
 {
     func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView
     {
@@ -353,9 +353,9 @@ extension MPMeditatorListViewController: UIPickerViewDelegate
 
 }
 
-// MARK: - MPMeditationTimerDelegate
+// MARK: - MeditationTimerDelegate
 
-extension MPMeditatorListViewController: MeditationTimerDelegate
+extension MeditatorListViewController: MeditationTimerDelegate
 {
 
     func meditationTimer(meditationTimer: MeditationTimer, didStartWithState state: MeditationState)
@@ -416,7 +416,7 @@ extension MPMeditatorListViewController: MeditationTimerDelegate
 
 // MARK: - DZNEmptyDataSet
 
-extension MPMeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate
+extension MeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate
 {
 
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
@@ -445,7 +445,7 @@ extension MPMeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetD
 
 // MARK: - UIViewControllerPreviewingDelegate
 
-extension MPMeditatorListViewController: UIViewControllerPreviewingDelegate
+extension MeditatorListViewController: UIViewControllerPreviewingDelegate
 {
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController?
     {
@@ -454,7 +454,7 @@ extension MPMeditatorListViewController: UIViewControllerPreviewingDelegate
         if let indexPath = meditatorView.tableView.indexPathForRowAtPoint(location) {
             if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath) {
                 previewingContext.sourceRect = meditatorView.tableView.rectForRowAtIndexPath(indexPath)
-                viewController = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, username: meditator.username)
+                viewController = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: meditator.username)
             }
         }
         
@@ -467,9 +467,9 @@ extension MPMeditatorListViewController: UIViewControllerPreviewingDelegate
     }
 }
 
-extension MPMeditatorListViewController: MeditatorCellDelegate
+extension MeditatorListViewController: MeditatorCellDelegate
 {
-    func cell(cell: MPMeditatorCell, didTapInfoButton button: UIButton)
+    func cell(cell: MeditatorCell, didTapInfoButton button: UIButton)
     {
         guard let indexPath = self.meditatorView.tableView.indexPathForCell(cell) else {
             return
@@ -477,7 +477,7 @@ extension MPMeditatorListViewController: MeditatorCellDelegate
         
         if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath)
         {
-            let viewController = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, username: meditator.username)
+            let viewController = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: meditator.username)
             navigationController?.pushViewController(viewController, animated: true)
         }
     }

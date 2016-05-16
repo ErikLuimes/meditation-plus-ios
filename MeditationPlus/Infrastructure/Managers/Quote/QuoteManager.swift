@@ -26,7 +26,7 @@
 import Foundation
 import Alamofire
 
-class MPQuoteManager
+class QuoteManager
 {
     private let authenticationManager = AuthenticationManager.sharedInstance
 

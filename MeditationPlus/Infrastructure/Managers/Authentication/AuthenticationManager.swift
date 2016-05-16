@@ -28,8 +28,9 @@ import Locksmith
 import Alamofire
 import AlamofireObjectMapper
 
-public class MTAuthenticationManager {
-    static let sharedInstance = MTAuthenticationManager()
+public class AuthenticationManager
+{
+    static let sharedInstance = AuthenticationManager()
 
     var loggedInUser: User?
 

@@ -25,7 +25,7 @@
 
 import Foundation
 
-struct MPTableViewSection<T>
+struct TableViewSection<T>
 {
     let title: String
     let items: [T]

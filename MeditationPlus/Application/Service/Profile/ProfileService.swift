@@ -15,7 +15,7 @@ protocol ProfileServiceProtocol
 {
     func reloadProfileIfNeeded(name: String, forceReload: Bool) -> Bool
     
-    func profile(username: String, notificationBlock: (RealmCollectionChange<Results<MPProfile>> -> Void)) -> (NotificationToken, Results<MPProfile>)
+    func profile(username: String, notificationBlock: (RealmCollectionChange<Results<Profile>> -> Void)) -> (NotificationToken, Results<Profile>)
 }
 
 public class ProfileService: ProfileServiceProtocol
@@ -63,7 +63,7 @@ public class ProfileService: ProfileServiceProtocol
         
         chatNotificationToken = dataStore.chatItems.addNotificationBlock
         {
-            (changes: RealmCollectionChange<Results<MPChatItem>>) in
+            (changes: RealmCollectionChange<Results<ChatItem>>) in
             
             if changes.isSuccess() {
                 self.retrieveMisscingProfiles()
@@ -95,7 +95,7 @@ public class ProfileService: ProfileServiceProtocol
      */
     public func reloadProfileIfNeeded(name: String, forceReload: Bool = false) -> Bool
     {
-        let cacheKey    = String(MPProfile.self).sha256()
+        let cacheKey    = String(Profile.self).sha256()
         let needsUpdate = forceReload ? forceReload : cacheManager.needsUpdate(cacheKey, timeout: 360)
         
         guard needsUpdate else {
@@ -104,7 +104,7 @@ public class ProfileService: ProfileServiceProtocol
         
         apiClient.loadProfile(name)
         {
-            (response: ApiResponse<MPProfile>) in
+            (response: ApiResponse<Profile>) in
             
             switch response {
             case ApiResponse.Success(let model):
@@ -113,7 +113,7 @@ public class ProfileService: ProfileServiceProtocol
             case ApiResponse.NoData(_):
                 break
             case ApiResponse.Failure(let error):
-                DDLogError(error?.localizedDescription ?? "Failed retrieving 'MPProfile'")
+                DDLogError(error?.localizedDescription ?? "Failed retrieving 'Profile'")
             }
         }
         
@@ -127,7 +127,7 @@ public class ProfileService: ProfileServiceProtocol
      
      - returns: returns a tuple with a `NotificationToken` and realm `Results`
      */
-    public func profile(username: String, notificationBlock: (RealmCollectionChange<Results<MPProfile>> -> Void)) -> (NotificationToken, Results<MPProfile>)
+    public func profile(username: String, notificationBlock: (RealmCollectionChange<Results<Profile>> -> Void)) -> (NotificationToken, Results<Profile>)
     {
         let results = dataStore.profile(username)
         let token   = results.addNotificationBlock(notificationBlock)

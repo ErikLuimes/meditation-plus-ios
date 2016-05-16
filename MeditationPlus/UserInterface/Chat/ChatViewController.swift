@@ -14,7 +14,7 @@ import RealmSwift
 import CocoaLumberjack
 import PureLayout
 
-class MPChatViewController: SLKTextViewController {
+class ChatViewController: SLKTextViewController {
     // MARK: Services
     
     private var chatService: ChatService!
@@ -55,7 +55,7 @@ class MPChatViewController: SLKTextViewController {
         profileService = ProfileService.sharedInstance
         
         tabBarItem     = UITabBarItem(title: nil, image: UIImage(named: "chat-icon"), tag: 0)
-        questionButton = UIBarButtonItem(title: "Ask Question", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPChatViewController.didPressQuestionButton(_:)))
+        questionButton = UIBarButtonItem(title: "Ask Question", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChatViewController.didPressQuestionButton(_:)))
     }
 
     required init(coder decoder: NSCoder)
@@ -109,7 +109,7 @@ class MPChatViewController: SLKTextViewController {
 
 // MARK: - View controller configuration
 
-extension MPChatViewController
+extension ChatViewController
 {
     private func configure()
     {
@@ -142,8 +142,8 @@ extension MPChatViewController
         
         view.backgroundColor = UIColor.whiteColor()
         
-        tableView?.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
-        tableView?.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
+        tableView?.registerNib(UINib(nibName: "OtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
+        tableView?.registerNib(UINib(nibName: "OwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
         tableView?.separatorStyle       = .None
         tableView?.rowHeight            = UITableViewAutomaticDimension
         tableView?.scrollsToTop         = false
@@ -160,13 +160,13 @@ extension MPChatViewController
 
 // MARK: - Timer handling
 
-extension MPChatViewController
+extension ChatViewController
 {
     
     private func startChatUpdateTimer()
     {
         chatUpdateTimer?.invalidate()
-        chatUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: #selector(MPChatViewController.updateChat), userInfo: nil, repeats: true)
+        chatUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: #selector(ChatViewController.updateChat), userInfo: nil, repeats: true)
         NSRunLoop.mainRunLoop().addTimer(chatUpdateTimer!, forMode: NSRunLoopCommonModes)
     }
     
@@ -179,7 +179,7 @@ extension MPChatViewController
 
 // MARK: - Data handling
 
-extension MPChatViewController
+extension ChatViewController
 {
     private func enableChatNotification()
     {
@@ -233,7 +233,7 @@ extension MPChatViewController
 
 // MARK: - Actions
 
-extension MPChatViewController
+extension ChatViewController
 {
     // MARK: SLKTextViewController action methods
     
@@ -281,7 +281,7 @@ extension MPChatViewController
 
 // MARK: - UITableViewDataSource
 
-extension MPChatViewController
+extension ChatViewController
 {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int
     {
@@ -310,14 +310,14 @@ extension MPChatViewController
                 let chatItem = chatResults[indexPath.row]
                 if chatItem.me ?? false {
                     cell = tableView.dequeueReusableCellWithIdentifier(self.ownChatCellIdentifier, forIndexPath: indexPath)
-                    (cell as? MPMessageCell)?.type = MessageCellType.Own
+                    (cell as? MessageCell)?.type = MessageCellType.Own
                 } else {
                     cell = tableView.dequeueReusableCellWithIdentifier(self.otherChatCellIdentifier, forIndexPath: indexPath)
-                    (cell as? MPMessageCell)?.type = MessageCellType.Other
+                    (cell as? MessageCell)?.type = MessageCellType.Other
                 }
 
-                if cell is MPMessageCell {
-                    (cell as? MPMessageCell)?.configureWithChatItem(chatItem)
+                if cell is MessageCell {
+                    (cell as? MessageCell)?.configureWithChatItem(chatItem)
                 }
             }
         } else {
@@ -332,16 +332,16 @@ extension MPChatViewController
 
 // MARK: - UITableViewDelegate
 
-extension MPChatViewController
+extension ChatViewController
 {
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath)
     {
-        (cell as? MPMessageCell)?.delegate = self
+        (cell as? MessageCell)?.delegate = self
     }
 
     override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath)
     {
-        (cell as? MPMessageCell)?.delegate = nil
+        (cell as? MessageCell)?.delegate = nil
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
@@ -354,7 +354,7 @@ extension MPChatViewController
 
 // MARK: - MFMailComposeViewControllerDelegate Method
 
-extension MPChatViewController: MFMailComposeViewControllerDelegate
+extension ChatViewController: MFMailComposeViewControllerDelegate
 {
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
     {
@@ -376,9 +376,9 @@ extension MPChatViewController: MFMailComposeViewControllerDelegate
     
 }
 
-// MARK: - MPMessageCellDelegate
+// MARK: - MessageCellDelegate
 
-extension MPChatViewController: MPMessageCellDelegate
+extension ChatViewController: MessageCellDelegate
 {
     
     func didPressReportButton(button: UIButton, chatItem: ChatItem?)
@@ -430,7 +430,7 @@ extension MPChatViewController: MPMessageCellDelegate
 
 // MARK: - DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
 
-extension MPChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
+extension ChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
 {
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
     {
@@ -458,7 +458,7 @@ extension MPChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
 
 // MARK: - UIViewControllerPreviewingDelegate
 
-extension MPChatViewController: UIViewControllerPreviewingDelegate
+extension ChatViewController: UIViewControllerPreviewingDelegate
 {
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController?
     {
@@ -474,7 +474,7 @@ extension MPChatViewController: UIViewControllerPreviewingDelegate
         }
         
         // There are 2 different message cells, 'Other' should be clickable on the left side, 'Own' on the right
-        if let cell: MPMessageCell = tableView?.cellForRowAtIndexPath(indexPath) as? MPMessageCell {
+        if let cell: MessageCell = tableView?.cellForRowAtIndexPath(indexPath) as? MessageCell {
             let tappableXMargin: CGFloat = 90
             
             switch cell.type {
@@ -491,7 +491,7 @@ extension MPChatViewController: UIViewControllerPreviewingDelegate
         
         if let chatItem = chatResults?[indexPath.row] {
             previewingContext.sourceRect = tableView!.rectForRowAtIndexPath(indexPath)
-            viewController               = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, username: chatItem.username)
+            viewController               = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: chatItem.username)
         }
         
         return viewController

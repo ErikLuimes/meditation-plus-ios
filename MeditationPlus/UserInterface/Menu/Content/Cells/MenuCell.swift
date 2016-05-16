@@ -25,9 +25,8 @@
 
 import UIKit
 
-class MPMenuCell: UITableViewCell
+class MenuCell: UITableViewCell
 {
-
     struct ViewData
     {
         let title: String
@@ -42,7 +41,7 @@ class MPMenuCell: UITableViewCell
     }
 }
 
-extension MPMenuCell.ViewData
+extension MenuCell.ViewData
 {
     init(menuItem: MenuItem)
     {

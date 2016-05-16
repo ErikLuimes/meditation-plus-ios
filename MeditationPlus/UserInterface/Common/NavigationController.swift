@@ -26,7 +26,7 @@
 import Foundation
 import UIImage_Additions
 
-class MPNavigationController: UINavigationController, UINavigationControllerDelegate
+class NavigationController: UINavigationController, UINavigationControllerDelegate
 {
     var toggleDrawerHandler: (() -> Void)?
 
@@ -55,7 +55,7 @@ class MPNavigationController: UINavigationController, UINavigationControllerDele
             return
         }
 
-        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("menu_btn", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPNavigationController.didPressMenuButton(_:)))
+        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("menu_btn", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(NavigationController.didPressMenuButton(_:)))
     }
 
     func didPressMenuButton(sender: UIBarButtonItem)

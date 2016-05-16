@@ -1,5 +1,5 @@
 //
-//  MPOtherMessageCell.swift
+//  OtherMessageCell.swift
 //  MeditationPlus
 //
 //  Created by Erik Luimes on 13/09/15.
@@ -10,7 +10,7 @@ import UIKit
 import DTCoreText
 import DateTools
 
-protocol MPMessageCellDelegate: NSObjectProtocol
+protocol MessageCellDelegate: NSObjectProtocol
 {
     func didPressReportButton(button: UIButton, chatItem: ChatItem?)
 }
@@ -21,14 +21,14 @@ enum MessageCellType
     case Other
 }
 
-class MPMessageCell: UITableViewCell
+class MessageCell: UITableViewCell
 {
     @IBOutlet weak var messageLabel: UITextView!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var dateLabel: UILabel!
 
-    weak var delegate: MPMessageCellDelegate?
+    weak var delegate: MessageCellDelegate?
 
     var type: MessageCellType = .Other
     

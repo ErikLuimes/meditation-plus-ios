@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="100" id="KGk-i7-Jjw" customClass="MPMessageCell" customModule="MeditationPlus" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="100" id="KGk-i7-Jjw" customClass="MessageCell" customModule="MeditationPlus" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -18,7 +17,6 @@
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KEq-Hp-CNv" userLabel="Avatar Image">
                         <rect key="frame" x="297" y="8" width="70" height="70"/>
-                        <animations/>
                         <constraints>
                             <constraint firstAttribute="width" constant="70" id="BgV-HJ-Cmk"/>
                             <constraint firstAttribute="width" secondItem="KEq-Hp-CNv" secondAttribute="height" multiplier="1:1" id="g6j-WQ-8XU"/>
@@ -35,14 +33,12 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zr5-Ry-8Gl" userLabel="Title Label">
                                 <rect key="frame" x="8" y="8" width="256" height="17"/>
-                                <animations/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="0tc-ga-R7k">
                                 <rect key="frame" x="8" y="25" width="256" height="35.5"/>
-                                <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -52,13 +48,11 @@
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s3G-ed-hgK" userLabel="Date Label">
                                 <rect key="frame" x="8" y="60.5" width="256" height="14.5"/>
-                                <animations/>
                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <animations/>
                         <color key="backgroundColor" red="0.88627451658248901" green="0.87058824300765991" blue="0.82745099067687988" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="s3G-ed-hgK" firstAttribute="top" secondItem="0tc-ga-R7k" secondAttribute="bottom" id="311-Q8-Vhj"/>
@@ -79,7 +73,6 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
-                <animations/>
                 <constraints>
                     <constraint firstItem="bDh-6R-wh9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="3Cr-jx-4Wf"/>
                     <constraint firstAttribute="bottomMargin" secondItem="bDh-6R-wh9" secondAttribute="bottom" id="61b-9t-w2w"/>
@@ -89,7 +82,6 @@
                     <constraint firstAttribute="topMargin" secondItem="bDh-6R-wh9" secondAttribute="top" id="qGB-qp-3wy"/>
                 </constraints>
             </tableViewCellContentView>
-            <animations/>
             <connections>
                 <outlet property="authorLabel" destination="zr5-Ry-8Gl" id="nN8-ag-fXI"/>
                 <outlet property="avatarImageView" destination="KEq-Hp-CNv" id="G8d-yd-WqG"/>

@@ -25,7 +25,7 @@
 
 import UIKit
 
-class MPMenuView: UIView
+class MenuView: UIView
 {
     @IBOutlet weak var menuTableView: UITableView!
 

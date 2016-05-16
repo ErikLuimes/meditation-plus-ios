@@ -22,9 +22,9 @@
 import Foundation
 import Alamofire
 
-class MPYoutubeManager
+class YoutubeManager
 {
-    static let sharedInstance = MPYoutubeManager()
+    static let sharedInstance = YoutubeManager()
 
     private var apiKey: String = ""
 

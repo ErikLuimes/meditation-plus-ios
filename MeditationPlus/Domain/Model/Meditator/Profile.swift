@@ -112,7 +112,7 @@ public class Profile: Object, Mappable
         username <- map["username"]
         about <- map["description"]
         email <- map["email"]
-        hoursData <- (map["hours"], MPValueTransform.transformNSDataArray())
+        hoursData <- (map["hours"], ValueTransform.transformNSDataArray())
         img <- map["img"]
         country <- map["country"]
         website <- map["website"]

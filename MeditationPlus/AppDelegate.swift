@@ -28,45 +28,22 @@ import Fabric
 import Crashlytics
 
 @UIApplicationMain
-class MPAppDelegate: UIResponder, UIApplicationDelegate
+class AppDelegate: UIResponder, UIApplicationDelegate
 {
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool
     {
-        Fabric.with([Crashlytics.self])
-
         application.cancelAllLocalNotifications()
+    
+        SetupManager.setup()
 
-        window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        window!.rootViewController = MPMenuContainerViewController()
-        window!.backgroundColor = UIColor.whiteColor()
+        window                     = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window!.rootViewController = MenuContainerViewController()
+        window!.backgroundColor    = UIColor.whiteColor()
         window!.makeKeyAndVisible()
 
-        setupDefaults()
-        setupMeditationTimer()
-
         return true
-    }
-
-    func setupDefaults()
-    {
-        NSUserDefaults.standardUserDefaults().registerDefaults([
-            "rememberPassword": false,
-            "walkingMeditationTimeId": 30,
-            "sittingMeditationTimeId": 30
-        ])
-
-        if (NSUserDefaults.standardUserDefaults().URLForKey("avatar") == nil) {
-            let url = NSURL(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")!
-            NSUserDefaults.standardUserDefaults().setURL(url, forKey: "avatar")
-        }
-    }
-
-    func setupMeditationTimer()
-    {
-        MeditationTimer.sharedInstance.addDelegate(AudioPlayerManager.sharedInstance)
-        MeditationTimer.sharedInstance.addDelegate(IdleTimeoutMeditationTimerDelegate.sharedInstance)
     }
 
     func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification)

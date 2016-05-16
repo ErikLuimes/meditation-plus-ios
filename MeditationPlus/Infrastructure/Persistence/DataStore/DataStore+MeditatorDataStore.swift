@@ -16,20 +16,20 @@ protocol MeditatorDataStoreProtocol
 
 extension DataStore: MeditatorDataStoreProtocol
 {
-    public func meditators() -> Results<MPMeditator>
+    public func meditators() -> Results<Meditator>
     {
-        return mainRealm.objects(MPMeditator)
+        return mainRealm.objects(Meditator)
     }
     
-    public func syncMeditators(meditators: [MPMeditator])
+    public func syncMeditators(meditators: [Meditator])
     {
         performWriteBlock
         {
             (backgroundRealm) in
             
-            let availableMeditators = backgroundRealm.objects(MPMeditator)
+            let availableMeditators = backgroundRealm.objects(Meditator)
             let newMeditators       = meditators.map({ $0.sid })
-            var meditatorsToDelete  = [MPMeditator]()
+            var meditatorsToDelete  = [Meditator]()
             
             for meditator in availableMeditators {
                 if !newMeditators.contains(meditator.sid) {

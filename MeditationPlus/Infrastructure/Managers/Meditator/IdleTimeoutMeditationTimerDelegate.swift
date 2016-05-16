@@ -1,5 +1,5 @@
 //
-//  MPIdleTimeoutDelegate.swift
+//  IdleTimeoutDelegate.swift
 //  MeditationPlus
 //
 //  Created by Erik Luimes on 25/10/15
@@ -26,37 +26,37 @@
 import Foundation
 import UIKit
 
-class MPIdleTimeoutMeditationTimerDelegate: NSObject, MPMeditationTimerDelegate
+class IdleTimeoutMeditationTimerDelegate: NSObject, MeditationTimerDelegate
 {
-    static let sharedInstance = MPIdleTimeoutMeditationTimerDelegate()
+    static let sharedInstance = IdleTimeoutMeditationTimerDelegate()
 
-    // MARK: MPMeditationTimerDelegate
+    // MARK: MeditationTimerDelegate
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
+    func meditationTimer(meditationTimer: MeditationTimer, didStartWithState state: MeditationState)
     {
         UIApplication.sharedApplication().idleTimerDisabled = true
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
+    func meditationTimer(meditationTimer: MeditationTimer, withState state: MeditationState, type: MeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
     {
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+    func meditationTimer(meditationTimer: MeditationTimer, didProgress progress: Double, withState state: MeditationState, timeLeft: NSTimeInterval)
     {
     }
 
-    func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
+    func meditationTimerWasCancelled(meditationTimer: MeditationTimer)
     {
         UIApplication.sharedApplication().idleTimerDisabled = false
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
+    func meditationTimer(meditationTimer: MeditationTimer, didChangeMeditationFromType fromType: MeditationType, toType: MeditationType)
     {
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
+    func meditationTimer(meditationTimer: MeditationTimer, didStopWithState state: MeditationState)
     {
-        if state == MPMeditationState.Meditation {
+        if state == MeditationState.Meditation {
             UIApplication.sharedApplication().idleTimerDisabled = false
         }
     }

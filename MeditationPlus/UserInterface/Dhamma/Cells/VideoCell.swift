@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MPVideoCell: UITableViewCell
+class VideoCell: UITableViewCell
 {
     @IBOutlet weak var titleLabel: UILabel!
 

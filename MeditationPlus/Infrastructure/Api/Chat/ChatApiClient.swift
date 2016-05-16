@@ -31,14 +31,14 @@ import Alamofire
 
 public protocol ChatApiClientProtocol
 {
-    func loadChatItems(username: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[MPChatItem]>) -> Void)
+    func loadChatItems(username: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[ChatItem]>) -> Void)
     
-    func postMessage(username: String, message: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[MPChatItem]>) -> Void)
+    func postMessage(username: String, message: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[ChatItem]>) -> Void)
 }
 
 public class ChatApiClient: BaseApiClient, ChatApiClientProtocol
 {
-    public func loadChatItems(username: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[MPChatItem]>) -> Void)
+    public func loadChatItems(username: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[ChatItem]>) -> Void)
     {
         let endpoint: String = "http://meditation.sirimangalo.org/db.php"
         let parameters: [String:AnyObject] = ["username": username, "last_chat": lastChatTimestamp]
@@ -46,14 +46,14 @@ public class ChatApiClient: BaseApiClient, ChatApiClientProtocol
         super.loadArray(Alamofire.Method.POST, endpoint, parameters: parameters, keyPath: "chat", completionBlock: completionBlock)
     }
     
-    public func postMessage(username: String, message: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[MPChatItem]>) -> Void)
+    public func postMessage(username: String, message: String, lastChatTimestamp: String, completionBlock: (ApiResponse<[ChatItem]>) -> Void)
     {
         let endpoint = "http://meditation.sirimangalo.org/db.php"
         let parameters: [String:AnyObject] = [
-            "username": username,
-            "form_id": "chatform",
-            "message": message,
-            "last_chat": MPChatManager.lastUpdateTimeStamp
+            "username"  : username,
+            "form_id"   : "chatform",
+            "message"   : message,
+            "last_chat" : lastChatTimestamp
         ]
         
         super.loadArray(Alamofire.Method.POST, endpoint, parameters: parameters, keyPath: "chat", completionBlock: completionBlock)

@@ -25,30 +25,31 @@
 
 import UIKit
 
-class MPMenuViewController: UIViewController, UITableViewDelegate {
-    private var menuView: MPMenuView {
-        return self.view as! MPMenuView
+class MenuViewController: UIViewController, UITableViewDelegate {
+    private var menuView: MenuView
+    {
+        return self.view as! MenuView
     }
 
     var drawerNavigationHandler: ((UIViewController, Bool) -> Void)?
 
     private let menuCellIdentifier = "menuCellIdentifier"
 
-    private var menuDataSource: MPMenuDataSource!
+    private var menuDataSource: MenuDataSource!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        menuDataSource = MPMenuDataSource(cellReuseIdentifier: menuCellIdentifier)
+        menuDataSource = MenuDataSource(cellReuseIdentifier: menuCellIdentifier)
         menuDataSource.updateSections(menuSections())
         menuDataSource.cellConfigurationHandler = {
             cell, menuItem in
-            cell.viewData = MPMenuCell.ViewData(menuItem: menuItem)
+            cell.viewData = MenuCell.ViewData(menuItem: menuItem)
         }
 
         menuView.menuTableView.dataSource = menuDataSource
         menuView.menuTableView.delegate = self
-        menuView.menuTableView.registerNib(UINib(nibName: "MPMenuCell", bundle: nil), forCellReuseIdentifier: menuCellIdentifier)
+        menuView.menuTableView.registerNib(UINib(nibName: "MenuCell", bundle: nil), forCellReuseIdentifier: menuCellIdentifier)
     }
 
     // MARK: Setup Menu Items
@@ -76,13 +77,13 @@ class MPMenuViewController: UIViewController, UITableViewDelegate {
         if let menuItem = self.menuDataSource.itemForIndexPath(indexPath) {
             switch menuItem {
                 case .Home:
-                    self.drawerNavigationHandler?(MPTabBarController(), true)
+                    self.drawerNavigationHandler?(TabBarController(), true)
 
                 case .Logout:
                     if MeditationTimer.sharedInstance.state != .Stopped {
                         MeditationTimer.sharedInstance.cancelTimer()
                     }
-                    self.drawerNavigationHandler?(MPSplashViewController(nibName: "MPSplashViewController", bundle: nil), false)
+                    self.drawerNavigationHandler?(SplashViewController(nibName: "SplashViewController", bundle: nil), false)
                 default:
                     NSLog("default")
             }

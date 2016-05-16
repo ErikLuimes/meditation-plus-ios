@@ -26,11 +26,11 @@
 import Foundation
 import UIKit
 
-class MPMenuDataSource: NSObject, UITableViewDataSource
+class MenuDataSource: NSObject, UITableViewDataSource
 {
     private let cellReuseIdentifier: String
 
-    var cellConfigurationHandler: ((MPMenuCell, MenuItem) -> ())?
+    var cellConfigurationHandler: ((MenuCell, MenuItem) -> ())?
 
     private var sections: [TableViewSection<MenuItem>] = [TableViewSection < MenuItem>]()
 
@@ -59,7 +59,7 @@ class MPMenuDataSource: NSObject, UITableViewDataSource
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.cellReuseIdentifier, forIndexPath: indexPath) as! MPMenuCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(self.cellReuseIdentifier, forIndexPath: indexPath) as! MenuCell
 
         if let menuItem = self.itemForIndexPath(indexPath) {
             self.cellConfigurationHandler?(cell, menuItem)

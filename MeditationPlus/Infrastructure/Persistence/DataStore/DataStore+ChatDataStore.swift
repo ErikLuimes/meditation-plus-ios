@@ -19,10 +19,10 @@ extension DataStore: ChatDataStoreProtocol
         performBackgroundBlock
             { (backgroundRealm) in
             
-                let availableUids = backgroundRealm.objects(MPProfile).flatMap({ $0.uid })
+                let availableUids = backgroundRealm.objects(Profile).flatMap({ $0.uid })
                 
                 let predicate = NSPredicate(format: "NOT uid IN %@", availableUids)
-                let usernames = Set(backgroundRealm.objects(MPChatItem).filter(predicate).flatMap({ $0.username }))
+                let usernames = Set(backgroundRealm.objects(ChatItem).filter(predicate).flatMap({ $0.username }))
                 dispatch_async(dispatch_get_main_queue(), { 
                     completion(usernames)
                 })

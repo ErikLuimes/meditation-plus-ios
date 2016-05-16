@@ -26,7 +26,7 @@
 import Foundation
 import ObjectMapper
 
-class MPQuote: Mappable
+class Quote: Mappable
 {
     var quote: String?
     var cite: String?

@@ -1,5 +1,5 @@
 //
-//  MPViewController.swift
+//  DhammaViewController.swift
 //  MeditationPlus
 //
 //  Created by Erik Luimes on 01/11/15.
@@ -9,14 +9,14 @@
 import UIKit
 import DZNEmptyDataSet
 
-class MPDhammaViewController: UIViewController
+class DhammaViewController: UIViewController
 {
-    private var videoListView: MPVideoListView
+    private var videoListView: VideoListView
     {
-        return view as! MPVideoListView
+        return view as! VideoListView
     }
 
-    private var videoDataSource: MPVideoDataSource = MPVideoDataSource()
+    private var videoDataSource: VideoDataSource = VideoDataSource()
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
     {
@@ -38,7 +38,7 @@ class MPDhammaViewController: UIViewController
         videoListView.tableView.delegate = self
         videoListView.tableView.emptyDataSetSource = self
         videoListView.tableView.emptyDataSetDelegate = self
-        videoListView.refreshControl.addTarget(self, action: #selector(MPDhammaViewController.refreshVideos(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        videoListView.refreshControl.addTarget(self, action: #selector(DhammaViewController.refreshVideos(_:)), forControlEvents: UIControlEvents.ValueChanged)
 
         YoutubeManager.setup()
         YoutubeManager.sharedInstance.videoList
@@ -64,7 +64,7 @@ class MPDhammaViewController: UIViewController
     }
 }
 
-extension MPDhammaViewController: UITableViewDelegate
+extension DhammaViewController: UITableViewDelegate
 {
     // MARK: UITableViewDelegate
 
@@ -93,7 +93,7 @@ extension MPDhammaViewController: UITableViewDelegate
             let viewPosition = cell.convertRect(cell.bounds, toView: self.view).origin.y
             let parallaxFactor = clamp((viewPosition - top) / bottom, lowerBound: 0.0, upperBound: 1.0)
 
-            (cell as? MPVideoCell)?.setParallaxFactor(parallaxFactor)
+            (cell as? VideoCell)?.setParallaxFactor(parallaxFactor)
         }
     }
 
@@ -134,7 +134,7 @@ extension MPDhammaViewController: UITableViewDelegate
 
 }
 
-extension MPDhammaViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate
+extension DhammaViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate
 {
     // MARK: DZNEmptyDataSetDelegate
 

@@ -26,7 +26,7 @@
 import Foundation
 import ObjectMapper
 
-class MPVideoList: Mappable
+class VideoList: Mappable
 {
     var nextPageToken: String?
     var items: [VideoItem]?

@@ -74,13 +74,13 @@ public class Meditator: Object, Mappable
         self.sid <- map["sid"]
         self.username <- map["username"]
         self.avatarString <- map["avatar"]
-        self.walkingMinutes.value <- (map["walking"], MPValueTransform.transformIntString())
-        self.sittingMinutes.value <- (map["sitting"], MPValueTransform.transformIntString())
-        self.anumodana.value <- (map["anumodana"], MPValueTransform.transformIntString())
+        self.walkingMinutes.value <- (map["walking"], ValueTransform.transformIntString())
+        self.sittingMinutes.value <- (map["sitting"], ValueTransform.transformIntString())
+        self.anumodana.value <- (map["anumodana"], ValueTransform.transformIntString())
         self.country <- map["country"]
-        self.start <- (map["start"], MPValueTransform.transformDateEpochString())
-        self.end <- (map["end"], MPValueTransform.transformDateEpochString())
-        self.me <- (map["me"], MPValueTransform.transformBoolString())
+        self.start <- (map["start"], ValueTransform.transformDateEpochString())
+        self.end <- (map["end"], ValueTransform.transformDateEpochString())
+        self.me <- (map["me"], ValueTransform.transformBoolString())
 
         if let startDate = self.start, endDate: NSDate = self.end {
             self.timeDiff.value = endDate.timeIntervalSinceDate(startDate)

@@ -25,11 +25,11 @@
 
 import UIKit
 
-class MPQuoteViewController: UIViewController
+class QuoteViewController: UIViewController
 {
-    private var quoteView: MPQuoteView
+    private var quoteView: QuoteView
     {
-        return self.view as! MPQuoteView
+        return self.view as! QuoteView
     }
     private let quoteManager: QuoteManager = QuoteManager()
 

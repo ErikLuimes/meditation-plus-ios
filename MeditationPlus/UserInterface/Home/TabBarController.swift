@@ -25,7 +25,7 @@
 import Foundation
 import UIKit
 
-class MPTabBarController: UITabBarController
+class TabBarController: UITabBarController
 {
     private var tabBarTransition: TabBarTransition!
     
@@ -35,16 +35,16 @@ class MPTabBarController: UITabBarController
 
         var viewControllers: [UIViewController] = []
 
-        let meditatorController: MPMeditatorListViewController = MPMeditatorListViewController(nibName: "MPMeditatorListViewController", bundle: nil)
+        let meditatorController: MeditatorListViewController = MeditatorListViewController(nibName: "MeditatorListViewController", bundle: nil)
         viewControllers.append(meditatorController)
 
         let chatViewController: ChatViewController = ChatViewController()
         viewControllers.append(chatViewController)
 
-        let dhammaViewController: DhammaViewController = DhammaViewController(nibName: "MPDhammaViewController", bundle: nil)
+        let dhammaViewController: DhammaViewController = DhammaViewController(nibName: "DhammaViewController", bundle: nil)
         viewControllers.append(dhammaViewController)
 
-        let quoteViewController: MPQuoteViewController = MPQuoteViewController(nibName: "MPQuoteViewController", bundle: nil)
+        let quoteViewController: QuoteViewController = QuoteViewController(nibName: "QuoteViewController", bundle: nil)
         viewControllers.append(quoteViewController)
 
         self.viewControllers = viewControllers
@@ -79,7 +79,7 @@ class MPTabBarController: UITabBarController
     }
 }
 
-extension MPTabBarController: UITabBarControllerDelegate
+extension TabBarController: UITabBarControllerDelegate
 {
     func tabBarController(tabBarController: UITabBarController, animationControllerForTransitionFromViewController fromVC: UIViewController, toViewController toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {

@@ -27,11 +27,11 @@ import UIKit
 import AVFoundation
 import CWStatusBarNotification
 
-class MPSplashViewController: UIViewController
+class SplashViewController: UIViewController
 {
-    private var splashScreenView: MPSplashView
+    private var splashScreenView: SplashView
     {
-        return self.view as! MPSplashView
+        return self.view as! SplashView
     }
 
     @IBAction func didSwitchRememberPassword(sender: UISwitch)
@@ -60,8 +60,8 @@ class MPSplashViewController: UIViewController
 
     private func attachObservers()
     {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MPSplashViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MPSplashViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SplashViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SplashViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
 
     private func detachObservers()
@@ -117,13 +117,13 @@ class MPSplashViewController: UIViewController
 
     func keyboardWillShow(notification: NSNotification)
     {
-        let userInfo = notification.userInfo!
+        let userInfo              = notification.userInfo!
         let keyboardFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-        let animationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
-        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
+        let animationCurve        = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
+        let duration              = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
 
         let centerY: CGFloat = (CGRectGetHeight(UIScreen.mainScreen().bounds) - CGRectGetHeight(keyboardFrame)) / 2.0
-        let offset: CGFloat = self.splashScreenView.passwordField.center.y - centerY
+        let offset: CGFloat  = self.splashScreenView.passwordField.center.y - centerY
 
         UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: {
             () -> Void in
@@ -133,9 +133,9 @@ class MPSplashViewController: UIViewController
 
     func keyboardWillHide(notification: NSNotification)
     {
-        let userInfo = notification.userInfo!
+        let userInfo       = notification.userInfo!
         let animationCurve = userInfo[UIKeyboardAnimationCurveUserInfoKey]!.integerValue!
-        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
+        let duration       = userInfo[UIKeyboardAnimationDurationUserInfoKey]!.doubleValue!
 
         UIView.animateWithDuration(duration, delay: 0.0, options: UIViewAnimationOptions(rawValue: UInt(animationCurve << 16)), animations: {
             () -> Void in
@@ -154,7 +154,6 @@ class MPSplashViewController: UIViewController
                 return
             }
 
-
             self.authenticationManager.loginWithUsername(username, password: password, failure: {
                 (error, errorString) -> Void in
                 NotificationManager.displayNotification((errorString ?? "Some error occured, Please try again later.") as String)
@@ -170,13 +169,12 @@ class MPSplashViewController: UIViewController
             sender.enabled = true
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
             self.splashScreenView.shake()
-
         }
     }
 
     func navigatoToMainViewController()
     {
-        let tabBarController = MPTabBarController()
+        let tabBarController = TabBarController()
         self.navigationController?.setViewControllers([tabBarController], animated: true)
     }
 

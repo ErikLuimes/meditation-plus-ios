@@ -22,7 +22,7 @@
 import Foundation
 import UIKit
 
-class MPQuoteView: UIView
+class QuoteView: UIView
 {
     @IBOutlet weak var quoteView: UITextView!
 

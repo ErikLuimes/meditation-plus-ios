@@ -27,70 +27,70 @@ import Foundation
 
 // Be sure to remove your delegates since there are no weak references
 
-class MPCompoundMeditationTimerDelegate: NSObject, MPMeditationTimerDelegate
+class CompoundMeditationTimerDelegate: NSObject, MeditationTimerDelegate
 {
-    var delegates: [MPMeditationTimerDelegate] = [MPMeditationTimerDelegate]()
+    var delegates: [MeditationTimerDelegate] = [MeditationTimerDelegate]()
 
     override init()
     {
         super.init()
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
+    func meditationTimer(meditationTimer: MeditationTimer, didStartWithState state: MeditationState)
     {
         _ = self.delegates.map({ $0.meditationTimer(meditationTimer, didStartWithState: state) })
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+    func meditationTimer(meditationTimer: MeditationTimer, didProgress progress: Double, withState state: MeditationState, timeLeft: NSTimeInterval)
     {
         _ = self.delegates.map({ $0.meditationTimer(meditationTimer, didProgress: progress, withState: state, timeLeft: timeLeft) })
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
+    func meditationTimer(meditationTimer: MeditationTimer, withState state: MeditationState, type: MeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
     {
         _ = self.delegates.map({ $0.meditationTimer(meditationTimer, withState: state, type: type, progress: progress, timeLeft: timeLeft, totalProgress: totalProgress, totalTimeLeft: totalTimeLeft) })
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
+    func meditationTimer(meditationTimer: MeditationTimer, didStopWithState state: MeditationState)
     {
         _ = self.delegates.map({ $0.meditationTimer(meditationTimer, didStopWithState: state) })
     }
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
+    func meditationTimer(meditationTimer: MeditationTimer, didChangeMeditationFromType fromType: MeditationType, toType: MeditationType)
     {
         _ = self.delegates.map({ $0.meditationTimer(meditationTimer, didChangeMeditationFromType: fromType, toType: toType) })
     }
 
-    func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
+    func meditationTimerWasCancelled(meditationTimer: MeditationTimer)
     {
         _ = self.delegates.map({ $0.meditationTimerWasCancelled(meditationTimer) })
     }
 }
 
-protocol MPMeditationTimerCompoundDelegate: NSObjectProtocol
+protocol MeditationTimerCompoundDelegate: NSObjectProtocol
 {
-    func addDelegate(delegate: MPMeditationTimerDelegate)
+    func addDelegate(delegate: MeditationTimerDelegate)
 
-    func removeDelegate(delegate: MPMeditationTimerDelegate)
+    func removeDelegate(delegate: MeditationTimerDelegate)
 }
 
-extension MPMeditationTimer: MPMeditationTimerCompoundDelegate
+extension MeditationTimer: MeditationTimerCompoundDelegate
 {
     // Removes existing delegate if it's not a compound delegate
-    func addDelegate(delegate: MPMeditationTimerDelegate)
+    func addDelegate(delegate: MeditationTimerDelegate)
     {
-        if !(self.delegate is MPCompoundMeditationTimerDelegate) {
-            self.delegate = MPCompoundMeditationTimerDelegate()
+        if !(self.delegate is CompoundMeditationTimerDelegate) {
+            self.delegate = CompoundMeditationTimerDelegate()
         }
 
-        if let compoundDelegate = self.delegate as? MPCompoundMeditationTimerDelegate {
+        if let compoundDelegate = self.delegate as? CompoundMeditationTimerDelegate {
             compoundDelegate.delegates.append(delegate)
         }
     }
 
-    func removeDelegate(delegate: MPMeditationTimerDelegate)
+    func removeDelegate(delegate: MeditationTimerDelegate)
     {
-        if let compoundDelegate = self.delegate as? MPCompoundMeditationTimerDelegate {
+        if let compoundDelegate = self.delegate as? CompoundMeditationTimerDelegate {
             compoundDelegate.delegates = compoundDelegate.delegates.filter
             {
                 return $0 !== delegate

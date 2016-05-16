@@ -28,7 +28,7 @@ import ObjectMapper
 import DTCoreText
 import RealmSwift
 
-public class MPChatItem: Object, Mappable
+public class ChatItem: Object, Mappable
 {
     dynamic public var uid: String!
     dynamic public var cid: String!
@@ -42,9 +42,9 @@ public class MPChatItem: Object, Mappable
     
     
     // TODO: Persist profile
-    //   dynamic public var profile: MPProfile?
-    lazy public var profile: Results<MPProfile> = {
-        return dataStore.mainRealm.objects(MPProfile.self).filter("username = %@", self.username)
+    //   dynamic public var profile: Profile?
+    lazy public var profile: Results<Profile> = {
+        return dataStore.mainRealm.objects(Profile.self).filter("username = %@", self.username)
     }()
     
     lazy public var attributedText: NSAttributedString? = {
@@ -96,17 +96,17 @@ public class MPChatItem: Object, Mappable
         cid       <- map["cid"]
         username  <- map["username"]
         message   <- map["message"]
-        time      <- (map["time"], MPValueTransform.transformDateEpochString())
+        time      <- (map["time"], ValueTransform.transformDateEpochString())
         timestamp <- map["time"]
         country   <- map["country"]
-        me        <- (map["me"], MPValueTransform.transformBoolString())
+        me        <- (map["me"], ValueTransform.transformBoolString())
 
         createAttributedText()
     }
 
     public func createAttributedText()
     {
-        let regExp = MPTextManager.sharedInstance.regExp
+        let regExp = TextTools.sharedInstance.regExp
 
         if let message = self.message {
             let font = UIFont.systemFontOfSize(15)
@@ -121,7 +121,7 @@ public class MPChatItem: Object, Mappable
             for result: NSTextCheckingResult in matches.reverse() {
                 let match = (message as NSString).substringWithRange(result.range)
                 let textAttachment = NSTextAttachment()
-                if let imageName = MPTextManager.sharedInstance.emoticons[match] {
+                if let imageName = TextTools.sharedInstance.emoticons[match] {
                     textAttachment.image = UIImage(named: imageName)
                 }
 

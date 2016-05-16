@@ -14,7 +14,7 @@ let dataStore = DataStore()
 
 public protocol DataStoreProtocol
 {
-    // var chatItems: Results<MPChatItem> { get set }
+    // var chatItems: Results<ChatItem> { get set }
 }
 
 public struct DataStore: DataStoreProtocol
@@ -167,8 +167,8 @@ public struct DataStore: DataStoreProtocol
     
     // MARK: Lazy Result Sets
     
-    lazy public private(set) var chatItems: Results<MPChatItem> =
+    lazy public private(set) var chatItems: Results<ChatItem> =
     {
-        return self.mainRealm.objects(MPChatItem).sorted("time")
+        return self.mainRealm.objects(ChatItem).sorted("time")
     }()
 }

@@ -27,26 +27,26 @@ import Foundation
 import AVFoundation
 import UIKit
 
-protocol MPMeditationTimerDelegate: NSObjectProtocol {
-    func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
+protocol MeditationTimerDelegate: NSObjectProtocol {
+    func meditationTimer(meditationTimer: MeditationTimer, didStartWithState state: MeditationState)
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didProgress progress: Double, withState state: MPMeditationState, timeLeft: NSTimeInterval)
+    func meditationTimer(meditationTimer: MeditationTimer, didProgress progress: Double, withState state: MeditationState, timeLeft: NSTimeInterval)
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, withState state: MPMeditationState, type: MPMeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
+    func meditationTimer(meditationTimer: MeditationTimer, withState state: MeditationState, type: MeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
+    func meditationTimer(meditationTimer: MeditationTimer, didStopWithState state: MeditationState)
 
-    func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
+    func meditationTimer(meditationTimer: MeditationTimer, didChangeMeditationFromType fromType: MeditationType, toType: MeditationType)
 
-    func meditationTimerWasCancelled(meditationTimer: MPMeditationTimer)
+    func meditationTimerWasCancelled(meditationTimer: MeditationTimer)
 }
 
-enum MPMeditationTimerError: ErrorType {
+enum MeditationTimerError: ErrorType {
     case NoValidTimeAvailable
     case InvalidTime
 }
 
-enum MPMeditationState: Int {
+enum MeditationState: Int {
     case Stopped
     case Suspended
     case Preparation
@@ -72,13 +72,14 @@ enum MPMeditationState: Int {
     }
 }
 
-enum MPMeditationType: String {
+enum MeditationType: String {
     case Sitting
     case Walking
 }
 
-class MPMeditationSession {
-    let type: MPMeditationType
+class MeditationSession
+{
+    let type: MeditationType
     let time: NSTimeInterval
 
     var remaining: NSTimeInterval {
@@ -102,7 +103,7 @@ class MPMeditationSession {
         return time > 0 ? (time - remaining) / time : 0.0
     }
 
-    init(type: MPMeditationType, time: NSTimeInterval, startDate: NSDate = NSDate()) {
+    init(type: MeditationType, time: NSTimeInterval, startDate: NSDate = NSDate()) {
         self.type = type
         self.time = time
 
@@ -115,19 +116,19 @@ class MPMeditationSession {
     }
 }
 
-class MPMeditationTimer: NSObject {
-    static let sharedInstance: MPMeditationTimer = MPMeditationTimer()
+class MeditationTimer: NSObject {
+    static let sharedInstance: MeditationTimer = MeditationTimer()
 
-    internal var delegate: MPMeditationTimerDelegate?
+    internal var delegate: MeditationTimerDelegate?
 
-    private(set) var state: MPMeditationState = .Stopped
+    private(set) var state: MeditationState = .Stopped
 
     private let timeInterval: NSTimeInterval = 1
 
     private var meditationTimer: NSTimer?
 
     // MARK: Meditation time
-    private var meditationSessions: [MPMeditationSession] = [MPMeditationSession]()
+    private var meditationSessions: [MeditationSession] = [MeditationSession]()
 
     private var currentSessionIndex: Int = 0 {
         didSet {
@@ -184,11 +185,11 @@ class MPMeditationTimer: NSObject {
 
     // MARK: Timer functions
 
-    func startTimer(meditationSessions: [MPMeditationSession], preparationTime: NSTimeInterval = 0) throws -> Void {
+    func startTimer(meditationSessions: [MeditationSession], preparationTime: NSTimeInterval = 0) throws -> Void {
         self.meditationSessions = meditationSessions.filter({ $0.time > 0 })
 
         if self.meditationSessions.count == 0 {
-            throw MPMeditationTimerError.NoValidTimeAvailable
+            throw MeditationTimerError.NoValidTimeAvailable
         }
 
         self.meditationTimerStartDate = NSDate()
@@ -206,7 +207,7 @@ class MPMeditationTimer: NSObject {
     }
 
     private func initTimer() {
-        meditationTimer = NSTimer.scheduledTimerWithTimeInterval(timeInterval, target: self, selector: #selector(MPMeditationTimer.meditationTimerCompoundTick), userInfo: nil, repeats: true)
+        meditationTimer = NSTimer.scheduledTimerWithTimeInterval(timeInterval, target: self, selector: #selector(MeditationTimer.meditationTimerCompoundTick), userInfo: nil, repeats: true)
         NSRunLoop.mainRunLoop().addTimer(meditationTimer!, forMode: NSRunLoopCommonModes)
         meditationTimerCompoundTick()
     }
@@ -233,7 +234,7 @@ class MPMeditationTimer: NSObject {
 
     func meditationTimerCompoundTick() {
         let oldState = self.state
-        let newState = MPMeditationState(remainingMeditationTime: totalRemainingMeditationTime, remainingPreparationTime: remainingPreparationTime)
+        let newState = MeditationState(remainingMeditationTime: totalRemainingMeditationTime, remainingPreparationTime: remainingPreparationTime)
 
         if oldState != newState {
             notifyStateChangeFromState(oldState, toState: newState)
@@ -257,7 +258,7 @@ class MPMeditationTimer: NSObject {
 
     // MARK State change notifications
 
-    func notifyStateChangeFromState(fromState: MPMeditationState, toState: MPMeditationState) -> Void {
+    func notifyStateChangeFromState(fromState: MeditationState, toState: MeditationState) -> Void {
         if toState == .Stopped {
             delegate?.meditationTimer(self, didStopWithState: fromState)
         } else {

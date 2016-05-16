@@ -26,7 +26,7 @@
 import Foundation
 import UIKit
 
-class MPTimerDataSource: NSObject, UIPickerViewDataSource
+class TimerDataSource: NSObject, UIPickerViewDataSource
 {
     lazy private(set) var times: [Int] = {
         var times = [Int]()

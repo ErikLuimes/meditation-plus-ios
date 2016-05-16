@@ -14,10 +14,10 @@ protocol MeditatorServiceProtocol
 {
     func reloadMeditatorsIfNeeded(forceReload: Bool) -> Bool
     
-    func meditators(notificationBlock: (RealmCollectionChange<Results<MPMeditator>> -> Void)) -> (NotificationToken, Results<MPMeditator>)
+    func meditators(notificationBlock: (RealmCollectionChange<Results<Meditator>> -> Void)) -> (NotificationToken, Results<Meditator>)
 }
 
-private enum MeditationState
+private enum MeditationTimePublishState
 {
     case Start
     case Cancel
@@ -31,14 +31,14 @@ public class MeditatorService: MeditatorServiceProtocol
     
     private var cacheManager: CacheManager!
     
-    private var authenticationManager: MTAuthenticationManager
+    private var authenticationManager: AuthenticationManager
     
     convenience init()
     {
-        self.init(apiClient: MeditatorApiClient(), dataStore: DataStore(), cacheManager: CacheManager(), authenticationManager: MTAuthenticationManager.sharedInstance)
+        self.init(apiClient: MeditatorApiClient(), dataStore: DataStore(), cacheManager: CacheManager(), authenticationManager: AuthenticationManager.sharedInstance)
     }
     
-    public init(apiClient: MeditatorApiClientProtocol, dataStore: DataStore, cacheManager: CacheManager, authenticationManager: MTAuthenticationManager)
+    public init(apiClient: MeditatorApiClientProtocol, dataStore: DataStore, cacheManager: CacheManager, authenticationManager: AuthenticationManager)
     {
         self.apiClient = apiClient
         self.dataStore = dataStore
@@ -53,7 +53,7 @@ public class MeditatorService: MeditatorServiceProtocol
      */
     public func reloadMeditatorsIfNeeded(forceReload: Bool = false) -> Bool
     {
-        let cacheKey    = String(MPMeditator.self).sha256()
+        let cacheKey    = String(Meditator.self).sha256()
         let needsUpdate = forceReload ? forceReload : cacheManager.needsUpdate(cacheKey, timeout: 360)
         
         guard needsUpdate else {
@@ -66,7 +66,7 @@ public class MeditatorService: MeditatorServiceProtocol
         
         apiClient.loadMeditators(username)
         {
-            (response: ApiResponse<[MPMeditator]>) in
+            (response: ApiResponse<[Meditator]>) in
             
             if let model = response.value where model.count > 0 {
                 self.cacheManager.updateTimestampForCacheKey(cacheKey)
@@ -81,15 +81,15 @@ public class MeditatorService: MeditatorServiceProtocol
     
     public func startMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: ((ServiceResult) -> Void)? = nil)
     {
-        updateMeditationTime(MeditationState.Start, sittingTimeInMinutes: sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completionBlock: completionBlock)
+        updateMeditationTime(MeditationTimePublishState.Start, sittingTimeInMinutes: sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completionBlock: completionBlock)
     }
     
     public func cancelMeditation(sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: ((ServiceResult) -> Void)? = nil)
     {
-        updateMeditationTime(MeditationState.Cancel, sittingTimeInMinutes: sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completionBlock: completionBlock)
+        updateMeditationTime(MeditationTimePublishState.Cancel, sittingTimeInMinutes: sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completionBlock: completionBlock)
     }
     
-    private func updateMeditationTime(state: MeditationState, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: ((ServiceResult) -> Void)? = nil)
+    private func updateMeditationTime(state: MeditationTimePublishState, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: ((ServiceResult) -> Void)? = nil)
     {
        if sittingTimeInMinutes == nil && walkingTimeInMinutes == nil {
             completionBlock?(ServiceResult.Failure(nil))
@@ -105,11 +105,11 @@ public class MeditatorService: MeditatorServiceProtocol
             return
         }
         
-        let cacheKey = String(MPMeditator.self).sha256()
+        let cacheKey = String(Meditator.self).sha256()
         
-        let apiResponseBlock: ((ApiResponse<[MPMeditator]>) -> Void) =
+        let apiResponseBlock: ((ApiResponse<[Meditator]>) -> Void) =
         {
-            (response: ApiResponse<[MPMeditator]>) in
+            (response: ApiResponse<[Meditator]>) in
             
             if let model = response.value where model.count > 0 {
                 self.cacheManager.updateTimestampForCacheKey(cacheKey)
@@ -120,9 +120,9 @@ public class MeditatorService: MeditatorServiceProtocol
         }
         
         switch state {
-        case .Start:
+        case MeditationTimePublishState.Start:
             apiClient.startMeditation(username, token: token, sittingTimeInMinutes: sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completionBlock: apiResponseBlock)
-        case .Cancel:
+        case MeditationTimePublishState.Cancel:
             apiClient.cancelMeditation(username, token: token, sittingTimeInMinutes: sittingTimeInMinutes, walkingTimeInMinutes: walkingTimeInMinutes, completionBlock: apiResponseBlock)
         }
     }
@@ -134,7 +134,7 @@ public class MeditatorService: MeditatorServiceProtocol
      
      - returns: returns a tuple with a `NotificationToken` and realm `Results`
      */
-    public func meditators(notificationBlock: (RealmCollectionChange<Results<MPMeditator>> -> Void)) -> (NotificationToken, Results<MPMeditator>)
+    public func meditators(notificationBlock: (RealmCollectionChange<Results<Meditator>> -> Void)) -> (NotificationToken, Results<Meditator>)
     {
         let results = dataStore.meditators()
         let token   = results.addNotificationBlock(notificationBlock)

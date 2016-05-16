@@ -25,14 +25,14 @@
 
 import UIKit
 
-protocol MPSplashViewDelegate: NSObjectProtocol
+protocol SplashViewDelegate: NSObjectProtocol
 {
-    func splashViewPerformLogin(splashView: MPSplashView)
+    func splashViewPerformLogin(splashView: SplashView)
 }
 
-class MPSplashView: UIView, UITextFieldDelegate
+class SplashView: UIView, UITextFieldDelegate
 {
-    weak var delegate: MPSplashViewDelegate?
+    weak var delegate: SplashViewDelegate?
 
     @IBOutlet weak var backgroundImageView: UIImageView!
 

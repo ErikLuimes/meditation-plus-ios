@@ -26,7 +26,7 @@
 import Foundation
 import KGFloatingDrawer
 
-class MPMenuContainerViewController: KGDrawerViewController
+class MenuContainerViewController: KGDrawerViewController
 {
     var toggleMenuHandler: (() -> Void)!
 
@@ -46,7 +46,7 @@ class MPMenuContainerViewController: KGDrawerViewController
         self.animator.springDamping = 1
 
         // Menu view controller
-        let menuViewController = MPMenuViewController(nibName: "MPMenuViewController", bundle: nil)
+        let menuViewController = MenuViewController(nibName: "MenuViewController", bundle: nil)
         menuViewController.drawerNavigationHandler = {
             (viewController: UIViewController, animated: Bool) in
             let navigationViewController = NavigationController(rootViewController: viewController)
@@ -60,7 +60,7 @@ class MPMenuContainerViewController: KGDrawerViewController
         }
 
         // Initial view controller
-        let initialContentViewController = MPSplashViewController(nibName: "MPSplashViewController", bundle: nil)
+        let initialContentViewController = SplashViewController(nibName: "SplashViewController", bundle: nil)
         let navigationViewController = NavigationController(rootViewController: initialContentViewController)
         navigationViewController.toggleDrawerHandler = self.toggleMenuHandler
 

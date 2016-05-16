@@ -26,7 +26,7 @@
 import Foundation
 import UIKit
 
-class MPVideoDataSource: NSObject, UITableViewDataSource
+class VideoDataSource: NSObject, UITableViewDataSource
 {
     private var videos: [VideoItem] = [VideoItem]()
 
@@ -37,7 +37,7 @@ class MPVideoDataSource: NSObject, UITableViewDataSource
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let cell: MPVideoCell = tableView.dequeueReusableCellWithIdentifier("VideoCell") as! MPVideoCell
+        let cell: VideoCell = tableView.dequeueReusableCellWithIdentifier("VideoCell") as! VideoCell
 
         if let video = self.videoForIndexPath(indexPath) {
             let style: NSMutableParagraphStyle = NSMutableParagraphStyle.defaultParagraphStyle().mutableCopy() as! NSMutableParagraphStyle

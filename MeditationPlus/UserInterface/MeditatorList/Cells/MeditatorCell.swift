@@ -29,10 +29,10 @@ import SDWebImage
 
 public protocol MeditatorCellDelegate
 {
-    func cell(cell: MPMeditatorCell, didTapInfoButton button: UIButton)
+    func cell(cell: MeditatorCell, didTapInfoButton button: UIButton)
 }
 
-public class MPMeditatorCell: UITableViewCell
+public class MeditatorCell: UITableViewCell
 {
     public var delegate: MeditatorCellDelegate?
     
@@ -85,7 +85,7 @@ public class MPMeditatorCell: UITableViewCell
         selectionStyle = .Default
         
         let button: UIButton = UIButton(type: UIButtonType.InfoLight)
-        button.addTarget(self, action: #selector(MPMeditatorCell.didTapInfoButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(MeditatorCell.didTapInfoButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         button.tintColor = UIColor.orangeColor()
         accessoryView = button
     }

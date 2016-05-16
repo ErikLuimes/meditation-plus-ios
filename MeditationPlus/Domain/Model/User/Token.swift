@@ -27,7 +27,7 @@ import Foundation
 import Locksmith
 import ObjectMapper
 
-struct MPToken: ReadableSecureStorable,
+struct Token: ReadableSecureStorable,
         CreateableSecureStorable,
         DeleteableSecureStorable,
         GenericPasswordSecureStorable,
@@ -43,7 +43,6 @@ struct MPToken: ReadableSecureStorable,
     {
         return ["token": token != nil ? token! : ""]
     }
-
 
     // MARK: Mappable
 
