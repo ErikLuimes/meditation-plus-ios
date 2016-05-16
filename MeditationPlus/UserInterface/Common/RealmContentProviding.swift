@@ -18,8 +18,6 @@ protocol RealmContentProviding
     
     var notificationBlock: ((changes: RealmCollectionChange<Results<Content>>) -> Void)? { get set }
     
-    mutating func fetchContentIfNeeded(forceReload forceReload: Bool) -> Bool
-    
     mutating func disableNotification()
 }
 

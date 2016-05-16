@@ -95,7 +95,7 @@ public class ProfileService: ProfileServiceProtocol
      */
     public func reloadProfileIfNeeded(name: String, forceReload: Bool = false) -> Bool
     {
-        let cacheKey    = String(Profile.self).sha256()
+        let cacheKey    = "\(Profile.self)-\(name)".sha256()
         let needsUpdate = forceReload ? forceReload : cacheManager.needsUpdate(cacheKey, timeout: 360)
         
         guard needsUpdate else {
