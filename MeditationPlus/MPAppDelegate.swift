@@ -52,10 +52,10 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
     func setupDefaults()
     {
         NSUserDefaults.standardUserDefaults().registerDefaults([
-                                                                       "rememberPassword": false,
-                                                                       "walkingMeditationTimeId": 0,
-                                                                       "sittingMeditationTimeId": 0
-                                                               ])
+            "rememberPassword": false,
+            "walkingMeditationTimeId": 30,
+            "sittingMeditationTimeId": 30
+        ])
 
         if (NSUserDefaults.standardUserDefaults().URLForKey("avatar") == nil) {
             let url = NSURL(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")!
@@ -76,20 +76,16 @@ class MPAppDelegate: UIResponder, UIApplicationDelegate
 
     func applicationWillEnterForeground(application: UIApplication)
     {
-        // FG
         MPMeditationTimer.sharedInstance.applicationWillEnterForeground()
-        NSLog("will enter fg")
     }
 
     func applicationDidEnterBackground(application: UIApplication)
     {
         MPMeditationTimer.sharedInstance.applicationDidEnterBackground()
-        NSLog("did enter bg")
     }
 
     func applicationWillTerminate(application: UIApplication)
     {
-        NSLog("Terminate")
         application.cancelAllLocalNotifications()
     }
 

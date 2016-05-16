@@ -32,9 +32,21 @@ class MPMessageCell: UITableViewCell
         avatarImageView.image = nil
         chatItem = nil
     }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        messageLabel.selectable = false
+    }
+    
 
     func configureWithChatItem(chatItem: MPChatItem)
     {
+        guard !chatItem.invalidated else {
+            self.chatItem = nil
+            return
+        }
+        
         self.chatItem = chatItem
 
         authorLabel.text = (chatItem.username)

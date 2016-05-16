@@ -27,6 +27,8 @@ public struct DataStore: DataStoreProtocol
     
     public init()
     {
+        Realm.Configuration.defaultConfiguration.deleteRealmIfMigrationNeeded = true
+        
         mainRealm = try! Realm()
     }
     

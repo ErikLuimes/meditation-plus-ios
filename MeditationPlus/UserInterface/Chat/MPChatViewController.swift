@@ -43,8 +43,6 @@ class MPChatViewController: SLKTextViewController {
 
     private var chatUpdateTimer: NSTimer?
 
-    private var emoticonButton: UIButton!
-
     // MARK: Init
 
     init() {
@@ -56,32 +54,28 @@ class MPChatViewController: SLKTextViewController {
         
         tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "chat-icon"), tag: 0)
 
-        tableView?.separatorStyle = .None
-
-        self.textInputbar.contentInset = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 40)
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "orange_q"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPChatViewController.didPressQuestionButton(_:)))
     }
 
     required init(coder decoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle {
+    override class func tableViewStyleForCoder(decoder: NSCoder) -> UITableViewStyle
+    {
         return UITableViewStyle.Plain
     }
 
     // MARK: View life cycle
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
 
+        if traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
+            registerForPreviewingWithDelegate(self, sourceView: tableView!)
+        }
+        
         configure()
-//        self.leftButton.removeConstraints(self.leftButton.constraints)
-//        self.leftButton.autoPinEdgeToSuperviewEdge(.Leading, withInset: 20)
-//        self.textInputbar.slk_constraintsForAttribute(NSLayoutAttribute.Leading)?.first?.constant = 40
-//        [self slk_constraintsForAttribute:NSLayoutAttributeLeading][0];
-//        self.textInputbar.
-//        leftMarginWC
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -99,7 +93,12 @@ class MPChatViewController: SLKTextViewController {
         stopChatUpdateTimer()
     }
 
-    // MARK: Logic handling
+}
+
+// MARK: - Timer handling
+
+extension MPChatViewController
+{
     
     private func startChatUpdateTimer()
     {
@@ -114,6 +113,11 @@ class MPChatViewController: SLKTextViewController {
         chatUpdateTimer = nil
     }
     
+}
+    // MARK: Data handling
+
+extension MPChatViewController
+{
     private func enableChatNotification()
     {
         guard self.chatNotificationToken == nil else {
@@ -161,29 +165,75 @@ class MPChatViewController: SLKTextViewController {
     func updateChat() {
         chatService.reloadChatItemsIfNeeded(true)
     }
-    
-    // MARK: Actions
-    
-    func didPressQuestionButton(button: UIBarButtonItem) {
-        NSLog("did press button")
+}
+
+// MARK: - View controller configuration
+
+extension MPChatViewController
+{
+    private func configure()
+    {
+        bounces                = true
+        shakeToClearEnabled    = true
+        keyboardPanningEnabled = true
+        inverted               = false
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "orange_q"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPChatViewController.didPressQuestionButton(_:)))
+        
+        autoCompletionView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "autocompletion")
+        registerPrefixesForAutoCompletion([":"])
+        
+        shouldScrollToBottomAfterKeyboardShows = true
+        
+        leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
+        leftButton.tintColor = UIColor.grayColor()
+        
+        rightButton.setTitle("Send", forState: UIControlState.Normal)
+        rightButton.tintColor = UIColor.orangeColor()
+        
+        textView.placeholder      = "Message"
+        textView.placeholderColor = UIColor.lightGrayColor()
+        
+        textInputbar.autoHideRightButton = true
+        textInputbar.maxCharCount        = 1000
+        textInputbar.counterStyle        = SLKCounterStyle.Split
+        
+        typingIndicatorView?.canResignByTouch = true
+        
+        view.backgroundColor = UIColor.whiteColor()
+        
+        tableView?.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
+        tableView?.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
+        tableView?.separatorStyle       = .None
+        tableView?.rowHeight            = UITableViewAutomaticDimension
+        tableView?.scrollsToTop         = false
+        tableView?.estimatedRowHeight   = 100.0
+        tableView?.emptyDataSetSource   = self
+        tableView?.emptyDataSetDelegate = self
+        
+        view.clipsToBounds = true
     }
+    
+    override func heightForAutoCompletionView() -> CGFloat
+    {
+        return 300
+    }
+}
 
-    // MARK: SLKTextViewController methods
+// MARK: - Actions
 
-    override func didPressLeftButton(sender: AnyObject!) {
+extension MPChatViewController
+{
+    // MARK: SLKTextViewController action methods
+    
+    override func didPressLeftButton(sender: AnyObject!)
+    {
         autocompletionVisible = !autocompletionVisible
         self.showAutoCompletionView(autocompletionVisible)
     }
 
-    func didPressEmoticonButton(sener: UIButton)
+    override func didPressRightButton(sender: AnyObject!)
     {
-        if let originalText = self.textView.text, regex = try? NSRegularExpression(pattern: "^\\s*q:\\s*", options: .CaseInsensitive) {
-            let modifiedText   = regex.stringByReplacingMatchesInString(originalText, options: .WithTransparentBounds, range: NSMakeRange(0, originalText.characters.count), withTemplate: "")
-            self.textView.text = "Q: " + modifiedText
-        }
-    }
-
-    override func didPressRightButton(sender: AnyObject!) {
         self.textView.refreshFirstResponder()
 
         let message: String? = self.textView.text.copy() as? String
@@ -205,125 +255,16 @@ class MPChatViewController: SLKTextViewController {
         }
     }
 
-
-    override func heightForAutoCompletionView() -> CGFloat {
-        return 300
-    }
-
-//    func enrichChatsWithProfileData(animated: Bool = true) {
-//        let dispatchGroup = dispatch_group_create()
-//
-//        var profiles: [String:MPProfile] = [String: MPProfile]()
-//
-//        for username in Set(self.chats.map({ $0.username ?? "" })) {
-//            dispatch_group_enter(dispatchGroup)
-//            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
-//                self.profilemanager.profile(username, completion: {
-//                    (profile: MPProfile) -> Void in
-//                    profiles[username] = profile
-//                    dispatch_group_leave(dispatchGroup)
-//                })
-//            })
-//        }
-//
-//        dispatch_group_notify(dispatchGroup, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
-//            for chat in self.chats where chat.username != nil {
-//                if let profile: MPProfile = profiles[chat.username!] {
-//                    if let _ = profile.img, imgURL = NSURL(string: profile.img!) where profile.img!.characters.count > 0 {
-//                        chat.avatarURL = imgURL
-//                    } else if let _ = profile.img where profile.img!.rangeOfString("@") != nil {
-//                        let emailhash = profile.img!.md5()
-//                        let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
-//
-//
-//                        chat.avatarURL = avatarURL
-//
-//                    } else if let email = profile.email {
-//                        let emailhash = email.md5()
-//                        let avatarURL = NSURL(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
-//
-//
-//                        chat.avatarURL = avatarURL
-//                    }
-//                }
-//            }
-//
-//            dispatch_sync(dispatch_get_main_queue(), {
-//                self.tableView?.reloadData()
-////                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-//                let path: NSIndexPath = NSIndexPath(forRow: (self.tableView?.numberOfRowsInSection(0))! - 1, inSection: 0)
-//                self.tableView?.scrollToRowAtIndexPath(path, atScrollPosition: UITableViewScrollPosition.Bottom, animated: animated)
-////                })
-//            })
-//        })
-//    }
-}
-
-// MARK: - View controller configuration
-
-extension MPChatViewController
-{
-    private func configure()
+    // MARK: Other action methods
+    
+    func didPressQuestionButton(button: UIBarButtonItem)
     {
-        bounces = true
-        shakeToClearEnabled = true
-        keyboardPanningEnabled = true
-        inverted = false
-        
-        autoCompletionView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "autocompletion")
-        registerPrefixesForAutoCompletion([":"])
-        
-        shouldScrollToBottomAfterKeyboardShows = true
-        
-        leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
-        leftButton.tintColor = UIColor.grayColor()
-        
-        rightButton.setTitle("Send", forState: UIControlState.Normal)
-        rightButton.tintColor = UIColor.orangeColor()
-        
-//        leftButton.removeConstraints(leftButton.constraints)
-//        leftButton.autoPinEdgeToSuperviewEdge(.Leading, withInset: 20)
-//        leftButton.autoAlignAxisToSuperviewAxis(.Horizontal)
-        
-        
-        emoticonButton = UIButton(type: UIButtonType.Custom)
-        emoticonButton.translatesAutoresizingMaskIntoConstraints = false
-        emoticonButton.setImage(UIImage(named: "orange_q"), forState: .Normal)
-        emoticonButton.addTarget(self, action: #selector(MPChatViewController.didPressEmoticonButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        textInputbar.insertSubview(emoticonButton, atIndex: 0)
-        emoticonButton.autoPinEdgeToSuperviewEdge(.Trailing)
-//        emoticonButton.autoAlignAxisToSuperviewAxis(ALAxis.Horizontal)
-        emoticonButton.autoPinEdgeToSuperviewEdge(.Top)
-        emoticonButton.autoPinEdgeToSuperviewEdge(.Bottom)
-        emoticonButton.autoSetDimensionsToSize(CGSize(width: 20, height: 20))
-        //emoticonButton.sizeToFit()
-        
-        
-//        self.rightButton.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 20)
-        
-        
-        textView.placeholder = "Message"
-        textView.placeholderColor = UIColor.lightGrayColor()
-        
-        textInputbar.autoHideRightButton = true
-        textInputbar.maxCharCount = 1000
-        textInputbar.counterStyle = SLKCounterStyle.Split
-        
-        typingIndicatorView?.canResignByTouch = true
-        
-        view.backgroundColor = UIColor.whiteColor()
-        
-        tableView?.rowHeight = UITableViewAutomaticDimension
-        tableView?.scrollsToTop = false
-        tableView?.estimatedRowHeight = 100.0
-        tableView?.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
-        tableView?.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
-        
-        tableView?.emptyDataSetSource = self
-        tableView?.emptyDataSetDelegate = self
-        
-        self.view.clipsToBounds = true
+        if let originalText = self.textView.text, regex = try? NSRegularExpression(pattern: "^\\s*q:\\s*", options: .CaseInsensitive) {
+            let modifiedText   = regex.stringByReplacingMatchesInString(originalText, options: .WithTransparentBounds, range: NSMakeRange(0, originalText.characters.count), withTemplate: "")
+            self.textView.text = "Q: " + modifiedText
+        }
     }
+
 }
 
 // MARK: - UITableViewDataSource
@@ -464,11 +405,13 @@ extension MPChatViewController: MPMessageCellDelegate
 
 extension MPChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
 {
-    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage! {
+    func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
+    {
         return UIImage(named: "chat-icon")
     }
 
-    func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation! {
+    func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation!
+    {
         let animation = CABasicAnimation(keyPath: "transform")
 
         animation.fromValue = NSValue(CATransform3D: CATransform3DIdentity)
@@ -480,8 +423,37 @@ extension MPChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
         return animation
     }
 
-    func emptyDataSetShouldAnimateImageView(scrollView: UIScrollView!) -> Bool {
+    func emptyDataSetShouldAnimateImageView(scrollView: UIScrollView!) -> Bool
+    {
         return true
     }
     
+}
+
+// MARK: - Peek and Pop
+
+extension MPChatViewController: UIViewControllerPreviewingDelegate
+{
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController?
+    {
+        var viewController: UIViewController?
+        
+        if let indexPath = tableView?.indexPathForRowAtPoint(location) {
+            guard indexPath.row < chatResults?.count ?? 0 else {
+                return nil
+            }
+            
+            if let chatItem = chatResults?[indexPath.row] {
+                previewingContext.sourceRect = tableView!.rectForRowAtIndexPath(indexPath)
+                viewController = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, username: chatItem.username)
+            }
+        }
+        
+        return viewController
+    }
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController)
+    {
+        navigationController?.pushViewController(viewControllerToCommit, animated: true)
+    }
 }

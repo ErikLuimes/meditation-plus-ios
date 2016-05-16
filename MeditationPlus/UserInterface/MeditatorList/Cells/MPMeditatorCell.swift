@@ -98,6 +98,10 @@ class MPMeditatorCell: UITableViewCell
 
     func configureWithMeditator(meditator: MPMeditator, displayProgress: Bool)
     {
+        guard !meditator.invalidated else {
+            return
+        }
+        
         self.displayProgress = displayProgress
         self.meditator = meditator
 
@@ -110,7 +114,7 @@ class MPMeditatorCell: UITableViewCell
         avatarImageView.layer.masksToBounds = true
         avatarImageView.layer.cornerRadius = avatarImageView.bounds.size.height / 2.0
 
-        if let imageUrl = meditator.avatar {
+        if let imageUrl = NSURL(meditator: meditator) {
             avatarImageView.sd_setImageWithURL(imageUrl)
         } else {
             avatarImageView.image = nil
