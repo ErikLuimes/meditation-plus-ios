@@ -28,8 +28,8 @@
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WuC-4D-rxT">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <subviews>
-                        <view contentMode="scaleToFill" misplaced="YES" placeholderIntrinsicWidth="360" placeholderIntrinsicHeight="130" translatesAutoresizingMaskIntoConstraints="NO" id="UxA-Dj-oEU" userLabel="Content View">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="801"/>
+                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="360" placeholderIntrinsicHeight="130" translatesAutoresizingMaskIntoConstraints="NO" id="UxA-Dj-oEU" userLabel="Content View">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="395"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4mk-9D-puN" userLabel="Profile Image View">
                                     <rect key="frame" x="117" y="30" width="140" height="140"/>
@@ -43,23 +43,23 @@
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WLu-ZZ-U5E" userLabel="Username Label">
-                                    <rect key="frame" x="188" y="200" width="0.0" height="0.0"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WLu-ZZ-U5E" userLabel="Username Label">
+                                    <rect key="frame" x="187" y="200" width="0.0" height="0.0"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="748" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2ef-KH-zhn" userLabel="Profile Content View">
-                                    <rect key="frame" x="30" y="229" width="315" height="170"/>
+                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="748" translatesAutoresizingMaskIntoConstraints="NO" id="2ef-KH-zhn" userLabel="Profile Content View">
+                                    <rect key="frame" x="30" y="205" width="315" height="160"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aEb-MG-f2w" userLabel="About Label">
-                                            <rect key="frame" x="15" y="5" width="285" height="20"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aEb-MG-f2w" userLabel="About Label">
+                                            <rect key="frame" x="15" y="15" width="285" height="0.0"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="37s-Vb-UDt" userLabel="Bar Chart View" customClass="BarChartView" customModule="Charts">
-                                            <rect key="frame" x="15" y="35" width="285" height="120"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="37s-Vb-UDt" userLabel="Bar Chart View" customClass="BarChartView" customModule="Charts">
+                                            <rect key="frame" x="15" y="25" width="285" height="120"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="120" id="vT6-gg-XS8"/>

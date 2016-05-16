@@ -42,21 +42,24 @@ class MPChatViewController: SLKTextViewController {
     private var autocompletionVisible: Bool = false
 
     private var chatUpdateTimer: NSTimer?
+    
+    private var questionButton: UIBarButtonItem!
 
     // MARK: Init
 
-    init() {
+    init()
+    {
         super.init(tableViewStyle: UITableViewStyle.Plain)
 
-        chatService = ChatService()
-        
+        chatService    = ChatService()
         profileService = ProfileService.sharedInstance
         
-        tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "chat-icon"), tag: 0)
-
+        tabBarItem     = UITabBarItem(title: nil, image: UIImage(named: "chat-icon"), tag: 0)
+        questionButton = UIBarButtonItem(title: "Ask Question", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPChatViewController.didPressQuestionButton(_:)))
     }
 
-    required init(coder decoder: NSCoder) {
+    required init(coder decoder: NSCoder)
+    {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -78,10 +81,9 @@ class MPChatViewController: SLKTextViewController {
         configure()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(animated: Bool)
+    {
         super.viewWillAppear(animated)
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "orange_q"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPChatViewController.didPressQuestionButton(_:)))
         
         enableChatNotification()
         chatService.reloadChatItemsIfNeeded()
@@ -89,7 +91,15 @@ class MPChatViewController: SLKTextViewController {
         startChatUpdateTimer()
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewDidAppear(animated: Bool)
+    {
+        super.viewDidAppear(animated)
+        
+        parentViewController?.navigationItem.setRightBarButtonItem(questionButton, animated: true)
+    }
+    
+    override func viewWillDisappear(animated: Bool)
+    {
         super.viewWillDisappear(animated)
 
         stopChatUpdateTimer()
@@ -140,7 +150,6 @@ extension MPChatViewController
         tableView?.estimatedRowHeight   = 100.0
         tableView?.emptyDataSetSource   = self
         tableView?.emptyDataSetDelegate = self
-        
     }
     
     override func heightForAutoCompletionView() -> CGFloat
@@ -261,23 +270,26 @@ extension MPChatViewController
     
     func didPressQuestionButton(button: UIBarButtonItem)
     {
+        textInputbar.textView.becomeFirstResponder()
+        
         if let originalText = self.textView.text, regex = try? NSRegularExpression(pattern: "^\\s*q:\\s*", options: .CaseInsensitive) {
             let modifiedText   = regex.stringByReplacingMatchesInString(originalText, options: .WithTransparentBounds, range: NSMakeRange(0, originalText.characters.count), withTemplate: "")
             self.textView.text = "Q: " + modifiedText
         }
     }
-
 }
 
 // MARK: - UITableViewDataSource
 
 extension MPChatViewController
 {
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
         var numRows = 0
         
         if tableView == self.autoCompletionView {
@@ -289,7 +301,8 @@ extension MPChatViewController
         return numRows
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
         var cell: UITableViewCell!
 
         if tableView == self.tableView {
@@ -321,27 +334,30 @@ extension MPChatViewController
 
 extension MPChatViewController
 {
-    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath)
+    {
         (cell as? MPMessageCell)?.delegate = self
     }
 
-    override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath)
+    {
         (cell as? MPMessageCell)?.delegate = nil
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    {
         if tableView == self.autoCompletionView {
             textInputbar.textView.insertText(self.emojis[indexPath.row])
         }
     }
-    
 }
 
 // MARK: - MFMailComposeViewControllerDelegate Method
 
 extension MPChatViewController: MFMailComposeViewControllerDelegate
 {
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?)
+    {
         switch result {
             case MFMailComposeResultCancelled:
                 break
@@ -365,7 +381,8 @@ extension MPChatViewController: MFMailComposeViewControllerDelegate
 extension MPChatViewController: MPMessageCellDelegate
 {
     
-    func didPressReportButton(button: UIButton, chatItem: MPChatItem?) {
+    func didPressReportButton(button: UIButton, chatItem: MPChatItem?)
+    {
         let alertController = UIAlertController(title: "Report inappropriate content", message: "By clicking the 'Report' button you can send us an email to report abuse and inappropriate content.", preferredStyle: UIAlertControllerStyle.ActionSheet)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
@@ -390,7 +407,8 @@ extension MPChatViewController: MPMessageCellDelegate
         presentViewController(alertController, animated: true, completion: nil)
     }
     
-    func rapportChatItem(chatItem: MPChatItem) {
+    func rapportChatItem(chatItem: MPChatItem)
+    {
         
         if MFMailComposeViewController.canSendMail() {
             let title = "Report inappropriate content"
