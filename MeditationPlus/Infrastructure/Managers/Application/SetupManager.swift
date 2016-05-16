@@ -32,9 +32,7 @@ public class SetupManager
     
     static private func setupCrashlytics() -> Void
     {
-        let sendCrashesValue: NSNumber? = NSUserDefaults.standardUserDefaults().objectForKey("CrashReportingPreference") as? NSNumber
-        let sendCrashes = (sendCrashesValue == nil) || (sendCrashesValue!.boolValue == true)
-        
+        let sendCrashes = NSUserDefaults.standardUserDefaults().objectForKey("CrashReportingPreference")?.boolValue ?? true
         DDLogInfo("Send crashlogs: \(sendCrashes)")
         
         if (sendCrashes) {
