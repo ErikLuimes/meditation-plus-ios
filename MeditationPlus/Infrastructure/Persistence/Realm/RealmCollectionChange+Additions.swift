@@ -7,3 +7,41 @@
 //
 
 import Foundation
+import RealmSwift
+
+extension RealmCollectionChange
+{
+    public func isSuccess() -> Bool
+    {
+        switch self {
+        case .Initial, .Update:
+            return true
+        default:
+            return false
+        }
+    }
+    
+    public func isFailure() -> Bool
+    {
+        return !isSuccess()
+    }
+    
+    public var results: T? {
+        switch self {
+        case .Initial(let results):
+            return results
+        case .Update(let results, _, _, _):
+            return results
+        default:
+            return nil
+        }
+    }
+    
+    public var error: NSError? {
+        if case .Error(let error) = self {
+            return error
+        } else {
+            return nil
+        }
+    }
+}

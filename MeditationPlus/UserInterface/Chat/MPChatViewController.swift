@@ -35,7 +35,7 @@ class MPChatViewController: SLKTextViewController {
     // MARK: Identifiers
     
     private let otherChatCellIdentifier = "otherChatCellIdentifier"
-    private let ownChatCellIdentifier = "ownChatCellIdentifier"
+    private let ownChatCellIdentifier   = "ownChatCellIdentifier"
 
     // MARK: Misc
     
@@ -81,6 +81,8 @@ class MPChatViewController: SLKTextViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "orange_q"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPChatViewController.didPressQuestionButton(_:)))
+        
         enableChatNotification()
         chatService.reloadChatItemsIfNeeded()
         
@@ -93,6 +95,58 @@ class MPChatViewController: SLKTextViewController {
         stopChatUpdateTimer()
     }
 
+}
+
+// MARK: - View controller configuration
+
+extension MPChatViewController
+{
+    private func configure()
+    {
+        bounces                = true
+        shakeToClearEnabled    = true
+        keyboardPanningEnabled = true
+        inverted               = false
+        
+        view.clipsToBounds = true
+        
+        autoCompletionView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "autocompletion")
+        registerPrefixesForAutoCompletion([":"])
+        
+        shouldScrollToBottomAfterKeyboardShows = true
+        
+        leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
+        leftButton.tintColor = UIColor.grayColor()
+        
+        rightButton.setTitle("Send", forState: UIControlState.Normal)
+        rightButton.tintColor = UIColor.orangeColor()
+        
+        textView.placeholder      = "Message"
+        textView.placeholderColor = UIColor.lightGrayColor()
+        
+        textInputbar.autoHideRightButton = true
+        textInputbar.maxCharCount        = 1000
+        textInputbar.counterStyle        = SLKCounterStyle.Split
+        
+        typingIndicatorView?.canResignByTouch = true
+        
+        view.backgroundColor = UIColor.whiteColor()
+        
+        tableView?.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
+        tableView?.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
+        tableView?.separatorStyle       = .None
+        tableView?.rowHeight            = UITableViewAutomaticDimension
+        tableView?.scrollsToTop         = false
+        tableView?.estimatedRowHeight   = 100.0
+        tableView?.emptyDataSetSource   = self
+        tableView?.emptyDataSetDelegate = self
+        
+    }
+    
+    override func heightForAutoCompletionView() -> CGFloat
+    {
+        return 300
+    }
 }
 
 // MARK: - Timer handling
@@ -112,9 +166,9 @@ extension MPChatViewController
         chatUpdateTimer?.invalidate()
         chatUpdateTimer = nil
     }
-    
 }
-    // MARK: Data handling
+
+// MARK: - Data handling
 
 extension MPChatViewController
 {
@@ -167,58 +221,6 @@ extension MPChatViewController
     }
 }
 
-// MARK: - View controller configuration
-
-extension MPChatViewController
-{
-    private func configure()
-    {
-        bounces                = true
-        shakeToClearEnabled    = true
-        keyboardPanningEnabled = true
-        inverted               = false
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "orange_q"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(MPChatViewController.didPressQuestionButton(_:)))
-        
-        autoCompletionView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "autocompletion")
-        registerPrefixesForAutoCompletion([":"])
-        
-        shouldScrollToBottomAfterKeyboardShows = true
-        
-        leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
-        leftButton.tintColor = UIColor.grayColor()
-        
-        rightButton.setTitle("Send", forState: UIControlState.Normal)
-        rightButton.tintColor = UIColor.orangeColor()
-        
-        textView.placeholder      = "Message"
-        textView.placeholderColor = UIColor.lightGrayColor()
-        
-        textInputbar.autoHideRightButton = true
-        textInputbar.maxCharCount        = 1000
-        textInputbar.counterStyle        = SLKCounterStyle.Split
-        
-        typingIndicatorView?.canResignByTouch = true
-        
-        view.backgroundColor = UIColor.whiteColor()
-        
-        tableView?.registerNib(UINib(nibName: "MPOtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
-        tableView?.registerNib(UINib(nibName: "MPOwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
-        tableView?.separatorStyle       = .None
-        tableView?.rowHeight            = UITableViewAutomaticDimension
-        tableView?.scrollsToTop         = false
-        tableView?.estimatedRowHeight   = 100.0
-        tableView?.emptyDataSetSource   = self
-        tableView?.emptyDataSetDelegate = self
-        
-        view.clipsToBounds = true
-    }
-    
-    override func heightForAutoCompletionView() -> CGFloat
-    {
-        return 300
-    }
-}
 
 // MARK: - Actions
 
@@ -311,7 +313,12 @@ extension MPChatViewController
 
         return cell
     }
+}
 
+// MARK: - UITableViewDelegate
+
+extension MPChatViewController
+{
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         (cell as? MPMessageCell)?.delegate = self
     }
@@ -401,7 +408,7 @@ extension MPChatViewController: MPMessageCellDelegate
     }
 }
 
-// MARK: - DZNEmptyDataSetDelegate
+// MARK: - DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
 
 extension MPChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
 {
@@ -430,7 +437,7 @@ extension MPChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
     
 }
 
-// MARK: - Peek and Pop
+// MARK: - UIViewControllerPreviewingDelegate
 
 extension MPChatViewController: UIViewControllerPreviewingDelegate
 {

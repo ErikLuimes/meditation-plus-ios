@@ -27,8 +27,15 @@ import UIKit
 import QuartzCore
 import SDWebImage
 
-class MPMeditatorCell: UITableViewCell
+public protocol MeditatorCellDelegate
 {
+    func cell(cell: MPMeditatorCell, didTapInfoButton button: UIButton)
+}
+
+public class MPMeditatorCell: UITableViewCell
+{
+    public var delegate: MeditatorCellDelegate?
+    
     private var meditator: MPMeditator?
 
     private var displayProgress: Bool = false
@@ -47,12 +54,12 @@ class MPMeditatorCell: UITableViewCell
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
 
-    required init?(coder aDecoder: NSCoder)
+    required public init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
     }
 
-    override func awakeFromNib()
+    override public func awakeFromNib()
     {
         super.awakeFromNib()
 
@@ -76,16 +83,14 @@ class MPMeditatorCell: UITableViewCell
         avatarImageView.layer.addSublayer(circlePathLayer)
 
         selectionStyle = .Default
+        
+        let button: UIButton = UIButton(type: UIButtonType.InfoLight)
+        button.addTarget(self, action: #selector(MPMeditatorCell.didTapInfoButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        button.tintColor = UIColor.orangeColor()
+        accessoryView = button
     }
 
-    override func setSelected(selected: Bool, animated: Bool)
-    {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
-    override func prepareForReuse()
+    override public func prepareForReuse()
     {
         meditator = nil
         displayProgress = false
@@ -152,8 +157,13 @@ class MPMeditatorCell: UITableViewCell
             circlePathLayer.strokeEnd = CGFloat(meditator?.normalizedProgress ?? 0.0)
         }
     }
+    
+    func didTapInfoButton(button: UIButton)
+    {
+        delegate?.cell(self, didTapInfoButton: button)
+    }
 
-    override func layoutSubviews()
+    override public func layoutSubviews()
     {
         super.layoutSubviews()
     }
