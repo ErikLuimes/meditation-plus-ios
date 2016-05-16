@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 
+#import "CTLineUtils.h"
 #import "DTAccessibilityElement.h"
 #import "DTAccessibilityViewProxy.h"
 #import "DTAnchorHTMLElement.h"

@@ -54,15 +54,18 @@ NSString static *const kYTPlayerCallbackOnError = @"onError";
 NSString static *const kYTPlayerCallbackOnPlayTime = @"onPlayTime";
 
 NSString static *const kYTPlayerCallbackOnYouTubeIframeAPIReady = @"onYouTubeIframeAPIReady";
+NSString static *const kYTPlayerCallbackOnYouTubeIframeAPIFailedToLoad = @"onYouTubeIframeAPIFailedToLoad";
 
 NSString static *const kYTPlayerEmbedUrlRegexPattern = @"^http(s)://(www.)youtube.com/embed/(.*)$";
 NSString static *const kYTPlayerAdUrlRegexPattern = @"^http(s)://pubads.g.doubleclick.net/pagead/conversion/";
 NSString static *const kYTPlayerOAuthRegexPattern = @"^http(s)://accounts.google.com/o/oauth2/(.*)$";
 NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.googleapis.com/static/proxy.html(.*)$";
+NSString static *const kYTPlayerSyndicationRegexPattern = @"^https://tpc.googlesyndication.com/sodar/(.*).html$";
 
 @interface YTPlayerView()
 
-@property(nonatomic, strong) NSURL *originURL;
+@property (nonatomic, strong) NSURL *originURL;
+@property (nonatomic, weak) UIView *initialLoadingView;
 
 @end
 
@@ -90,7 +93,9 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
   NSMutableDictionary *tempPlayerVars = [[NSMutableDictionary alloc] init];
   [tempPlayerVars setValue:@"playlist" forKey:@"listType"];
   [tempPlayerVars setValue:playlistId forKey:@"list"];
-  [tempPlayerVars addEntriesFromDictionary:playerVars];  // No-op if playerVars is null
+  if (playerVars) {
+    [tempPlayerVars addEntriesFromDictionary:playerVars];
+  }
 
   NSDictionary *playerParams = @{ @"playerVars" : tempPlayerVars };
   return [self loadWithPlayerParams:playerParams];
@@ -116,10 +121,6 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
   NSString *allowSeekAheadValue = [self stringForJSBoolean:allowSeekAhead];
   NSString *command = [NSString stringWithFormat:@"player.seekTo(%@, %@);", secondsValue, allowSeekAheadValue];
   [self stringFromEvaluatingJavaScript:command];
-}
-
-- (void)clearVideo {
-  [self stringFromEvaluatingJavaScript:@"player.clearVideo();"];
 }
 
 #pragma mark - Cueing methods
@@ -405,6 +406,12 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
   return YES;
 }
 
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+  if (self.initialLoadingView) {
+    [self.initialLoadingView removeFromSuperview];
+  }
+}
+
 /**
  * Convert a quality value from NSString to the typed enum value.
  *
@@ -531,6 +538,9 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
   }
 
   if ([action isEqual:kYTPlayerCallbackOnReady]) {
+    if (self.initialLoadingView) {
+      [self.initialLoadingView removeFromSuperview];
+    }
     if ([self.delegate respondsToSelector:@selector(playerViewDidBecomeReady:)]) {
       [self.delegate playerViewDidBecomeReady:self];
     }
@@ -578,11 +588,14 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
       [self.delegate playerView:self receivedError:error];
     }
   } else if ([action isEqualToString:kYTPlayerCallbackOnPlayTime]) {
-      if ([self.delegate respondsToSelector:@selector(playerView:didPlayTime:)]) {
-          float time = [data floatValue];
-          [self.delegate playerView:self didPlayTime:time];
-      }
-      
+    if ([self.delegate respondsToSelector:@selector(playerView:didPlayTime:)]) {
+      float time = [data floatValue];
+      [self.delegate playerView:self didPlayTime:time];
+    }
+  } else if ([action isEqualToString:kYTPlayerCallbackOnYouTubeIframeAPIFailedToLoad]) {
+    if (self.initialLoadingView) {
+      [self.initialLoadingView removeFromSuperview];
+    }
   }
 }
 
@@ -609,6 +622,16 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
       [adRegex firstMatchInString:url.absoluteString
                         options:0
                           range:NSMakeRange(0, [url.absoluteString length])];
+    
+  NSRegularExpression *syndicationRegex =
+      [NSRegularExpression regularExpressionWithPattern:kYTPlayerSyndicationRegexPattern
+                                                options:NSRegularExpressionCaseInsensitive
+                                                  error:&error];
+
+  NSTextCheckingResult *syndicationMatch =
+      [syndicationRegex firstMatchInString:url.absoluteString
+                                   options:0
+                                     range:NSMakeRange(0, [url.absoluteString length])];
 
   NSRegularExpression *oauthRegex =
       [NSRegularExpression regularExpressionWithPattern:kYTPlayerOAuthRegexPattern
@@ -628,7 +651,7 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
                                   options:0
                                     range:NSMakeRange(0, [url.absoluteString length])];
 
-  if (ytMatch || adMatch || oauthMatch || staticProxyMatch) {
+  if (ytMatch || adMatch || oauthMatch || staticProxyMatch || syndicationMatch) {
     return YES;
   } else {
     [[UIApplication sharedApplication] openURL:url];
@@ -653,7 +676,9 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
         @"onError" : @"onPlayerError"
   };
   NSMutableDictionary *playerParams = [[NSMutableDictionary alloc] init];
-  [playerParams addEntriesFromDictionary:additionalPlayerParams];
+  if (additionalPlayerParams) {
+    [playerParams addEntriesFromDictionary:additionalPlayerParams];
+  }
   if (![playerParams objectForKey:@"height"]) {
     [playerParams setValue:@"100%" forKey:@"height"];
   }
@@ -723,6 +748,17 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
   [self.webView setDelegate:self];
   self.webView.allowsInlineMediaPlayback = YES;
   self.webView.mediaPlaybackRequiresUserAction = NO;
+  
+  if ([self.delegate respondsToSelector:@selector(playerViewPreferredInitialLoadingView:)]) {
+    UIView *initialLoadingView = [self.delegate playerViewPreferredInitialLoadingView:self];
+    if (initialLoadingView) {
+      initialLoadingView.frame = self.bounds;
+      initialLoadingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+      [self addSubview:initialLoadingView];
+      self.initialLoadingView = initialLoadingView;
+    }
+  }
+  
   return YES;
 }
 
@@ -808,7 +844,8 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
   return boolValue ? @"true" : @"false";
 }
 
-#pragma mark Exposed for Testing
+#pragma mark - Exposed for Testing
+
 - (void)setWebView:(UIWebView *)webView {
   _webView = webView;
 }

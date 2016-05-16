@@ -25,9 +25,11 @@
 
 import Foundation
 
-extension Array {
+extension Array
+{
     // Optional retrieval of array elements
-    subscript (safe index: Int) -> Element? {
+    subscript(safe index: Int) -> Element?
+    {
         return self.indices ~= index ? self[index] : nil
     }
 }

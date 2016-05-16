@@ -1,83 +1,101 @@
 PODS:
-  - Alamofire (2.0.2)
-  - AlamofireObjectMapper (1.0):
-    - Alamofire (~> 2.0.0)
-    - ObjectMapper (= 0.17)
-  - Crashlytics (3.4.0):
-    - Fabric (~> 1.6.0)
-  - CWStatusBarNotification (2.3.3)
+  - Alamofire (3.3.1)
+  - AlamofireObjectMapper (3.0.0):
+    - Alamofire (~> 3.2)
+    - ObjectMapper (~> 1.0)
+  - Charts (2.2.4):
+    - Charts/Core (= 2.2.4)
+  - Charts/Core (2.2.4)
+  - CocoaLumberjack/Core (2.2.0)
+  - CocoaLumberjack/Default (2.2.0):
+    - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.2.0):
+    - CocoaLumberjack/Default
+  - CocoaLumberjack/Swift (2.2.0):
+    - CocoaLumberjack/Extensions
+  - Crashlytics (3.7.0):
+    - Fabric (~> 1.6.3)
+  - CryptoSwift (0.3.1)
+  - CWStatusBarNotification (2.3.4)
   - DateTools (1.7.0)
-  - DTCoreText (1.6.16):
+  - DTCoreText (1.6.17):
     - DTFoundation/Core (~> 1.7.5)
     - DTFoundation/DTAnimatedGIF (~> 1.7.5)
     - DTFoundation/DTHTMLParser (~> 1.7.5)
     - DTFoundation/UIKit (~> 1.7.5)
-  - DTFoundation/Core (1.7.8)
-  - DTFoundation/DTAnimatedGIF (1.7.8)
-  - DTFoundation/DTHTMLParser (1.7.8):
+  - DTFoundation/Core (1.7.10)
+  - DTFoundation/DTAnimatedGIF (1.7.10)
+  - DTFoundation/DTHTMLParser (1.7.10):
     - DTFoundation/Core
-  - DTFoundation/UIKit (1.7.8):
+  - DTFoundation/UIKit (1.7.10):
     - DTFoundation/Core
-  - DZNEmptyDataSet (1.7.2)
-  - Fabric (1.6.0):
-    - Fabric/Base (= 1.6.0)
-  - Fabric/Base (1.6.0)
+  - DZNEmptyDataSet (1.8)
+  - Fabric (1.6.7)
   - KGFloatingDrawer (0.2.0)
-  - Locksmith (2.0.1)
-  - ObjectMapper (0.17)
+  - Locksmith (2.0.8)
+  - ObjectMapper (1.3.0)
   - PDTSimpleCalendar (0.9.1)
-  - SDWebImage (3.7.3):
-    - SDWebImage/Core (= 3.7.3)
-  - SDWebImage/Core (3.7.3)
-  - SlackTextViewController (1.7.2)
+  - PureLayout (3.0.1)
+  - Realm (0.102.0):
+    - Realm/Headers (= 0.102.0)
+  - Realm/Headers (0.102.0)
+  - RealmSwift (0.102.0):
+    - Realm (= 0.102.0)
+  - SDWebImage (3.7.5):
+    - SDWebImage/Core (= 3.7.5)
+  - SDWebImage/Core (3.7.5)
+  - SlackTextViewController (1.9.2)
   - UIImage+Additions (2.1.0)
-  - youtube-ios-player-helper (0.1.5)
+  - youtube-ios-player-helper (0.1.6)
 
 DEPENDENCIES:
-  - Alamofire (= 2.0.2)
-  - AlamofireObjectMapper (= 1.0)
-  - Crashlytics
-  - CWStatusBarNotification (~> 2.3.3)
-  - DateTools
-  - DTCoreText
-  - DZNEmptyDataSet
-  - Fabric
-  - KGFloatingDrawer (from `https://github.com/ErikLuimes/KGFloatingDrawer.git`, tag
-    `0.2.0`)
-  - Locksmith (= 2.0.1)
-  - PDTSimpleCalendar
-  - SDWebImage (~> 3.7)
-  - SlackTextViewController
+  - Alamofire (= 3.3.1)
+  - AlamofireObjectMapper (= 3.0.0)
+  - Charts
+  - CocoaLumberjack/Swift (= 2.2.0)
+  - Crashlytics (= 3.7.0)
+  - CryptoSwift (= 0.3.1)
+  - CWStatusBarNotification (= 2.3.4)
+  - DateTools (= 1.7.0)
+  - DTCoreText (= 1.6.17)
+  - DZNEmptyDataSet (= 1.8)
+  - Fabric (= 1.6.7)
+  - KGFloatingDrawer (= 0.2.0)
+  - Locksmith (= 2.0.8)
+  - ObjectMapper
+  - PDTSimpleCalendar (= 0.9.1)
+  - PureLayout
+  - RealmSwift (= 0.102.0)
+  - SDWebImage (= 3.7.5)
+  - SlackTextViewController (= 1.9.2)
   - UIImage+Additions (= 2.1.0)
-  - youtube-ios-player-helper
-
-EXTERNAL SOURCES:
-  KGFloatingDrawer:
-    :git: https://github.com/ErikLuimes/KGFloatingDrawer.git
-    :tag: 0.2.0
-
-CHECKOUT OPTIONS:
-  KGFloatingDrawer:
-    :git: https://github.com/ErikLuimes/KGFloatingDrawer.git
-    :tag: 0.2.0
+  - youtube-ios-player-helper (= 0.1.6)
 
 SPEC CHECKSUMS:
-  Alamofire: 8edbab00802a752bb5240cc2abe70e7e881488ad
-  AlamofireObjectMapper: 4f9d766a4742bb69258921723bafc260849f216c
-  Crashlytics: 1ee87895c37472eb3f01f409ea1654a464d2f8d4
-  CWStatusBarNotification: 2349142e97c9f16fb8247ed3c00308cd355d334b
+  Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
+  AlamofireObjectMapper: 2d16585d06177be0116d76de73497e77437798af
+  Charts: a9e735c83c6d376ade20f6612dcf0ba217394a49
+  CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
+  Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
+  CryptoSwift: baf01e3fb3226c0155cd54c266be882b13d45d5e
+  CWStatusBarNotification: 3fec41edcb0ae3677d9febfcb9632d8bdf52294c
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
-  DTCoreText: 934a16fe9ffdd169c96261721b39dc312b75713d
-  DTFoundation: 46e2b2fafe78d67febfd8d1f85fe9845a093f00e
-  DZNEmptyDataSet: 0ec00bfc230d7450997b60c127afdd0b9f24f3b6
-  Fabric: d737eda3a26ac940a5430230eedb35f16b226131
+  DTCoreText: 3ea8bba23dd2141ba18adb227a7dd33a822df1c4
+  DTFoundation: 3b6b1b817d2a7fb02e7eaf2596c922a68145bd43
+  DZNEmptyDataSet: d2351b2e8daefa40433ef292e246e21f6be31a7b
+  Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   KGFloatingDrawer: b0c2810954bfb61f4d4dd01b8891d5c23933e368
-  Locksmith: 2c7bdc5c3a31a97d748791ad830310b1af4b8549
-  ObjectMapper: fa286b7cb5a398f1b0d8d64d0dd33fd1b307022c
+  Locksmith: a8ed41ac4c06506ea8cb199d8ec8a8d3d108eb2a
+  ObjectMapper: 4eb08a726e9791a93b2632049951b56a7c17e471
   PDTSimpleCalendar: d1c03387678422715dc021aa1a85d70f4d1014f2
-  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
-  SlackTextViewController: 1f4e8f68c156ef93de73fd422db2b8d5d5b0f4e7
+  PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
+  Realm: 5d219f9037e3ec2019c599b8227bfc95433cb10e
+  RealmSwift: e6f436f9fea1c57b9ad6d1c46d57562c845f3c4c
+  SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
+  SlackTextViewController: bac3350ccc639bc446bb14cbd09da238f5e01f32
   UIImage+Additions: 6181430b139099649e56171d58a52d6c37d57e42
-  youtube-ios-player-helper: 8706bb155ffee74fbe5f2f5cf41c2dafe60dc155
+  youtube-ios-player-helper: 21ab92db027c7ff86cb17a3843a3f6eafc8158d2
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 1bb4d1dc146c67a2656b02f84d1414ceff9cf640
+
+COCOAPODS: 1.0.0
