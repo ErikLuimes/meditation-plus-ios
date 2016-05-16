@@ -25,6 +25,7 @@
 
 import Foundation
 import UIKit
+import SDWebImage
 
 class VideoDataSource: NSObject, UITableViewDataSource
 {
@@ -48,8 +49,16 @@ class VideoDataSource: NSObject, UITableViewDataSource
             style.paragraphSpacing = 10
 
             cell.titleLabel.attributedText = NSAttributedString(string: video.title ?? "", attributes: [NSParagraphStyleAttributeName: style])
-            if video.thumbnail != nil {
-                cell.videoImageView.sd_setImageWithURL(video.thumbnail!)
+            if let imageUrl = video.thumbnail {
+                cell.videoImageView.sd_setImageWithURL(imageUrl, completed: { (image, error, cacheType, url) in
+                    if cacheType == SDImageCacheType.None {
+                        UIView.transitionWithView(cell.videoImageView, duration: 0.3, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+                            cell.videoImageView.image = image
+                        }, completion: nil)
+                    } else {
+                        cell.videoImageView.image = image
+                    }
+                })
             }
         }
 

@@ -120,7 +120,15 @@ public class MeditatorCell: UITableViewCell
         avatarImageView.layer.cornerRadius = avatarImageView.bounds.size.height / 2.0
 
         if let imageUrl = NSURL(meditator: meditator) {
-            avatarImageView.sd_setImageWithURL(imageUrl)
+            self.avatarImageView.sd_setImageWithURL(imageUrl, completed: { (image, error, cacheType, url) in
+                if cacheType == SDImageCacheType.None {
+                    UIView.transitionWithView(self.avatarImageView, duration: 0.3, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+                        self.avatarImageView.image = image
+                    }, completion: nil)
+                } else {
+                    self.avatarImageView.image = image
+                }
+            })
         } else {
             avatarImageView.image = nil
         }

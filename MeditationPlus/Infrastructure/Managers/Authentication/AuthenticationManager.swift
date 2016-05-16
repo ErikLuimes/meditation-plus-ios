@@ -31,7 +31,7 @@ import AlamofireObjectMapper
 public class AuthenticationManager
 {
     static let sharedInstance = AuthenticationManager()
-
+    
     var loggedInUser: User?
 
     var token: Token?
@@ -90,7 +90,18 @@ public class AuthenticationManager
             }
 
             self.token = response.result.value!
-            completion(self.loggedInUser!)
+            
+            ProfileService.sharedInstance.reloadProfileIfNeeded(username, forceReload: true)
+            {
+                (result) in
+                
+                if result.isSuccess() {
+                    completion(self.loggedInUser!)
+                } else {
+                    self.logout()
+                    failure?(error: result.error, errorString: "Failed retrieving profile")
+                }
+            }
         }
     }
 

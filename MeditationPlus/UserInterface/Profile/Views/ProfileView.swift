@@ -26,6 +26,7 @@
 import Foundation
 import UIKit
 import Charts
+import SDWebImage
 
 class ProfileView: UIView {
     @IBOutlet weak var profileBackgroundImageView: UIImageView!
@@ -90,8 +91,25 @@ class ProfileView: UIView {
         }
         
         if let avatarURL = NSURL(profile: profile) {
-            profileBackgroundImageView.sd_setImageWithURL(avatarURL)
-            profileImageView.sd_setImageWithURL(avatarURL)
+            profileBackgroundImageView.sd_setImageWithURL(avatarURL, completed: { (image, error, cacheType, url) in
+                if cacheType == SDImageCacheType.None {
+                    UIView.transitionWithView(self.profileBackgroundImageView, duration: 0.3, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+                        self.profileBackgroundImageView.image = image
+                    }, completion: nil)
+                } else {
+                    self.profileBackgroundImageView.image = image
+                }
+            })
+            
+            profileImageView.sd_setImageWithURL(avatarURL, completed: { (image, error, cacheType, url) in
+                if cacheType == SDImageCacheType.None {
+                    UIView.transitionWithView(self.profileBackgroundImageView, duration: 0.3, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+                        self.profileImageView.image = image
+                    }, completion: nil)
+                } else {
+                    self.profileImageView.image = image
+                }
+            })
         }
         
         usernameLabel.text = profile.username

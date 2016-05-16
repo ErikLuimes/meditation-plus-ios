@@ -13,7 +13,9 @@ import CocoaLumberjack
 
 protocol ProfileServiceProtocol
 {
-    func reloadProfileIfNeeded(name: String, forceReload: Bool) -> Bool
+    func reloadProfileIfNeeded(name: String, forceReload: Bool, completion: ((ServiceResult) -> Void)?) -> Bool
+    
+    func profile(username: String) -> Results<Profile>
     
     func profile(username: String, notificationBlock: (RealmCollectionChange<Results<Profile>> -> Void)) -> (NotificationToken, Results<Profile>)
 }
@@ -93,7 +95,7 @@ public class ProfileService: ProfileServiceProtocol
      
      - parameter forceReload: force reload of chat items
      */
-    public func reloadProfileIfNeeded(name: String, forceReload: Bool = false) -> Bool
+    public func reloadProfileIfNeeded(name: String, forceReload: Bool = false, completion: ((ServiceResult) -> Void)? = nil) -> Bool
     {
         let cacheKey    = "\(Profile.self)-\(name)".sha256()
         let needsUpdate = forceReload ? forceReload : cacheManager.needsUpdate(cacheKey, timeout: 360)
@@ -110,9 +112,12 @@ public class ProfileService: ProfileServiceProtocol
             case ApiResponse.Success(let model):
                 self.cacheManager.updateTimestampForCacheKey(cacheKey)
                 self.dataStore.addOrUpdateObject(model)
+                completion?(ServiceResult.Success)
             case ApiResponse.NoData(_):
+                completion?(ServiceResult.Success)
                 break
             case ApiResponse.Failure(let error):
+                completion?(ServiceResult.Failure(error))
                 DDLogError(error?.localizedDescription ?? "Failed retrieving 'Profile'")
             }
         }
@@ -133,5 +138,10 @@ public class ProfileService: ProfileServiceProtocol
         let token   = results.addNotificationBlock(notificationBlock)
         
         return (token, results)
+    }
+    
+    public func profile(username: String) -> Results<Profile>
+    {
+        return dataStore.profile(username)
     }
 }

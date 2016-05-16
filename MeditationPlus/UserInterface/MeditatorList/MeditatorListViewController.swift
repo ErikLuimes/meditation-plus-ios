@@ -43,6 +43,10 @@ class MeditatorListViewController: UIViewController
     
     private let meditatorService: MeditatorService = MeditatorService()
     
+    private let profileService: ProfileService = ProfileService.sharedInstance
+    
+    private let authenticationManager: AuthenticationManager = AuthenticationManager.sharedInstance
+    
     // MARK: Timing methods
     
     private var meditationProgressUpdateTimer: NSTimer?
@@ -107,6 +111,7 @@ class MeditatorListViewController: UIViewController
         registerForPreviewingWithDelegate(self, sourceView: meditatorView.tableView)
         
         setupMeditatorContentProvider()
+        
     }
     
     override func viewWillAppear(animated: Bool)
@@ -114,6 +119,10 @@ class MeditatorListViewController: UIViewController
         super.viewWillAppear(animated)
 
         UIApplication.sharedApplication().registerUserNotificationSettings(UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound], categories: nil))
+        
+        if let username = self.authenticationManager.loggedInUser?.username, profile = profileService.profile(username).first {
+            meditatorView.configureWithProfile(profile)
+        }
 
         timer.addDelegate(self)
 

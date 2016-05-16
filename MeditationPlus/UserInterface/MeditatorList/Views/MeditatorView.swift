@@ -24,6 +24,7 @@
 // THE SOFTWARE.
 
 import UIKit
+import SDWebImage
 
 class MeditatorView: UIView
 {
@@ -68,9 +69,6 @@ class MeditatorView: UIView
         tableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 49, 0.0)
         tableView.tableFooterView = UIView()
 
-        if let avatarURL = NSUserDefaults.standardUserDefaults().URLForKey("avatar") {
-            profileImageView.sd_setImageWithURL(avatarURL)
-        }
 
         profileImageView.clipsToBounds = true
         profileImageView.layer.borderColor = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
@@ -104,6 +102,21 @@ class MeditatorView: UIView
             () -> Void in
             self.layoutIfNeeded()
         }, completion: nil)
+    }
+    
+    func configureWithProfile(profile: Profile)
+    {
+        if let imageUrl = profile.avatar {
+            self.profileImageView.sd_setImageWithURL(imageUrl, completed: { (image, error, cacheType, url) in
+                if cacheType == SDImageCacheType.None {
+                    UIView.transitionWithView(self.profileImageView, duration: 0.3, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+                        self.profileImageView.image = image
+                    }, completion: nil)
+                } else {
+                    self.profileImageView.image = image
+                }
+            })
+        }
     }
 
     override func layoutSubviews()
