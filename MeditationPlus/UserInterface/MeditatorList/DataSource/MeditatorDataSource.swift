@@ -100,6 +100,7 @@ public class MeditatorDataSource: NSObject, UITableViewDataSource
         let previousSectionCount: [Int] = sections.map( { $0.items.count } )
         
         guard previousSectionCount.reduce(0, combine: +) > 0 else {
+            updateSections()
             tableView.reloadData()
             return
         }
