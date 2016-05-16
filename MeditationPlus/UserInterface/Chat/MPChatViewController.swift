@@ -454,7 +454,6 @@ extension MPChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
     {
         return true
     }
-    
 }
 
 // MARK: - UIViewControllerPreviewingDelegate
@@ -463,27 +462,36 @@ extension MPChatViewController: UIViewControllerPreviewingDelegate
 {
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController?
     {
-        guard location.x < 90 else {
-            return nil
-        }
         
         var viewController: UIViewController?
         
-        if let indexPath = tableView?.indexPathForRowAtPoint(location) {
-            guard indexPath.row < chatResults?.count ?? 0 else {
-                return nil
-            }
+        guard let indexPath = tableView?.indexPathForRowAtPoint(location) else {
+            return nil
+        }
+        
+        guard indexPath.row < chatResults?.count ?? 0 else {
+            return nil
+        }
+        
+        // There are 2 different message cells, 'Other' should be clickable on the left side, 'Own' on the right
+        if let cell: MPMessageCell = tableView?.cellForRowAtIndexPath(indexPath) as? MPMessageCell {
+            let tappableXMargin: CGFloat = 90
             
-            if let cell: MPMessageCell = tableView?.cellForRowAtIndexPath(indexPath) as? MPMessageCell {
-                if cell.type == MessageCellType.Own {
+            switch cell.type {
+            case .Own:
+                guard location.x > UIScreen.mainScreen().bounds.width - tappableXMargin else {
+                    return nil
+                }
+            case .Other:
+                guard location.x < tappableXMargin else {
                     return nil
                 }
             }
-            
-            if let chatItem = chatResults?[indexPath.row] {
-                previewingContext.sourceRect = tableView!.rectForRowAtIndexPath(indexPath)
-                viewController = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, username: chatItem.username)
-            }
+        }
+        
+        if let chatItem = chatResults?[indexPath.row] {
+            previewingContext.sourceRect = tableView!.rectForRowAtIndexPath(indexPath)
+            viewController               = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, username: chatItem.username)
         }
         
         return viewController
