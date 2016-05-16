@@ -15,6 +15,11 @@ protocol ChatDataStoreProtocol
 
 extension DataStore: ChatDataStoreProtocol
 {
+    /**
+     Returns a list of usernames of chat items that have no associated profile
+     
+     - parameter completion: Block that returns a 'Set' of usernames
+     */
     public mutating func usernamesWithoutProfile(completion: (Set<String>) -> Void) {
         performBackgroundBlock
             { (backgroundRealm) in

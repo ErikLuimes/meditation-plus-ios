@@ -162,15 +162,10 @@ class MeditatorListViewController: UIViewController
 
             switch changes {
             case .Initial(_):
-                self.meditatorDataSource?.updateCache()
+                self.meditatorDataSource?.updateSections()
                 self.meditatorView.tableView.reloadData()
-            case .Update(_ , _, _, _):
-                if (self.meditatorDataSource?.hasData())! {
-                    self.meditatorDataSource?.checkMeditatorProgress(self.meditatorView.tableView)
-                } else {
-                    self.meditatorDataSource?.updateCache()
-                    self.meditatorView.tableView.reloadData()
-                }
+            case .Update(_,_,_,_):
+                self.meditatorDataSource?.update(self.meditatorView.tableView)
                 
                 for cell in self.meditatorView.tableView.visibleCells where cell is MeditatorCell
                 {
@@ -184,7 +179,7 @@ class MeditatorListViewController: UIViewController
     
     func refreshMeditators(refreshControl: UIRefreshControl)
     {
-        meditatorService.reloadMeditatorsIfNeeded(true)
+        meditatorContentProvider.fetchContentIfNeeded(forceReload: true)
     }
     
     func meditationProgressTimerTick()

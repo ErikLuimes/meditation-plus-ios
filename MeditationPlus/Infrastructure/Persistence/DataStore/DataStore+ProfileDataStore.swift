@@ -16,6 +16,13 @@ protocol ProfileDataStoreProtocol
 
 extension DataStore: ProfileDataStoreProtocol
 {
+    /**
+     Returns the profile by username
+     
+     - parameter username: username
+     
+     - returns: Result set with profile data
+     */
     public func profile(username: String) -> Results<Profile>
     {
         let predicate = NSPredicate(format: "username = %@", username)

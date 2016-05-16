@@ -74,9 +74,7 @@ class ChatViewController: SLKTextViewController {
     {
         super.viewDidLoad()
 
-        if traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
-            registerForPreviewingWithDelegate(self, sourceView: tableView!)
-        }
+        registerForPreviewingWithDelegate(self, sourceView: tableView!)
         
         configure()
     }
@@ -103,6 +101,7 @@ class ChatViewController: SLKTextViewController {
         super.viewWillDisappear(animated)
 
         stopChatUpdateTimer()
+        parentViewController?.navigationItem.setRightBarButtonItem(nil, animated: true)
     }
 
 }

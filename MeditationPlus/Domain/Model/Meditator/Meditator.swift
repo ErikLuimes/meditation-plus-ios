@@ -32,14 +32,16 @@ public class Meditator: Object, Mappable
     dynamic public var sid: String = ""
     dynamic public var username: String = ""
     dynamic public var avatarString: String?
+    dynamic public var country: String?
+    dynamic public var me: Bool = false
+    
     dynamic public var start: NSDate?
     dynamic public var end: NSDate?
+    
     public let timeDiff: RealmOptional<Double> = RealmOptional<Double>()
     public let walkingMinutes: RealmOptional<Int> = RealmOptional<Int>()
     public let sittingMinutes: RealmOptional<Int> = RealmOptional<Int>()
     public let anumodana: RealmOptional<Int> = RealmOptional<Int>()
-    dynamic public var country: String?
-    dynamic public var me: Bool = false
     
     lazy public var avatar: NSURL? = {
         guard self.avatarString != nil else {
@@ -61,7 +63,7 @@ public class Meditator: Object, Mappable
     
     override public class func indexedProperties() -> [String]
     {
-        return ["username", "me", "country"]
+        return ["username", "me", "country", "start"]
     }
     
     override public class func ignoredProperties() -> [String]
@@ -71,16 +73,16 @@ public class Meditator: Object, Mappable
     
     public func mapping(map: Map)
     {
-        self.sid <- map["sid"]
-        self.username <- map["username"]
-        self.avatarString <- map["avatar"]
+        self.sid                  <- map["sid"]
+        self.username             <- map["username"]
+        self.avatarString         <- map["avatar"]
         self.walkingMinutes.value <- (map["walking"], ValueTransform.transformIntString())
         self.sittingMinutes.value <- (map["sitting"], ValueTransform.transformIntString())
-        self.anumodana.value <- (map["anumodana"], ValueTransform.transformIntString())
-        self.country <- map["country"]
-        self.start <- (map["start"], ValueTransform.transformDateEpochString())
-        self.end <- (map["end"], ValueTransform.transformDateEpochString())
-        self.me <- (map["me"], ValueTransform.transformBoolString())
+        self.anumodana.value      <- (map["anumodana"], ValueTransform.transformIntString())
+        self.country              <- map["country"]
+        self.start                <- (map["start"], ValueTransform.transformDateEpochString())
+        self.end                  <- (map["end"], ValueTransform.transformDateEpochString())
+        self.me                   <- (map["me"], ValueTransform.transformBoolString())
 
         if let startDate = self.start, endDate: NSDate = self.end {
             self.timeDiff.value = endDate.timeIntervalSinceDate(startDate)

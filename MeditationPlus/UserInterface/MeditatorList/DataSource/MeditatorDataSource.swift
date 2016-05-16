@@ -51,7 +51,7 @@ public class MeditatorDataSource: NSObject, UITableViewDataSource
         return sections.map { $0.items.count }.reduce(0, combine: +) > 0
     }
     
-    public func updateCache()
+    public func updateSections()
     {
         sections[MeditatorSectionData.Meditating.rawValue].items.removeAll()
         sections[MeditatorSectionData.Finished.rawValue].items.removeAll()
@@ -95,10 +95,40 @@ public class MeditatorDataSource: NSObject, UITableViewDataSource
         return sections[indexPath.section].items[indexPath.row]
     }
     
+    func update(tableView: UITableView)
+    {
+        var previousSectionCount: [Int] = sections.map( { $0.items.count } )
+        
+        guard previousSectionCount.reduce(0, combine: +) > 0 else {
+            tableView.reloadData()
+            return
+        }
+        
+        updateSections()
+        
+        var currentSectionCount: [Int] = sections.map( { $0.items.count } )
+        
+        guard currentSectionCount.count == previousSectionCount.count else {
+            return
+        }
+        
+        tableView.beginUpdates()
+        
+        for (section, itemCount) in previousSectionCount.enumerate() {
+            if itemCount == currentSectionCount[section] {
+                tableView.reloadRowsAtIndexPaths(Array<Int>(0..<itemCount).map { NSIndexPath(forRow: $0, inSection: section) }, withRowAnimation: .Automatic)
+            } else {
+                tableView.reloadSections(NSIndexSet(index: section), withRowAnimation: UITableViewRowAnimation.Automatic)
+            }
+        }
+        
+        tableView.endUpdates()
+    }
+    
     func checkMeditatorProgress(tableView: UITableView)
     {
         var indexPathsToDelete: [NSIndexPath] = [NSIndexPath]()
-        var meditatorsToMove: [Meditator]   = [Meditator]()
+        var meditatorsToMove: [Meditator]     = [Meditator]()
         var indexPathsToAdd: [NSIndexPath]    = [NSIndexPath]()
 
         for (index, currentlyMeditating) in sections[0].items.enumerate() {

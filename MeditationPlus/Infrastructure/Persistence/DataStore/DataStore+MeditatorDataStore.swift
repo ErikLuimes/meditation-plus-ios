@@ -16,11 +16,22 @@ protocol MeditatorDataStoreProtocol
 
 extension DataStore: MeditatorDataStoreProtocol
 {
+    /**
+     List of people who have been meditating
+     
+     - returns: Result set of meditators ordered by start date of their meditation
+     */
     public func meditators() -> Results<Meditator>
     {
-        return mainRealm.objects(Meditator)
+        return mainRealm.objects(Meditator).sorted("start", ascending: false)
     }
     
+    /**
+     Synchronizes the list of meditators, the api is leading so meditators that are not retrieved
+     through the latest api call will be removed from the database
+     
+     - parameter meditators: Newly retrieved meditators
+     */
     public func syncMeditators(meditators: [Meditator])
     {
         performWriteBlock
