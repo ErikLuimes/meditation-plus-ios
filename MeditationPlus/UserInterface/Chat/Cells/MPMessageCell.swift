@@ -15,9 +15,14 @@ protocol MPMessageCellDelegate: NSObjectProtocol
     func didPressReportButton(button: UIButton, chatItem: MPChatItem?)
 }
 
+enum MessageCellType
+{
+    case Own
+    case Other
+}
+
 class MPMessageCell: UITableViewCell
 {
-
     @IBOutlet weak var messageLabel: UITextView!
     @IBOutlet weak var authorLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
@@ -25,6 +30,8 @@ class MPMessageCell: UITableViewCell
 
     weak var delegate: MPMessageCellDelegate?
 
+    var type: MessageCellType = .Other
+    
     private var chatItem: MPChatItem?
 
     override func prepareForReuse()
@@ -32,9 +39,18 @@ class MPMessageCell: UITableViewCell
         avatarImageView.image = nil
         chatItem = nil
     }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
 
     func configureWithChatItem(chatItem: MPChatItem)
     {
+        guard !chatItem.invalidated else {
+            self.chatItem = nil
+            return
+        }
+        
         self.chatItem = chatItem
 
         authorLabel.text = (chatItem.username)

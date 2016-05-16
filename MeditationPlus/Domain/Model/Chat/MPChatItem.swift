@@ -39,6 +39,10 @@ public class MPChatItem: Object, Mappable
     dynamic public var country: String?
     dynamic public var me: Bool = false
     dynamic public var attributedTextData: NSData?
+    
+    
+    // TODO: Persist profile
+    //   dynamic public var profile: MPProfile?
     lazy public var profile: Results<MPProfile> = {
         return dataStore.mainRealm.objects(MPProfile.self).filter("username = %@", self.username)
     }()
@@ -51,7 +55,6 @@ public class MPChatItem: Object, Mappable
         return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSAttributedString
     }()
     
-//    public var profile: MPProfile?
     lazy public var avatarURL: NSURL? = {
         return self.profile.first?.avatar
     }()
@@ -89,14 +92,14 @@ public class MPChatItem: Object, Mappable
 
     public func mapping(map: Map)
     {
-        uid <- map["uid"]
-        cid <- map["cid"]
-        username <- map["username"]
-        message <- map["message"]
-        time <- (map["time"], MPValueTransform.transformDateEpochString())
+        uid       <- map["uid"]
+        cid       <- map["cid"]
+        username  <- map["username"]
+        message   <- map["message"]
+        time      <- (map["time"], MPValueTransform.transformDateEpochString())
         timestamp <- map["time"]
-        country <- map["country"]
-        me <- (map["me"], MPValueTransform.transformBoolString())
+        country   <- map["country"]
+        me        <- (map["me"], MPValueTransform.transformBoolString())
 
         createAttributedText()
     }
@@ -128,6 +131,5 @@ public class MPChatItem: Object, Mappable
 
             attributedTextData = NSKeyedArchiver.archivedDataWithRootObject(attributedString)
         }
-
     }
 }

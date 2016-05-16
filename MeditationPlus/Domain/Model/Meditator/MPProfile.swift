@@ -27,6 +27,23 @@ import RealmSwift
 
 extension NSURL
 {
+    public convenience init?(meditator: MPMeditator)
+    {
+        guard let avatarString = meditator.avatarString else {
+            self.init(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")
+            return
+        }
+    
+        if avatarString.rangeOfString("@") != nil {
+            let emailhash = avatarString.lowercaseString.md5()
+            self.init(string: "http://www.gravatar.com/avatar/\(emailhash)?d=mm&s=140")!
+        } else if avatarString.characters.count > 0 {
+            self.init(string: avatarString)
+        } else {
+            self.init(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")
+        }
+    }
+    
     public convenience init?(profile: MPProfile)
     {
         if let img = profile.img where img.characters.count > 0 {
@@ -50,6 +67,7 @@ public class MPProfile: Object, Mappable
 {
     public dynamic var uid: String = ""
     public dynamic var username: String = ""
+    public dynamic var about: String?
     public dynamic var email: String?
     public dynamic var hoursData: NSData?
     public dynamic var img: String?
@@ -92,6 +110,7 @@ public class MPProfile: Object, Mappable
     {
         uid <- map["uid"]
         username <- map["username"]
+        about <- map["description"]
         email <- map["email"]
         hoursData <- (map["hours"], MPValueTransform.transformNSDataArray())
         img <- map["img"]

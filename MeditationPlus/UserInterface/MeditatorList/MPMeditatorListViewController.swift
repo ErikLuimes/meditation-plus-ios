@@ -28,43 +28,6 @@ import DZNEmptyDataSet
 import RealmSwift
 import CocoaLumberjack
 
-extension RealmCollectionChange
-{
-    public func isSuccess() -> Bool
-    {
-        switch self {
-        case .Initial, .Update:
-            return true
-        default:
-            return false
-        }
-    }
-    
-    public func isFailure() -> Bool
-    {
-        return !isSuccess()
-    }
-    
-    public var results: T? {
-        switch self {
-        case .Initial(let results):
-            return results
-        case .Update(let results, _, _, _):
-            return results
-        default:
-            return nil
-        }
-    }
-    
-    public var error: NSError? {
-        if case .Error(let error) = self {
-            return error
-        } else {
-            return nil
-        }
-    }
-}
-
 class MPMeditatorListViewController: UIViewController
 {
     private var meditatorView: MPMeditatorView
@@ -72,23 +35,31 @@ class MPMeditatorListViewController: UIViewController
         return view as! MPMeditatorView
     }
     
+    // MARK: Service content providers
+    
+    private var meditatorDataSource: MeditatorDataSource?
+    
+    private var meditatorContentProvider: MeditatorContentProvider!
+    
     private let meditatorService: MeditatorService = MeditatorService()
     
-    private var meditatorNotificationToken: NotificationToken!
-
+    // MARK: Timing methods
+    
+    private var meditationProgressUpdateTimer: NSTimer?
+    
     private let timer = MPMeditationTimer.sharedInstance
-
-    private var meditatorDataSource: MeditatorDataSource?
 
     private let timerDataSource = MPTimerDataSource()
 
-    private var meditationProgressUpdateTimer: NSTimer?
-
     // Current meditation times
+    
     private var sittingTimeInMinutes: Int?
 
     private var walkingTimeInMinutes: Int?
-
+    
+    
+    // MARK: Init
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -96,6 +67,8 @@ class MPMeditatorListViewController: UIViewController
         tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "BuddhaIcon"), tag: 0)
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MPMeditatorListViewController.willEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
+        
+        meditatorContentProvider = MeditatorContentProvider(meditatorService: meditatorService)
     }
 
     required init?(coder aDecoder: NSCoder)
@@ -107,18 +80,20 @@ class MPMeditatorListViewController: UIViewController
     {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
+    
+    // MARK: View life cycle
 
     override func viewDidLoad()
     {
         super.viewDidLoad()
 
-        meditatorView.tableView.delegate = self
-        meditatorView.tableView.emptyDataSetSource = self
+        meditatorView.tableView.delegate             = self
+        meditatorView.tableView.emptyDataSetSource   = self
         meditatorView.tableView.emptyDataSetDelegate = self
         meditatorView.refreshControl.addTarget(self, action: #selector(MPMeditatorListViewController.refreshMeditators(_:)), forControlEvents: UIControlEvents.ValueChanged)
 
         meditatorView.meditationPickerView.dataSource = timerDataSource
-        meditatorView.meditationPickerView.delegate = self
+        meditatorView.meditationPickerView.delegate   = self
 
         if timer.state != .Stopped {
             timer.cancelTimer()
@@ -128,6 +103,10 @@ class MPMeditatorListViewController: UIViewController
 
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("walkingMeditationTimeId"), inComponent: 0, animated: true)
         meditatorView.meditationPickerView.selectRow(NSUserDefaults.standardUserDefaults().integerForKey("sittingMeditationTimeId"), inComponent: 2, animated: true)
+        
+        registerForPreviewingWithDelegate(self, sourceView: meditatorView.tableView)
+        
+        setupMeditatorContentProvider()
     }
     
     override func viewWillAppear(animated: Bool)
@@ -148,8 +127,7 @@ class MPMeditatorListViewController: UIViewController
 
         meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(MPMeditatorListViewController.meditationProgressTimerTick), userInfo: nil, repeats: true)
 
-        meditatorService.reloadMeditatorsIfNeeded()
-        enableMeditatorNotification()
+        meditatorContentProvider.fetchContentIfNeeded()
     }
 
     override func viewWillDisappear(animated: Bool)
@@ -161,27 +139,39 @@ class MPMeditatorListViewController: UIViewController
         meditationProgressUpdateTimer?.invalidate()
         meditationProgressUpdateTimer = nil
         
-        disableMeditatorNotification()
+        meditatorContentProvider.disableNotification()
     }
     
-    private func enableMeditatorNotification()
+    // MARK: Data handling
+    
+    private func setupMeditatorContentProvider()
     {
-        guard self.meditatorNotificationToken == nil else {
-            return
+        meditatorContentProvider.resultsBlock = {
+            (results: Results<MPMeditator>) in
+            
+            if self.meditatorDataSource == nil {
+                self.meditatorDataSource = MeditatorDataSource(results: results)
+                self.meditatorView.tableView.dataSource = self.meditatorDataSource
+            }
         }
         
-        let (meditatorNotificationToken, results) = meditatorService.meditators()
-        {
-            (changes: RealmCollectionChange<Results<MPMeditator>>) in
+        meditatorContentProvider.notificationBlock = {
+            (changes:  RealmCollectionChange<Results<MPMeditator>>) in
             
             self.meditatorView.refreshControl.endRefreshing()
-            
+
             switch changes {
             case .Initial(_):
                 self.meditatorDataSource?.updateCache()
                 self.meditatorView.tableView.reloadData()
             case .Update(_ , _, _, _):
-                self.meditatorDataSource?.checkMeditatorProgress(self.meditatorView.tableView)
+                if (self.meditatorDataSource?.hasData())! {
+                    self.meditatorDataSource?.checkMeditatorProgress(self.meditatorView.tableView)
+                } else {
+                    self.meditatorDataSource?.updateCache()
+                    self.meditatorView.tableView.reloadData()
+                }
+                
                 for cell in self.meditatorView.tableView.visibleCells where cell is MPMeditatorCell
                 {
                     (cell as! MPMeditatorCell).updateProgressIndicatorIfNeeded()
@@ -190,21 +180,8 @@ class MPMeditatorListViewController: UIViewController
                 DDLogError(error.localizedDescription)
             }
         }
-        
-        self.meditatorNotificationToken = meditatorNotificationToken
-        
-        if meditatorDataSource == nil {
-            meditatorDataSource = MeditatorDataSource(results: results)
-            meditatorView.tableView.dataSource = meditatorDataSource
-        }
     }
-
-    private func disableMeditatorNotification()
-    {
-        meditatorNotificationToken?.stop()
-        meditatorNotificationToken = nil
-    }
-
+    
     func refreshMeditators(refreshControl: UIRefreshControl)
     {
         meditatorService.reloadMeditatorsIfNeeded(true)
@@ -275,6 +252,8 @@ class MPMeditatorListViewController: UIViewController
     }
 }
 
+// MARK: - UITableViewDelegate
+
 extension MPMeditatorListViewController: UITableViewDelegate
 {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
@@ -304,7 +283,30 @@ extension MPMeditatorListViewController: UITableViewDelegate
         view.textLabel?.textColor = UIColor.darkGrayColor()
         return view
     }
+    
+    func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath?
+    {
+        return nil
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    {
+        if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath) {
+            let viewController = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, username: meditator.username)
+            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+    }
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        (cell as? MPMeditatorCell)?.delegate = self
+    }
+    
+    func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        (cell as? MPMeditatorCell)?.delegate = nil
+    }
 }
+
+// MARK: - UIPickerViewDelegate
 
 extension MPMeditatorListViewController: UIPickerViewDelegate
 {
@@ -351,9 +353,10 @@ extension MPMeditatorListViewController: UIPickerViewDelegate
 
 }
 
+// MARK: - MPMeditationTimerDelegate
+
 extension MPMeditatorListViewController: MPMeditationTimerDelegate
 {
-    // MARK: MPMeditationTimerDelegate
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStartWithState state: MPMeditationState)
     {
@@ -388,13 +391,10 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
             let minutes = totalTimeLeft / 60 % 60
             meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d", Int(hours), Int(minutes), Int(seconds))
         }
-
-//        NSLog("type: \(type), progress: \(progress), timeLeft: \(timeLeft), totalTimeLeft: \(totalTimeLeft)")
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didChangeMeditationFromType fromType: MPMeditationType, toType: MPMeditationType)
     {
-//        NSLog("didChange meditation type")
     }
 
     func meditationTimer(meditationTimer: MPMeditationTimer, didStopWithState state: MPMeditationState)
@@ -414,10 +414,10 @@ extension MPMeditatorListViewController: MPMeditationTimerDelegate
     }
 }
 
+// MARK: - DZNEmptyDataSet
 
 extension MPMeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate
 {
-    // MARK: DZNEmptyDataSetDelegate
 
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
     {
@@ -440,5 +440,45 @@ extension MPMeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetD
     func emptyDataSetShouldAnimateImageView(scrollView: UIScrollView!) -> Bool
     {
         return true
+    }
+}
+
+// MARK: - UIViewControllerPreviewingDelegate
+
+extension MPMeditatorListViewController: UIViewControllerPreviewingDelegate
+{
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController?
+    {
+        var viewController: UIViewController?
+        
+        if let indexPath = meditatorView.tableView.indexPathForRowAtPoint(location) {
+            if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath) {
+                previewingContext.sourceRect = meditatorView.tableView.rectForRowAtIndexPath(indexPath)
+                viewController = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, username: meditator.username)
+            }
+        }
+        
+        return viewController
+    }
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController)
+    {
+        navigationController?.pushViewController(viewControllerToCommit, animated: true)
+    }
+}
+
+extension MPMeditatorListViewController: MeditatorCellDelegate
+{
+    func cell(cell: MPMeditatorCell, didTapInfoButton button: UIButton)
+    {
+        guard let indexPath = self.meditatorView.tableView.indexPathForCell(cell) else {
+            return
+        }
+        
+        if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath)
+        {
+            let viewController = MPProfileViewController(nibName: "MPProfileViewController", bundle: nil, username: meditator.username)
+            navigationController?.pushViewController(viewController, animated: true)
+        }
     }
 }
