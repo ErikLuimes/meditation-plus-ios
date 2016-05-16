@@ -297,8 +297,10 @@ extension MPChatViewController
                 let chatItem = chatResults[indexPath.row]
                 if chatItem.me ?? false {
                     cell = tableView.dequeueReusableCellWithIdentifier(self.ownChatCellIdentifier, forIndexPath: indexPath)
+                    (cell as? MPMessageCell)?.type = MessageCellType.Own
                 } else {
                     cell = tableView.dequeueReusableCellWithIdentifier(self.otherChatCellIdentifier, forIndexPath: indexPath)
+                    (cell as? MPMessageCell)?.type = MessageCellType.Other
                 }
 
                 if cell is MPMessageCell {
@@ -443,11 +445,21 @@ extension MPChatViewController: UIViewControllerPreviewingDelegate
 {
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController?
     {
+        guard location.x < 90 else {
+            return nil
+        }
+        
         var viewController: UIViewController?
         
         if let indexPath = tableView?.indexPathForRowAtPoint(location) {
             guard indexPath.row < chatResults?.count ?? 0 else {
                 return nil
+            }
+            
+            if let cell: MPMessageCell = tableView?.cellForRowAtIndexPath(indexPath) as? MPMessageCell {
+                if cell.type == MessageCellType.Own {
+                    return nil
+                }
             }
             
             if let chatItem = chatResults?[indexPath.row] {

@@ -111,7 +111,6 @@ class MPProfileView: UIView {
         chartDataSet.colors = [UIColor.orangeColor()]
         let chartData = BarChartData(xVals: xVals, dataSet: chartDataSet)
         barChartView.data = chartData
-//        barChartView.setVisibleXRangeMaximum(8)
         barChartView.animate(xAxisDuration: 0.3, easingOption: ChartEasingOption.EaseInOutSine)
         barChartView.zoomAndCenterViewAnimated(scaleX: 3, scaleY: 1, xIndex: 0, yValue: 0, axis: ChartYAxis.AxisDependency.Left, duration: 1.0)
     }
