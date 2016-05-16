@@ -13,12 +13,13 @@ import Crashlytics
 
 public class SetupManager
 {
-    
     static public func setup() -> Void
     {
         setupLogging()
         setupCrashlytics()
         updateSettingsPage()
+        setupDefaults()
+        setupMeditationTimer()
     }
     
     static private func setupLogging() -> Void
@@ -31,14 +32,14 @@ public class SetupManager
     
     static private func setupCrashlytics() -> Void
     {
-        let sendCrashesValue: NSNumber? = NSUserDefaults.standardUserDefaults().objectForKey("MICrashReportingPreference") as? NSNumber
+        let sendCrashesValue: NSNumber? = NSUserDefaults.standardUserDefaults().objectForKey("CrashReportingPreference") as? NSNumber
         let sendCrashes = (sendCrashesValue == nil) || (sendCrashesValue!.boolValue == true)
         
         DDLogInfo("Send crashlogs: \(sendCrashes)")
         
         if (sendCrashes) {
             Fabric.with([Crashlytics.sharedInstance()])
-            NSUserDefaults.standardUserDefaults().setValue(NSNumber(bool: true), forKey: "MICrashReportingPreference")
+            NSUserDefaults.standardUserDefaults().setValue(NSNumber(bool: true), forKey: "CrashReportingPreference")
         }
     }
     
@@ -47,8 +48,23 @@ public class SetupManager
         let versionNumber = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
         let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as! String
         
-        NSUserDefaults.standardUserDefaults().setValue("\(versionNumber) (\(buildNumber))", forKey: "EIApplicationVersion")
+        NSUserDefaults.standardUserDefaults().setValue("\(versionNumber) (\(buildNumber))", forKey: "ApplicationVersion")
         
         DDLogInfo("Version: \(versionNumber) (\(buildNumber))")
+    }
+    
+    static private func setupDefaults()
+    {
+        NSUserDefaults.standardUserDefaults().registerDefaults([
+            "rememberPassword": false,
+            "walkingMeditationTimeId": 6,
+            "sittingMeditationTimeId": 6
+        ])
+    }
+
+    static private func setupMeditationTimer()
+    {
+        MeditationTimer.sharedInstance.addDelegate(AudioPlayerManager.sharedInstance)
+        MeditationTimer.sharedInstance.addDelegate(IdleTimeoutMeditationTimerDelegate.sharedInstance)
     }
 }

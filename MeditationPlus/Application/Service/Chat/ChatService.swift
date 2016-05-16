@@ -15,7 +15,7 @@ protocol ChatServiceProtocol
 {
     func reloadChatItemsIfNeeded(forceReload: Bool) -> Bool
     
-    func chatItems(notificationBlock: (RealmCollectionChange<Results<MPChatItem>> -> Void)) -> (NotificationToken, Results<MPChatItem>)
+    func chatItems(notificationBlock: (RealmCollectionChange<Results<ChatItem>> -> Void)) -> (NotificationToken, Results<ChatItem>)
 }
 
 public class ChatService: ChatServiceProtocol
@@ -26,14 +26,14 @@ public class ChatService: ChatServiceProtocol
     
     private var cacheManager: CacheManager!
     
-    private var authenticationManager: MTAuthenticationManager
+    private var authenticationManager: AuthenticationManager
     
     convenience init()
     {
-        self.init(apiClient: ChatApiClient(), dataStore: DataStore(), cacheManager: CacheManager(), authenticationManager: MTAuthenticationManager.sharedInstance)
+        self.init(apiClient: ChatApiClient(), dataStore: DataStore(), cacheManager: CacheManager(), authenticationManager: AuthenticationManager.sharedInstance)
     }
     
-    public init(apiClient: ChatApiClientProtocol, dataStore: DataStore, cacheManager: CacheManager, authenticationManager: MTAuthenticationManager)
+    public init(apiClient: ChatApiClientProtocol, dataStore: DataStore, cacheManager: CacheManager, authenticationManager: AuthenticationManager)
     {
         self.apiClient = apiClient
         self.dataStore = dataStore
@@ -48,7 +48,7 @@ public class ChatService: ChatServiceProtocol
      */
     public func reloadChatItemsIfNeeded(forceReload: Bool = false) -> Bool
     {
-        let cacheKey    = String(MPChatItem.self).sha256()
+        let cacheKey    = String(ChatItem.self).sha256()
         let needsUpdate = forceReload ? forceReload : cacheManager.needsUpdate(cacheKey, timeout: 360)
         
         guard needsUpdate else {
@@ -63,7 +63,7 @@ public class ChatService: ChatServiceProtocol
         
         apiClient.loadChatItems(username, lastChatTimestamp: lastChatTimestamp)
         {
-            (response: ApiResponse<[MPChatItem]>) in
+            (response: ApiResponse<[ChatItem]>) in
             
             switch response {
             case ApiResponse.Success(let model):
@@ -90,7 +90,7 @@ public class ChatService: ChatServiceProtocol
         
         apiClient.postMessage(username, message: message, lastChatTimestamp: lastChatTimestamp)
         {
-            (response: ApiResponse<[MPChatItem]>) in
+            (response: ApiResponse<[ChatItem]>) in
             
             switch response {
             case ApiResponse.Success(let model):
@@ -112,7 +112,7 @@ public class ChatService: ChatServiceProtocol
      
      - returns: returns a tuple with a `NotificationToken` and realm `Results`
      */
-    public func chatItems(notificationBlock: (RealmCollectionChange<Results<MPChatItem>> -> Void)) -> (NotificationToken, Results<MPChatItem>)
+    public func chatItems(notificationBlock: (RealmCollectionChange<Results<ChatItem>> -> Void)) -> (NotificationToken, Results<ChatItem>)
     {
         let results = dataStore.chatItems
         let token   = results.addNotificationBlock(notificationBlock)

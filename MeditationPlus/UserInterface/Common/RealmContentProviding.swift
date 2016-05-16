@@ -25,9 +25,9 @@ protocol RealmContentProviding
 
 public struct MeditatorContentProvider: RealmContentProviding
 {
-    var notificationBlock: ((changes: RealmCollectionChange<Results<MPMeditator>>) -> Void)?
+    var notificationBlock: ((changes: RealmCollectionChange<Results<Meditator>>) -> Void)?
     
-    var resultsBlock: ((results: Results<MPMeditator>) -> Void)?
+    var resultsBlock: ((results: Results<Meditator>) -> Void)?
     
     private let meditatorService: MeditatorService!
     

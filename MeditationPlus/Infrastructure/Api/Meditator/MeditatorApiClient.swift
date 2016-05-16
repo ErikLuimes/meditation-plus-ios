@@ -13,16 +13,16 @@ import ObjectMapper
 
 public protocol MeditatorApiClientProtocol
 {
-    func loadMeditators(username: String, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
+    func loadMeditators(username: String, completionBlock: (ApiResponse<[Meditator]>) -> Void)
     
-    func startMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
+    func startMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[Meditator]>) -> Void)
     
-    func cancelMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
+    func cancelMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[Meditator]>) -> Void)
 }
 
 public class MeditatorApiClient: BaseApiClient, MeditatorApiClientProtocol
 {
-    public func loadMeditators(username: String, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
+    public func loadMeditators(username: String, completionBlock: (ApiResponse<[Meditator]>) -> Void)
     {
         let endpoint = "http://meditation.sirimangalo.org/db.php"
         // Always post 'last_chat' date so that no chat data is returned
@@ -32,7 +32,7 @@ public class MeditatorApiClient: BaseApiClient, MeditatorApiClientProtocol
     }
     
     
-    public func startMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
+    public func startMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[Meditator]>) -> Void)
     {
         let endpoint = "http://meditation.sirimangalo.org/db.php"
         var parameters: [String:String] = [
@@ -49,7 +49,7 @@ public class MeditatorApiClient: BaseApiClient, MeditatorApiClientProtocol
         super.loadArray(Alamofire.Method.POST, endpoint, parameters: parameters, keyPath: "list", completionBlock: completionBlock)
     }
     
-    public func cancelMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[MPMeditator]>) -> Void)
+    public func cancelMeditation(username: String, token: String, sittingTimeInMinutes: Int?, walkingTimeInMinutes: Int?, completionBlock: (ApiResponse<[Meditator]>) -> Void)
     {
         let endpoint = "http://meditation.sirimangalo.org/db.php"
         var parameters: [String:String] = [

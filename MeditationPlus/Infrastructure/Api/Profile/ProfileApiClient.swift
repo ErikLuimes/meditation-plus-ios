@@ -13,12 +13,12 @@ import ObjectMapper
 
 public protocol ProfileApiClientProtocol
 {
-    func loadProfile(username: String, completionBlock: (ApiResponse<MPProfile>) -> Void)
+    func loadProfile(username: String, completionBlock: (ApiResponse<Profile>) -> Void)
 }
 
 public class ProfileApiClient: BaseApiClient, ProfileApiClientProtocol
 {
-    public func loadProfile(username: String, completionBlock: (ApiResponse<MPProfile>) -> Void)
+    public func loadProfile(username: String, completionBlock: (ApiResponse<Profile>) -> Void)
     {
         let endpoint: String               = "http://meditation.sirimangalo.org/post.php"
         let parameters: [String:AnyObject] = ["profile": username, "submit": "Profile"]
