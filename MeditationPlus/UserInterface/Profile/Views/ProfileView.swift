@@ -28,6 +28,14 @@ import UIKit
 import Charts
 import SDWebImage
 
+private class TimeValueConverter:  ChartXAxisValueFormatter
+{
+    @objc func stringForXValue(index: Int, original: String, viewPortHandler: ChartViewPortHandler) -> String
+    {
+        return original + ":00"
+    }
+}
+
 class ProfileView: UIView {
     @IBOutlet weak var profileBackgroundImageView: UIImageView!
     
@@ -44,41 +52,40 @@ class ProfileView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        // Set vertical effect
         let verticalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.y", type: .TiltAlongVerticalAxis)
         verticalMotionEffect.minimumRelativeValue = -20
         verticalMotionEffect.maximumRelativeValue = 20
         
-        // Set horizontal effect
         let horizontalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.x", type: .TiltAlongHorizontalAxis)
         horizontalMotionEffect.minimumRelativeValue = -20
         horizontalMotionEffect.maximumRelativeValue = 20
         
-        // Create group to combine both
         let group = UIMotionEffectGroup()
         group.motionEffects = [horizontalMotionEffect, verticalMotionEffect]
         
-        // Add both effects to your view
         profileBackgroundImageView.addMotionEffect(group)
         
-        barChartView.descriptionText = ""
-        barChartView.xAxis.labelPosition = .Bottom
-//        barChartView.xAxis.labelRotationAngle = 90
-        barChartView.xAxis.labelFont = UIFont.systemFontOfSize(7)
-        barChartView.xAxis.drawAxisLineEnabled = false
-        barChartView.xAxis.drawGridLinesEnabled = false
-        barChartView.xAxis.axisLabelModulus = 0
-        barChartView.backgroundColor = UIColor.clearColor()
-//        barChartView.animate(yAxisDuration: 0.5)
+        barChartView.descriptionText           = ""
+        barChartView.backgroundColor           = UIColor.clearColor()
         barChartView.drawGridBackgroundEnabled = false
-        barChartView.drawBordersEnabled = false
-        barChartView.leftAxis.drawLabelsEnabled = false
+        barChartView.drawBordersEnabled        = false
+        
+        barChartView.xAxis.labelPosition        = .Bottom
+        barChartView.xAxis.valueFormatter       = TimeValueConverter()
+        barChartView.xAxis.labelFont            = UIFont.systemFontOfSize(7)
+        barChartView.xAxis.drawAxisLineEnabled  = false
+        barChartView.xAxis.drawGridLinesEnabled = false
+        barChartView.xAxis.axisLabelModulus     = 0
+        
+        
+        barChartView.leftAxis.drawLabelsEnabled    = false
         barChartView.leftAxis.drawGridLinesEnabled = false
-        barChartView.leftAxis.drawAxisLineEnabled = false
-        barChartView.rightAxis.drawLabelsEnabled = false
+        barChartView.leftAxis.drawAxisLineEnabled  = false
+        
+        barChartView.rightAxis.drawLabelsEnabled    = false
         barChartView.rightAxis.drawGridLinesEnabled = false
-        barChartView.rightAxis.drawAxisLineEnabled = false
-    
+        barChartView.rightAxis.drawAxisLineEnabled  = false
+        
         profileImageView.layer.borderColor = UIColor.whiteColor().CGColor
         profileImageView.layer.borderWidth = 3.0
         
@@ -125,9 +132,14 @@ class ProfileView: UIView {
             xVals.append(String(index))
         }
         
-        let chartDataSet = BarChartDataSet(yVals: dataEntries, label: "Minutes meditated")
-        chartDataSet.colors = [UIColor.orangeColor()]
-        let chartData = BarChartData(xVals: xVals, dataSet: chartDataSet)
+        let numberFormatter                     = NSNumberFormatter()
+        numberFormatter.generatesDecimalNumbers = false
+        
+        let chartDataSet            = BarChartDataSet(yVals: dataEntries, label: "Minutes meditated")
+        chartDataSet.valueFormatter = numberFormatter
+        chartDataSet.colors         = [UIColor.orangeColor()]
+        
+        let chartData     = BarChartData(xVals: xVals, dataSet: chartDataSet)
         barChartView.data = chartData
         barChartView.animate(xAxisDuration: 0.3, easingOption: ChartEasingOption.EaseInOutSine)
         barChartView.zoomAndCenterViewAnimated(scaleX: 3, scaleY: 1, xIndex: 0, yValue: 0, axis: ChartYAxis.AxisDependency.Left, duration: 1.0)
