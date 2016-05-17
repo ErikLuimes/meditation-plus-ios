@@ -63,9 +63,9 @@ public class ChatItem: Object, Mappable
     {
         self.init()
         self.username = username
-        self.message = message
-        self.time = NSDate()
-        self.me = true
+        self.message  = message
+        self.time     = NSDate()
+        self.me       = true
     }
 
 
@@ -100,7 +100,7 @@ public class ChatItem: Object, Mappable
         timestamp <- map["time"]
         country   <- map["country"]
         me        <- (map["me"], ValueTransform.transformBoolString())
-
+        
         createAttributedText()
     }
 

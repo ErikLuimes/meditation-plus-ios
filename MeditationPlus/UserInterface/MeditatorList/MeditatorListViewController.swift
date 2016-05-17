@@ -260,11 +260,6 @@ class MeditatorListViewController: UIViewController
 
 extension MeditatorListViewController: UITableViewDelegate
 {
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
-    {
-        return 80
-    }
-
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
     {
         guard tableView.dataSource != nil else {
@@ -279,15 +274,6 @@ extension MeditatorListViewController: UITableViewDelegate
         return 0
     }
 
-
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
-    {
-        let view = UITableViewHeaderFooterView()
-        view.contentView.backgroundColor = UIColor.whiteColor()
-        view.textLabel?.textColor = UIColor.darkGrayColor()
-        return view
-    }
-    
     func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath?
     {
         return nil
@@ -302,6 +288,9 @@ extension MeditatorListViewController: UITableViewDelegate
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath), meditatorCell = cell as? MeditatorCell {
+            meditatorCell.configureWithMeditator(meditator, displayProgress: indexPath.section == 0)
+        }
         (cell as? MeditatorCell)?.delegate = self
     }
     

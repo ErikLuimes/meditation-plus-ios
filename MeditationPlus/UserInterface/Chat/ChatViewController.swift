@@ -44,6 +44,8 @@ class ChatViewController: SLKTextViewController {
     private var chatUpdateTimer: NSTimer?
     
     private var questionButton: UIBarButtonItem!
+    
+    private var refreshControl: UIRefreshControl!
 
     // MARK: Init
 
@@ -87,6 +89,8 @@ class ChatViewController: SLKTextViewController {
         chatService.reloadChatItemsIfNeeded()
         
         startChatUpdateTimer()
+        
+        refreshControl.transform = tableView!.transform
     }
     
     override func viewDidAppear(animated: Bool)
@@ -102,6 +106,7 @@ class ChatViewController: SLKTextViewController {
 
         stopChatUpdateTimer()
         parentViewController?.navigationItem.setRightBarButtonItem(nil, animated: true)
+        refreshControl.endRefreshing()
     }
 
 }
@@ -115,7 +120,6 @@ extension ChatViewController
         bounces                = true
         shakeToClearEnabled    = true
         keyboardPanningEnabled = true
-        inverted               = false
         
         view.clipsToBounds = true
         
@@ -149,6 +153,12 @@ extension ChatViewController
         tableView?.estimatedRowHeight   = 100.0
         tableView?.emptyDataSetSource   = self
         tableView?.emptyDataSetDelegate = self
+        
+        refreshControl                 = UIRefreshControl()
+        refreshControl.backgroundColor = UIColor.whiteColor()
+        refreshControl.tintColor       = UIColor.orangeColor()
+        refreshControl.addTarget(self, action: #selector(ChatViewController.updateChat), forControlEvents: UIControlEvents.ValueChanged)
+        tableView?.addSubview(refreshControl)
     }
     
     override func heightForAutoCompletionView() -> CGFloat
@@ -190,12 +200,11 @@ extension ChatViewController
         {
             (changes: RealmCollectionChange<Results<ChatItem>>) in
             
+            self.refreshControl.endRefreshing()
+            
             switch changes {
-            case .Initial(let results):
+            case .Initial(_):
                 self.tableView?.reloadData()
-                if results.count > 0 {
-                    self.tableView?.scrollToRowAtIndexPath(NSIndexPath(forRow: results.count - 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
-                }
             case .Update(_, let deletions, let insertions, let modifications):
                 let indexPathsToInsert = insertions.map { NSIndexPath(forRow: $0, inSection: 0) }
                 
@@ -204,10 +213,6 @@ extension ChatViewController
                 self.tableView?.deleteRowsAtIndexPaths(deletions.map { NSIndexPath(forRow: $0, inSection: 0) }, withRowAnimation: .Automatic)
                 self.tableView?.reloadRowsAtIndexPaths(modifications.map { NSIndexPath(forRow: $0, inSection: 0) }, withRowAnimation: .Automatic)
                 self.tableView?.endUpdates()
-                
-                if let indexPath = indexPathsToInsert.last {
-                    self.tableView?.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
-                }
             case .Error(let error):
                 DDLogError(error.localizedDescription)
                 break
@@ -226,9 +231,13 @@ extension ChatViewController
 
     func updateChat() {
         chatService.reloadChatItemsIfNeeded(true)
+        {
+            (serviceResult) in
+            
+            self.refreshControl.endRefreshing()
+        }
     }
 }
-
 
 // MARK: - Actions
 
@@ -320,10 +329,12 @@ extension ChatViewController
                 }
             }
         } else {
-            cell = tableView.dequeueReusableCellWithIdentifier("autocompletion", forIndexPath: indexPath)
-            cell.textLabel?.text = self.emojis[indexPath.row]
+            cell                  = tableView.dequeueReusableCellWithIdentifier("autocompletion", forIndexPath: indexPath)
+            cell.textLabel?.text  = self.emojis[indexPath.row]
             cell.imageView?.image = UIImage(named: TextTools.sharedInstance.emoticons[self.emojis[indexPath.row]]!)
         }
+        
+        cell.transform = tableView.transform
 
         return cell
     }

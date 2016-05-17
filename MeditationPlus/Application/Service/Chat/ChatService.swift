@@ -13,7 +13,7 @@ import CocoaLumberjack
 
 protocol ChatServiceProtocol
 {
-    func reloadChatItemsIfNeeded(forceReload: Bool) -> Bool
+    func reloadChatItemsIfNeeded(forceReload: Bool, completion: ((ServiceResult) -> Void)?) -> Bool
     
     func chatItems(notificationBlock: (RealmCollectionChange<Results<ChatItem>> -> Void)) -> (NotificationToken, Results<ChatItem>)
 }
@@ -46,20 +46,22 @@ public class ChatService: ChatServiceProtocol
      
      - parameter forceReload: force reload of chat items
      */
-    public func reloadChatItemsIfNeeded(forceReload: Bool = false) -> Bool
+    public func reloadChatItemsIfNeeded(forceReload: Bool = false, completion: ((ServiceResult) -> Void)? = nil) -> Bool
     {
         let cacheKey    = String(ChatItem.self).sha256()
         let needsUpdate = forceReload ? forceReload : cacheManager.needsUpdate(cacheKey, timeout: 360)
         
         guard needsUpdate else {
+            completion?(ServiceResult.Failure(nil))
             return false
         }
         
         guard let username = authenticationManager.loggedInUser?.username else {
+            completion?(ServiceResult.Failure(nil))
             return false
         }
         
-        let lastChatTimestamp: String = dataStore.chatItems.last?.timestamp ?? "0"
+        let lastChatTimestamp: String = dataStore.chatItems.first?.timestamp ?? "0"
         
         apiClient.loadChatItems(username, lastChatTimestamp: lastChatTimestamp)
         {
@@ -69,9 +71,11 @@ public class ChatService: ChatServiceProtocol
             case ApiResponse.Success(let model):
                 self.cacheManager.updateTimestampForCacheKey(cacheKey)
                 self.dataStore.addOrUpdateObjects(model)
+                completion?(ServiceResult.Success)
             case ApiResponse.NoData(_):
-                break
+                completion?(ServiceResult.Success)
             case ApiResponse.Failure(let error):
+                completion?(ServiceResult.Failure(nil))
                 DDLogError(error?.localizedDescription ?? "Failed retrieving 'ChatItems'")
             }
         }
