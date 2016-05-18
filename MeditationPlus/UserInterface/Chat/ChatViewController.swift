@@ -76,7 +76,6 @@ class ChatViewController: SLKTextViewController {
     {
         super.viewDidLoad()
 
-        registerForPreviewingWithDelegate(self, sourceView: tableView!)
         
         configure()
     }
@@ -91,6 +90,8 @@ class ChatViewController: SLKTextViewController {
         startChatUpdateTimer()
         
         refreshControl.transform = tableView!.transform
+        
+        registerForPreviewingWithDelegate(self, sourceView: self.parentViewController!.view)
     }
     
     override func viewDidAppear(animated: Bool)
@@ -475,7 +476,9 @@ extension ChatViewController: UIViewControllerPreviewingDelegate
         
         var viewController: UIViewController?
         
-        guard let indexPath = tableView?.indexPathForRowAtPoint(location) else {
+        let convertedPoint = self.parentViewController!.view.convertPoint(location, toView: self.tableView!)
+        
+        guard let indexPath = tableView?.indexPathForRowAtPoint(convertedPoint) else {
             return nil
         }
         
@@ -497,12 +500,13 @@ extension ChatViewController: UIViewControllerPreviewingDelegate
                     return nil
                 }
             }
+            
+            if let chatItem = chatResults?[indexPath.row] {
+                previewingContext.sourceRect = CGRectApplyAffineTransform(tableView!.convertRect(cell.frame, toView: self.parentViewController!.view), CGAffineTransformIdentity)
+                viewController               = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: chatItem.username)
+            }
         }
         
-        if let chatItem = chatResults?[indexPath.row] {
-            previewingContext.sourceRect = tableView!.rectForRowAtIndexPath(indexPath)
-            viewController               = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: chatItem.username)
-        }
         
         return viewController
     }
