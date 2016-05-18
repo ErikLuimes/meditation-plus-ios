@@ -3,7 +3,9 @@
 //  MeditationPlus
 //
 //  Created by Erik Luimes on 07/11/15.
-//  Copyright (c) 2015 Maya Interactive.
+//
+//  The MIT License
+//  Copyright (c) 2015 Maya Interactive. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +24,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+//
+// Except as contained in this notice, the name of Maya Interactive and Meditation+
+// shall not be used in advertising or otherwise to promote the sale, use or other
+// dealings in this Software without prior written authorization from Maya Interactive.
+//
 
 import Foundation
 import UIKit

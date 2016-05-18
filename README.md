@@ -2,13 +2,11 @@
 ![Platform](https://img.shields.io/badge/platform-iOS-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-Meditation Plus
-==========
+# Meditation Plus
 
-![Screengrab of application](Images/ScreenGrab.gif)
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=VTG8OPleMWw" target="_blank"><img src="http://img.youtube.com/vi/VTG8OPleMWw/0.jpg" alt="Meditation+ v1.1" width="240" height="180" border="10" /></a>
 
-Introduction
--------
+### Introduction
 
 Meditation Plus is a companion app for the online meditation community at http://meditation.sirimangalo.org
 
@@ -19,9 +17,10 @@ For an introduction to the meditation teachings please read the booklet, availab
 http://htm.sirimangalo.org/
 
 The app features the following:
-
 * a list of all meditation sessions in progress
 * a simple notification system to trigger a sound on completion of a meditation session
+* chat functionality
+* ability to watch dhamma talks
 
 This app is free and open source, licensed under the MIT license.
 
@@ -34,21 +33,29 @@ Source code for the android application is available here:
 https://github.com/yuttadhammo/meditation-plus
 
 
-Requirements
----------------------
+### Requirements
 
-* iOS 8.0 and above
+* iOS 9.0 and above
 
 
-Copyright
----------
+### Todo
+
+- [ ] Update source documentation
+- [x] Add realm for persistence
+- [ ] Refactor the mega controller
+- [ ] Add commitments functionality
+- [x] Add chat functionality
+- [x] Add youtube channel videos
+
+
+### Copyright
 
 Meditation Plus is licensed under the MIT License
 
 Check LICENSE file for more details.
 
-Contact
--------
+
+### Contact
 
 If you have suggestions or want to help developing please send an email to:
 
