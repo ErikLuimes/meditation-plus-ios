@@ -47,6 +47,7 @@ public class MeditatorCell: UITableViewCell
     @IBOutlet weak var meditationDescription: UILabel!
 
     private let circlePathLayer = CAShapeLayer()
+    
     private let circlePathTrackLayer = CAShapeLayer()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?)
@@ -62,41 +63,50 @@ public class MeditatorCell: UITableViewCell
     override public func awakeFromNib()
     {
         super.awakeFromNib()
+        
+        let pathFrame = CGRect(x: 0, y: 0, width: 70, height: 70)
 
-        circlePathTrackLayer.hidden = true
-        circlePathTrackLayer.frame = avatarImageView.bounds
-        circlePathTrackLayer.lineWidth = 12
+        circlePathTrackLayer.hidden      = true
+        circlePathTrackLayer.frame       = pathFrame
+        circlePathTrackLayer.lineWidth   = 9
         circlePathTrackLayer.strokeColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
-        circlePathTrackLayer.fillColor = UIColor.clearColor().CGColor
-        circlePathTrackLayer.path = UIBezierPath(ovalInRect: avatarImageView.bounds).CGPath
-        circlePathTrackLayer.strokeEnd = 1
+        circlePathTrackLayer.fillColor   = UIColor.clearColor().CGColor
+        circlePathTrackLayer.path        = UIBezierPath(ovalInRect: CGRectInset(pathFrame, 1, 1)).CGPath
+        circlePathTrackLayer.strokeEnd   = 1
         avatarImageView.layer.addSublayer(circlePathTrackLayer)
 
-        circlePathLayer.hidden = true
-        circlePathLayer.frame = avatarImageView.bounds
-        circlePathLayer.lineWidth = 10
+        circlePathLayer.hidden      = true
+        circlePathLayer.frame       = pathFrame
+        circlePathLayer.lineWidth   = 8
         circlePathLayer.strokeColor = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
-        circlePathLayer.fillColor = UIColor.clearColor().CGColor
-        circlePathLayer.path = UIBezierPath(ovalInRect: avatarImageView.bounds).CGPath
-        circlePathLayer.transform = CATransform3DMakeRotation(CGFloat(-M_PI_2), 0, 0, 1)
-        circlePathLayer.strokeEnd = 0
+        circlePathLayer.fillColor   = UIColor.clearColor().CGColor
+        circlePathLayer.path        = UIBezierPath(ovalInRect: CGRectInset(pathFrame, 1, 1)).CGPath
+        circlePathLayer.transform   = CATransform3DMakeRotation(CGFloat(-M_PI_2), 0, 0, 1)
+        circlePathLayer.strokeEnd   = 0
         avatarImageView.layer.addSublayer(circlePathLayer)
 
         selectionStyle = .Default
         
         let button: UIButton = UIButton(type: UIButtonType.InfoLight)
+        button.tintColor     = UIColor.orangeColor()
         button.addTarget(self, action: #selector(MeditatorCell.didTapInfoButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        button.tintColor = UIColor.orangeColor()
         accessoryView = button
+
+        avatarImageView.layer.borderColor        = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
+        avatarImageView.layer.borderWidth        = 1
+        avatarImageView.layer.masksToBounds      = true
+        avatarImageView.layer.cornerRadius       = 35
+        avatarImageView.layer.shouldRasterize    = true
+        avatarImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
     }
 
     override public func prepareForReuse()
     {
-        meditator = nil
+        meditator       = nil
         displayProgress = false
 
         circlePathTrackLayer.hidden = true
-        circlePathLayer.hidden = true
+        circlePathLayer.hidden      = true
 
         imageView?.image = nil
     }
@@ -113,12 +123,6 @@ public class MeditatorCell: UITableViewCell
         circlePathTrackLayer.hidden = !displayProgress
         circlePathLayer.hidden = !displayProgress
 
-        avatarImageView.clipsToBounds = true
-        avatarImageView.layer.borderColor = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
-        avatarImageView.layer.borderWidth = 1
-        avatarImageView.layer.masksToBounds = true
-        avatarImageView.layer.cornerRadius = avatarImageView.bounds.size.height / 2.0
-
         if let imageUrl = NSURL(meditator: meditator) {
             self.avatarImageView.sd_setImageWithURL(imageUrl, completed: { (image, error, cacheType, url) in
                 if cacheType == SDImageCacheType.None {
@@ -134,10 +138,10 @@ public class MeditatorCell: UITableViewCell
         }
 
         if displayProgress {
-            let strokeAnim = CABasicAnimation(keyPath: "strokeEnd")
-            strokeAnim.duration = 0.75
-            strokeAnim.fromValue = circlePathLayer.strokeEnd
-            strokeAnim.toValue = meditator.normalizedProgress
+            let strokeAnim            = CABasicAnimation(keyPath: "strokeEnd")
+            strokeAnim.duration       = 0.75
+            strokeAnim.fromValue      = circlePathLayer.strokeEnd
+            strokeAnim.toValue        = meditator.normalizedProgress
             strokeAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
 
             circlePathLayer.addAnimation(strokeAnim, forKey: "strokeEnd")

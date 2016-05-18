@@ -169,6 +169,6 @@ public struct DataStore: DataStoreProtocol
     
     lazy public private(set) var chatItems: Results<ChatItem> =
     {
-        return self.mainRealm.objects(ChatItem).sorted("time")
+        return self.mainRealm.objects(ChatItem).sorted("time", ascending: false)
     }()
 }

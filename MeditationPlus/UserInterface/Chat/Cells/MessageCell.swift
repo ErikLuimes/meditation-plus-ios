@@ -9,6 +9,7 @@
 import UIKit
 import DTCoreText
 import DateTools
+import SDWebImage
 
 protocol MessageCellDelegate: NSObjectProtocol
 {
@@ -36,12 +37,20 @@ class MessageCell: UITableViewCell
 
     override func prepareForReuse()
     {
+        chatItem              = nil
         avatarImageView.image = nil
-        chatItem = nil
+        messageLabel.text     = nil
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        avatarImageView.layer.borderColor        = UIColor.darkGrayColor().colorWithAlphaComponent(0.6).CGColor
+        avatarImageView.layer.borderWidth        = 1
+        avatarImageView.layer.masksToBounds      = true
+        avatarImageView.layer.cornerRadius       = 35
+        avatarImageView.layer.shouldRasterize    = true
+        avatarImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
     }
 
     func configureWithChatItem(chatItem: ChatItem)
@@ -53,19 +62,26 @@ class MessageCell: UITableViewCell
         
         self.chatItem = chatItem
 
-        authorLabel.text = (chatItem.username)
+        authorLabel.text = chatItem.username
 
         if chatItem.time != nil {
             self.dateLabel.text = chatItem.time!.timeAgoSinceNow()
         }
 
         let placeholderImage = NSURL(string: "http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&f=y&s=140")!
-        let avatarURL = chatItem.avatarURL ?? placeholderImage
-        self.avatarImageView.sd_setImageWithURL(avatarURL)
+        let avatarURL        = chatItem.avatarURL ?? placeholderImage
 
+        self.avatarImageView.sd_setImageWithURL(avatarURL, completed: { (image, error, cacheType, url) in
+            if cacheType == SDImageCacheType.None {
+                UIView.transitionWithView(self.avatarImageView, duration: 0.3, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: {
+                    self.avatarImageView.image = image
+                }, completion: nil)
+            } else {
+                self.avatarImageView.image = image
+            }
+        })
+        
         messageLabel.attributedText = chatItem.attributedText
-
-        self.setNeedsLayout()
     }
 
     @IBAction func didPressReportButton(sender: UIButton)

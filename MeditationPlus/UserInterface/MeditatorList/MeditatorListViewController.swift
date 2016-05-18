@@ -54,6 +54,8 @@ class MeditatorListViewController: UIViewController
     private let timer = MeditationTimer.sharedInstance
 
     private let timerDataSource = TimerDataSource()
+    
+    private var meditatorListUpdateTimer: NSTimer?
 
     // Current meditation times
     
@@ -94,7 +96,7 @@ class MeditatorListViewController: UIViewController
         meditatorView.tableView.delegate             = self
         meditatorView.tableView.emptyDataSetSource   = self
         meditatorView.tableView.emptyDataSetDelegate = self
-        meditatorView.refreshControl.addTarget(self, action: #selector(MeditatorListViewController.refreshMeditators(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        meditatorView.refreshControl.addTarget(self, action: #selector(MeditatorListViewController.refreshMeditators), forControlEvents: UIControlEvents.ValueChanged)
 
         meditatorView.meditationPickerView.dataSource = timerDataSource
         meditatorView.meditationPickerView.delegate   = self
@@ -134,9 +136,12 @@ class MeditatorListViewController: UIViewController
             meditatorView.setSelectionViewHidden(false, animated: true)
         }
 
-        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(MeditatorListViewController.meditationProgressTimerTick), userInfo: nil, repeats: true)
+        meditationProgressUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(MeditatorListViewController.meditationProgressTimerTick), userInfo: nil, repeats: true)
+        NSRunLoop.mainRunLoop().addTimer(meditationProgressUpdateTimer!, forMode: NSRunLoopCommonModes)
 
         meditatorContentProvider.fetchContentIfNeeded()
+        
+        startMeditatorListUpdateTimer()
     }
 
     override func viewWillDisappear(animated: Bool)
@@ -149,6 +154,7 @@ class MeditatorListViewController: UIViewController
         meditationProgressUpdateTimer = nil
         
         meditatorContentProvider.disableNotification()
+        stopMeditatorListUpdateTimer()
     }
     
     // MARK: Data handling
@@ -186,7 +192,7 @@ class MeditatorListViewController: UIViewController
         }
     }
     
-    func refreshMeditators(refreshControl: UIRefreshControl)
+    func refreshMeditators()
     {
         meditatorContentProvider.fetchContentIfNeeded(forceReload: true)
     }
@@ -260,11 +266,6 @@ class MeditatorListViewController: UIViewController
 
 extension MeditatorListViewController: UITableViewDelegate
 {
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
-    {
-        return 80
-    }
-
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
     {
         guard tableView.dataSource != nil else {
@@ -279,15 +280,6 @@ extension MeditatorListViewController: UITableViewDelegate
         return 0
     }
 
-
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
-    {
-        let view = UITableViewHeaderFooterView()
-        view.contentView.backgroundColor = UIColor.whiteColor()
-        view.textLabel?.textColor = UIColor.darkGrayColor()
-        return view
-    }
-    
     func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath?
     {
         return nil
@@ -302,6 +294,9 @@ extension MeditatorListViewController: UITableViewDelegate
     }
     
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath), meditatorCell = cell as? MeditatorCell {
+            meditatorCell.configureWithMeditator(meditator, displayProgress: indexPath.section == 0)
+        }
         (cell as? MeditatorCell)?.delegate = self
     }
     
@@ -484,5 +479,24 @@ extension MeditatorListViewController: MeditatorCellDelegate
             let viewController = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: meditator.username)
             navigationController?.pushViewController(viewController, animated: true)
         }
+    }
+}
+
+// MARK: - Timer handling
+
+extension MeditatorListViewController
+{
+    
+    private func startMeditatorListUpdateTimer()
+    {
+        meditatorListUpdateTimer?.invalidate()
+        meditatorListUpdateTimer = NSTimer.scheduledTimerWithTimeInterval(360, target: self, selector: #selector(MeditatorListViewController.refreshMeditators), userInfo: nil, repeats: true)
+        NSRunLoop.mainRunLoop().addTimer(meditatorListUpdateTimer!, forMode: NSRunLoopCommonModes)
+    }
+    
+    private func stopMeditatorListUpdateTimer()
+    {
+        meditatorListUpdateTimer?.invalidate()
+        meditatorListUpdateTimer = nil
     }
 }

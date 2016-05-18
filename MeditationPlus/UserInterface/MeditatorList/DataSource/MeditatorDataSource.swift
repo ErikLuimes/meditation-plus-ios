@@ -75,9 +75,9 @@ public class MeditatorDataSource: NSObject, UITableViewDataSource
     {
         let cell: UITableViewCell = tableView.dequeueReusableCellWithIdentifier("MeditatorCellIdentifier")!
 
-        if let meditator = self.meditatorForIndexPath(indexPath), meditatorCell = cell as? MeditatorCell {
-            meditatorCell.configureWithMeditator(meditator, displayProgress: indexPath.section == 0)
-        }
+//        if let meditator = self.meditatorForIndexPath(indexPath), meditatorCell = cell as? MeditatorCell {
+//            meditatorCell.configureWithMeditator(meditator, displayProgress: indexPath.section == 0)
+//        }
 
         return cell
     }

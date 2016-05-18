@@ -65,23 +65,24 @@ class MeditatorView: UIView
         super.awakeFromNib()
 
         tableView.registerNib(UINib(nibName: "MeditatorCell", bundle: nil), forCellReuseIdentifier: "MeditatorCellIdentifier")
-        tableView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 49, 0.0)
+        tableView.contentInset          = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 49, 0.0)
         tableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 49, 0.0)
-        tableView.tableFooterView = UIView()
+        tableView.rowHeight             = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight    = 90
+        tableView.tableFooterView       = UIView()
 
-
-        profileImageView.clipsToBounds = true
-        profileImageView.layer.borderColor = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
-        profileImageView.layer.borderWidth = 5
+        profileImageView.layer.borderColor   = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
+        profileImageView.layer.borderWidth   = 5
         profileImageView.layer.masksToBounds = true
 
         startButton.layer.borderColor = startButton.titleColorForState(.Normal)?.CGColor
 
-        refreshControl = UIRefreshControl()
+        refreshControl           = UIRefreshControl()
+        refreshControl.tintColor = UIColor.orangeColor()
         tableView.addSubview(refreshControl)
 
         visibleSelectionViewTopConstant = selectionViewTopConstraint.constant
-        hiddenSelectionViewTopConstant = -CGRectGetMinY(confirmationEffectView.frame)
+        hiddenSelectionViewTopConstant  = -CGRectGetMinY(confirmationEffectView.frame)
     }
 
     func setSelectionViewHidden(hidden: Bool, animated: Bool)
@@ -123,6 +124,8 @@ class MeditatorView: UIView
     {
         super.layoutSubviews()
 
-        profileImageView.layer.cornerRadius = profileImageView.bounds.size.height / 2.0
+        profileImageView.layer.cornerRadius       = profileImageView.bounds.size.height / 2.0
+        profileImageView.layer.shouldRasterize    = true
+        profileImageView.layer.rasterizationScale = UIScreen.mainScreen().scale
     }
 }
