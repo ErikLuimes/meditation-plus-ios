@@ -51,7 +51,7 @@ class MenuView: UIView
         didSet
         {
             // Setting the rendering mode on the image is to make it work on a UIVibranceyEffectView
-            cutoutImageView.image = UIImage(named: "buddha")?.imageWithRenderingMode(.AlwaysTemplate)
+            cutoutImageView.image = R.image.buddha()?.imageWithRenderingMode(.AlwaysTemplate)
         }
     }
 

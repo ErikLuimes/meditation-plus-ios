@@ -77,7 +77,7 @@ class MeditatorListViewController: UIViewController
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "BuddhaIcon"), tag: 0)
+        tabBarItem = UITabBarItem(title: nil, image: R.image.buddhaIcon(), tag: 0)
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MeditatorListViewController.willEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
         
@@ -432,7 +432,7 @@ extension MeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDel
 
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
     {
-        return UIImage(named: "BuddhaIcon")
+        return R.image.buddhaIcon()
     }
 
     func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation!

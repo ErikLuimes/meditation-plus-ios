@@ -76,7 +76,7 @@ class ChatViewController: SLKTextViewController {
         chatService    = ChatService()
         profileService = ProfileService.sharedInstance
         
-        tabBarItem     = UITabBarItem(title: nil, image: UIImage(named: "chat-icon"), tag: 0)
+        tabBarItem     = UITabBarItem(title: nil, image: R.image.chatIcon(), tag: 0)
         questionButton = UIBarButtonItem(title: "Ask Question", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChatViewController.didPressQuestionButton(_:)))
     }
 
@@ -149,7 +149,7 @@ extension ChatViewController
         
         shouldScrollToBottomAfterKeyboardShows = true
         
-        leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
+        leftButton.setImage(R.image.smileyIcon(), forState: UIControlState.Normal)
         leftButton.tintColor = UIColor.grayColor()
         
         rightButton.setTitle("Send", forState: UIControlState.Normal)
@@ -465,7 +465,7 @@ extension ChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
 {
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
     {
-        return UIImage(named: "chat-icon")
+        return R.image.chatIcon()
     }
 
     func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation!

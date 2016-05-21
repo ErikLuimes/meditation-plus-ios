@@ -75,7 +75,7 @@ class MenuContainerViewController: KGDrawerViewController
 
         self.centerViewController = navigationViewController
         self.leftViewController   = menuViewController
-        self.backgroundImage      = R.image.background_blurred()
+        self.backgroundImage      = R.image.backgroundBlurred()
     }
 
     required init?(coder aDecoder: NSCoder)

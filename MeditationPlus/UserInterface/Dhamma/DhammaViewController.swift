@@ -46,7 +46,7 @@ class DhammaViewController: UIViewController
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "dhamma-wheel"), tag: 0)
+        tabBarItem = UITabBarItem(title: nil, image: R.image.dhammaWheel(), tag: 0)
     }
 
     required init?(coder aDecoder: NSCoder)
@@ -164,7 +164,7 @@ extension DhammaViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate
 
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
     {
-        return UIImage(named: "dhamma-wheel")
+        return R.image.dhammaWheel()
     }
 
     func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation!
