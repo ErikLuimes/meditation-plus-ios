@@ -32,7 +32,7 @@
 
 import Foundation
 
-class TextTools
+public class TextTools
 {
     static let sharedInstance = TextTools()
 
@@ -131,4 +131,19 @@ class TextTools
                 "(wfh)": "wfh"
         ]
     }()
+    
+    /**
+     Converts time in seconds to HH:mm:ss
+     
+     - parameter numSeconds: secoonds
+     
+     - returns: Formatted string
+     */
+    public func formattedTimeFromSeconds(numSeconds: NSTimeInterval) -> String
+    {
+        let seconds = numSeconds % 60;
+        let hours   = numSeconds / 3600
+        let minutes = numSeconds / 60 % 60
+        return String(format: "%2.2d:%2.2d:%2.2d", Int(hours), Int(minutes), Int(seconds))
+    }
 }

@@ -384,10 +384,10 @@ extension MeditatorListViewController: MeditationTimerDelegate
             meditatorView.preparationProgressView.setProgress(Float(1.0 - progress), animated: true)
         } else if state == MeditationState.Meditation {
             meditatorView.preparationProgressView.setProgress(0.0, animated: false)
-            let seconds = timeLeft % 60;
-            let hours = timeLeft / 3600
-            let minutes = timeLeft / 60 % 60
-            meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d", Int(hours), Int(minutes), Int(seconds))
+//            let seconds = timeLeft % 60;
+//            let hours   = timeLeft / 3600
+//            let minutes = timeLeft / 60 % 60
+            meditatorView.meditationTimerLabel.text = TextTools.sharedInstance.formattedTimeFromSeconds(timeLeft)
         }
     }
 
@@ -397,10 +397,11 @@ extension MeditatorListViewController: MeditationTimerDelegate
             meditatorView.preparationProgressView.setProgress(Float(1.0 - totalProgress), animated: true)
         } else if state == MeditationState.Meditation {
             meditatorView.preparationProgressView.setProgress(0.0, animated: false)
-            let seconds = totalTimeLeft % 60;
-            let hours = totalTimeLeft / 3600
-            let minutes = totalTimeLeft / 60 % 60
-            meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d", Int(hours), Int(minutes), Int(seconds))
+//            let seconds = totalTimeLeft % 60;
+//            let hours   = totalTimeLeft / 3600
+//            let minutes = totalTimeLeft / 60 % 60
+//            meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d", Int(hours), Int(minutes), Int(seconds))
+            meditatorView.meditationTimerLabel.text = TextTools.sharedInstance.formattedTimeFromSeconds(totalTimeLeft)
         }
     }
 
