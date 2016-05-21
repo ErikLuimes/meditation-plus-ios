@@ -1,0 +1,52 @@
+/*
+   Localizable.strings
+   MeditationPlus
+ 
+   Created by Erik Luimes on 21/05/16.
+   Copyright © 2016 Maya Interactive. All rights reserved.
+ */
+
+// Profile view
+"meditator.chart.description" = "Minutes meditated";
+
+// Meditator View
+"start" = "Start";
+"stop"  = "Stop";
+
+"walking.meditation.title" = "Walking";
+"sitting.meditation.title" = "Sitting";
+
+"meditating.section.title"          = "Currently meditating";
+"finished.meditating.section.title" = "Finished meditating";
+
+"walking.meditation.time.format minutes: %@" = "walking %@m"
+"sitting.meditation.time.format minutes: %@" = "sitting %@m"
+
+// Menu
+"menu.section.tools" = "Tools";
+"menu.section.misc"  = "Misc";
+
+"menu.item.home"   = "Home";
+"menu.item.logout" = "Logout";
+
+// Chat
+"ask.question.button.title" = "Ask Question";
+"chat.message.placeholder"  = "Type message or question";
+
+"empty.message.error"          = "Please enter a message.";
+"message.sending.failed.error" = "Failed sending message.";
+
+"mail.report.send.title"   = "Report send";
+"mail.report.saved.title"  = "Report saved";
+"mail.report.failed.title" = "Failed sending email.";
+
+"report.alert.title"       = "Report inappropriate content";
+"report.alert.description" = "By clicking the 'Report' button you can send us an email to report abuse and inappropriate content.";
+
+"report.mail.body.format username: %@, message: %@, messsageId: %@" = "Dear sir/madam, \n\nI would like to report inappropriate content on the Meditator Shoutbox.\n\nusername:\n%@\n\nmessage:\n%@\n\nmessageId:\n%@";
+
+"report.mail.title"        = "Report inappropriate content";
+"mail.configuration.error" = "Unable to send email, did you configure an email account?";
+
+// Authentication
+"authentication.unknown.error" = "Some error occured, Please try again later.";

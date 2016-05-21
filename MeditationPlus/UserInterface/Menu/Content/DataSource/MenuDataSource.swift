@@ -42,14 +42,14 @@ class MenuDataSource: NSObject, UITableViewDataSource
         var sections: [TableViewSection<MenuItem>] = [TableViewSection<MenuItem>]()
 
         let toolsSection = TableViewSection<MenuItem>(
-            title: "Tools",
+            title: NSLocalizedString("menu.section.tools", comment: ""),
             items: [
                 MenuItem.Home,
             ]
         )
 
         let informationSection = TableViewSection<MenuItem>(
-            title: "Misc",
+            title: NSLocalizedString("menu.section.misc", comment: ""),
             items: [
                 MenuItem.Logout
             ]

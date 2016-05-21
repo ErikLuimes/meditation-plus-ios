@@ -160,11 +160,11 @@ public class MeditatorCell: UITableViewCell
         var meditations: [String] = [String]()
 
         if let walkingMinutes: Int = meditator.walkingMinutes.value where walkingMinutes > 0 {
-            meditations.append("walking \(walkingMinutes)m")
+            meditations.append(String(format: NSLocalizedString("walking.meditation.time.format minutes: %@", comment: ""), walkingMinutes))
         }
 
         if let sittingMinutes: Int = meditator.sittingMinutes.value where sittingMinutes > 0 {
-            meditations.append("sitting \(sittingMinutes)m")
+            meditations.append(String(format: NSLocalizedString("sitting.meditation.time.format minutes: %@", comment: ""), sittingMinutes))
         }
 
         meditationDescription.text = meditations.joinWithSeparator(", ")

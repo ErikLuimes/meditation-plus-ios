@@ -77,7 +77,7 @@ class ChatViewController: SLKTextViewController {
         profileService = ProfileService.sharedInstance
         
         tabBarItem     = UITabBarItem(title: nil, image: R.image.chatIcon(), tag: 0)
-        questionButton = UIBarButtonItem(title: "Ask Question", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChatViewController.didPressQuestionButton(_:)))
+        questionButton = UIBarButtonItem(title: NSLocalizedString("ask.question.button.title", comment: ""), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChatViewController.didPressQuestionButton(_:)))
     }
 
     required init(coder decoder: NSCoder)
@@ -155,7 +155,7 @@ extension ChatViewController
         rightButton.setTitle("Send", forState: UIControlState.Normal)
         rightButton.tintColor = UIColor.orangeColor()
         
-        textView.placeholder      = "Message"
+        textView.placeholder      = NSLocalizedString("chat.message.placeholder", comment: "")
         textView.placeholderColor = UIColor.lightGrayColor()
         
         textInputbar.autoHideRightButton = true
@@ -281,7 +281,7 @@ extension ChatViewController
         super.didPressRightButton(sender)
 
         guard message?.characters.count ?? 0 > 0 else {
-            NotificationManager.displayStatusBarNotification("Please enter a message.")
+            NotificationManager.displayStatusBarNotification(NSLocalizedString("empty.message.error", comment: ""))
             return
         }
         
@@ -290,7 +290,7 @@ extension ChatViewController
             (result: ServiceResult) in
             
             if case ServiceResult.Failure(_) = result {
-                NotificationManager.displayStatusBarNotification("Failed sending message.")
+                NotificationManager.displayStatusBarNotification(NSLocalizedString("message.sending.failed.error", comment: ""))
             }
         }
     }
@@ -393,11 +393,11 @@ extension ChatViewController: MFMailComposeViewControllerDelegate
             case MFMailComposeResultCancelled:
                 break
             case MFMailComposeResultSent:
-                NotificationManager.displayStatusBarNotification("Report sent")
+                NotificationManager.displayStatusBarNotification(NSLocalizedString("mail.report.sent.title", comment: ""))
             case MFMailComposeResultSaved:
-                NotificationManager.displayStatusBarNotification("Report saved")
+                NotificationManager.displayStatusBarNotification(NSLocalizedString("mail.report.saved.title", comment: ""))
             case MFMailComposeResultFailed:
-                NotificationManager.displayNotification(error?.localizedDescription ?? "Somer error occurred, please try again later.")
+                NotificationManager.displayNotification(error?.localizedDescription ?? NSLocalizedString("mail.report.failed.title", comment: ""))
             default:
                 break
         }
@@ -414,10 +414,10 @@ extension ChatViewController: MessageCellDelegate
     
     func didPressReportButton(button: UIButton, chatItem: ChatItem?)
     {
-        let alertController = UIAlertController(title: "Report inappropriate content", message: "By clicking the 'Report' button you can send us an email to report abuse and inappropriate content.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let alertController = UIAlertController(title: NSLocalizedString("report.alert.title", comment: ""), message: NSLocalizedString("report.alert.description", comment: ""), preferredStyle: UIAlertControllerStyle.ActionSheet)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        let rapportAction = UIAlertAction(title: "Report ", style: UIAlertActionStyle.Destructive) {
+        let reportAction = UIAlertAction(title: "Report ", style: UIAlertActionStyle.Destructive) {
             (action) -> Void in
             self.presentedViewController?.dismissViewControllerAnimated(true, completion: nil)
             
@@ -427,11 +427,11 @@ extension ChatViewController: MessageCellDelegate
         }
         
         alertController.addAction(cancelAction)
-        alertController.addAction(rapportAction)
+        alertController.addAction(reportAction)
         
         if let popover = alertController.popoverPresentationController {
-            popover.sourceView = button
-            popover.sourceRect = button.bounds
+            popover.sourceView               = button
+            popover.sourceRect               = button.bounds
             popover.permittedArrowDirections = UIPopoverArrowDirection.Any
         }
         
@@ -442,9 +442,9 @@ extension ChatViewController: MessageCellDelegate
     {
         
         if MFMailComposeViewController.canSendMail() {
-            let title = "Report inappropriate content"
-            let body = "Dear sir/madam, \n\nI would like to report inappropriate content on the Meditator Shoutbox.\n\nusername:\n\(chatItem.username ?? "")\n\nmessage:\n\(chatItem.message ?? "")\n\nmessageId: \(chatItem.cid ?? "")"
-            let to = ["erik.luimes@gmail.com"]
+            let title = NSLocalizedString("report.mail.title", comment: "")
+            let body  = String(format: NSLocalizedString("report.mail.body.format username: %@, message: %@, messsageId: %@", comment: ""), chatItem.username ?? "", chatItem.message ?? "", chatItem.cid ?? "")
+            let to    = ["erik.luimes@gmail.com"]
             
             let composer = MFMailComposeViewController()
             composer.mailComposeDelegate = self
@@ -454,7 +454,7 @@ extension ChatViewController: MessageCellDelegate
             
             self.presentViewController(composer, animated: true, completion: nil)
         } else {
-            NotificationManager.displayNotification("Unable to use email.")
+            NotificationManager.displayNotification(NSLocalizedString("mail.configuration.error", comment: ""))
         }
     }
 }

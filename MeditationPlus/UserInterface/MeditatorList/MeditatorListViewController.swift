@@ -338,9 +338,9 @@ extension MeditatorListViewController: UIPickerViewDelegate
             let minutes = timerDataSource.times[row] % 60
             title = String(format: "%d:%2.2d", hours, minutes)
         } else if component == 1 {
-            title = "Walking"
+            title = NSLocalizedString("walking.meditation.title", comment: "")
         } else if component == 3 {
-            title = "Sitting"
+            title = NSLocalizedString("sitting.meditition.title", comment: "")
         }
 
 

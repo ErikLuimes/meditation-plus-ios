@@ -96,7 +96,7 @@ class MeditatorView: UIView
     func setSelectionViewHidden(hidden: Bool, animated: Bool)
     {
         selectionViewHidden = hidden
-        startButton.setTitle(hidden ? "Stop" : "Start", forState: UIControlState.Normal)
+        startButton.setTitle(hidden ? NSLocalizedString("stop", comment: "") : NSLocalizedString("start", comment: ""), forState: UIControlState.Normal)
 
         if !hidden {
             meditationTimerLabel.text = "00:00:00"

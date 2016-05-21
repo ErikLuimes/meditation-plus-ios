@@ -46,9 +46,9 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
     {
         super.init(rootViewController: rootViewController)
 
-        self.navigationBar.tintColor = UIColor.orangeColor()
+        self.navigationBar.tintColor   = UIColor.orangeColor()
         self.navigationBar.translucent = false
-        self.delegate = self;
+        self.delegate                  = self
     }
 
     required init?(coder aDecoder: NSCoder)
@@ -62,7 +62,7 @@ class NavigationController: UINavigationController, UINavigationControllerDelega
             return
         }
 
-        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.add_imageNamed("menu_btn", tintColor: UIColor.magentaColor(), style: ADDImageTintStyleKeepingAlpha), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(NavigationController.didPressMenuButton(_:)))
+        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(image: R.image.menuIcon(), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(NavigationController.didPressMenuButton(_:)))
     }
 
     func didPressMenuButton(sender: UIBarButtonItem)

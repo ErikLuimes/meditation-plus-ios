@@ -62,17 +62,14 @@ extension MenuViewController: UITableViewDelegate
     {
         if let menuItem = self.menuDataSource.itemForIndexPath(indexPath) {
             switch menuItem {
-                case .Home:
-                    self.drawerNavigationHandler?(TabBarController(), true)
-
-                case .Logout:
-                    if MeditationTimer.sharedInstance.state != .Stopped {
-                        MeditationTimer.sharedInstance.cancelTimer()
-                    }
-                    
-                    self.drawerNavigationHandler?(SplashViewController(nib: R.nib.splashView), false)
-                default:
-                    NSLog("default")
+            case .Home:
+                self.drawerNavigationHandler?(TabBarController(), true)
+            case .Logout:
+                if MeditationTimer.sharedInstance.state != .Stopped {
+                    MeditationTimer.sharedInstance.cancelTimer()
+                }
+                
+                self.drawerNavigationHandler?(SplashViewController(nib: R.nib.splashView), false)
             }
         }
     }

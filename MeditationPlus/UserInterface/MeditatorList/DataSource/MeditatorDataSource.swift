@@ -185,8 +185,8 @@ public enum MeditatorSectionData: Int
     public var title: String
     {
         switch self {
-        case .Meditating: return "Currently meditating"
-        case .Finished: return "Finished meditating"
+        case .Meditating: return NSLocalizedString("meditating.section.title", comment: "")
+        case .Finished:   return NSLocalizedString("finished.meditating.section.title", comment: "")
         }
     }
     
