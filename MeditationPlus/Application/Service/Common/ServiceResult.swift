@@ -34,7 +34,18 @@ import Foundation
 
 public enum ServiceResult
 {
+    /**
+     Successful service result
+     
+     - returns: nil
+     */
     case Success
+    
+    /**
+     Failure response with optional NSError
+     
+     - returns: NSError
+     */
     case Failure(NSError?)
     
     public func isSuccess() -> Bool
@@ -58,6 +69,5 @@ public enum ServiceResult
         } else {
             return nil
         }
-    
     }
 }

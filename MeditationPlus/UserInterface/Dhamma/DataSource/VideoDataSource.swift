@@ -49,11 +49,11 @@ class VideoDataSource: NSObject, UITableViewDataSource
 
         if let video = self.videoForIndexPath(indexPath) {
             let style: NSMutableParagraphStyle = NSMutableParagraphStyle.defaultParagraphStyle().mutableCopy() as! NSMutableParagraphStyle
-            style.alignment = NSTextAlignment.Justified
-            style.firstLineHeadIndent = 10.0
-            style.headIndent = 10.0
-            style.tailIndent = -10.0
-            style.paragraphSpacing = 10
+            style.alignment                    = NSTextAlignment.Justified
+            style.firstLineHeadIndent          = 10.0
+            style.headIndent                   = 10.0
+            style.tailIndent                   = -10.0
+            style.paragraphSpacing             = 10
 
             cell.titleLabel.attributedText = NSAttributedString(string: video.title ?? "", attributes: [NSParagraphStyleAttributeName: style])
             if let imageUrl = video.thumbnail {
