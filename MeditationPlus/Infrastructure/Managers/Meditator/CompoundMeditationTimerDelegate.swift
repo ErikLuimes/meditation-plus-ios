@@ -45,32 +45,32 @@ class CompoundMeditationTimerDelegate: NSObject, MeditationTimerDelegate
 
     func meditationTimer(meditationTimer: MeditationTimer, didStartWithState state: MeditationState)
     {
-        _ = self.delegates.map({ $0.meditationTimer(meditationTimer, didStartWithState: state) })
+        delegates.forEach({ $0.meditationTimer(meditationTimer, didStartWithState: state) })
     }
 
     func meditationTimer(meditationTimer: MeditationTimer, didProgress progress: Double, withState state: MeditationState, timeLeft: NSTimeInterval)
     {
-        _ = self.delegates.map({ $0.meditationTimer(meditationTimer, didProgress: progress, withState: state, timeLeft: timeLeft) })
+        delegates.forEach({ $0.meditationTimer(meditationTimer, didProgress: progress, withState: state, timeLeft: timeLeft) })
     }
 
     func meditationTimer(meditationTimer: MeditationTimer, withState state: MeditationState, type: MeditationType, progress: Double, timeLeft: NSTimeInterval, totalProgress: Double, totalTimeLeft: NSTimeInterval)
     {
-        _ = self.delegates.map({ $0.meditationTimer(meditationTimer, withState: state, type: type, progress: progress, timeLeft: timeLeft, totalProgress: totalProgress, totalTimeLeft: totalTimeLeft) })
+        delegates.forEach({ $0.meditationTimer(meditationTimer, withState: state, type: type, progress: progress, timeLeft: timeLeft, totalProgress: totalProgress, totalTimeLeft: totalTimeLeft) })
     }
 
     func meditationTimer(meditationTimer: MeditationTimer, didStopWithState state: MeditationState)
     {
-        _ = self.delegates.map({ $0.meditationTimer(meditationTimer, didStopWithState: state) })
+        delegates.forEach({ $0.meditationTimer(meditationTimer, didStopWithState: state) })
     }
 
     func meditationTimer(meditationTimer: MeditationTimer, didChangeMeditationFromType fromType: MeditationType, toType: MeditationType)
     {
-        _ = self.delegates.map({ $0.meditationTimer(meditationTimer, didChangeMeditationFromType: fromType, toType: toType) })
+        delegates.forEach({ $0.meditationTimer(meditationTimer, didChangeMeditationFromType: fromType, toType: toType) })
     }
 
     func meditationTimerWasCancelled(meditationTimer: MeditationTimer)
     {
-        _ = self.delegates.map({ $0.meditationTimerWasCancelled(meditationTimer) })
+        delegates.forEach({ $0.meditationTimerWasCancelled(meditationTimer) })
     }
 }
 
