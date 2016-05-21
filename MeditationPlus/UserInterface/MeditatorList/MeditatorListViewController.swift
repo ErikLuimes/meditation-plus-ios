@@ -340,7 +340,7 @@ extension MeditatorListViewController: UIPickerViewDelegate
         } else if component == 1 {
             title = NSLocalizedString("walking.meditation.title", comment: "")
         } else if component == 3 {
-            title = NSLocalizedString("sitting.meditition.title", comment: "")
+            title = NSLocalizedString("sitting.meditation.title", comment: "")
         }
 
 
