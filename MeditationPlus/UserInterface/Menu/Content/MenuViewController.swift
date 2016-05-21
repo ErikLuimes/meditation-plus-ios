@@ -31,8 +31,10 @@
 //
 
 import UIKit
+import Rswift
 
-class MenuViewController: UIViewController, UITableViewDelegate {
+class MenuViewController: UIViewController
+{
     private var menuView: MenuView
     {
         return self.view as! MenuView
@@ -40,47 +42,24 @@ class MenuViewController: UIViewController, UITableViewDelegate {
 
     var drawerNavigationHandler: ((UIViewController, Bool) -> Void)?
 
-    private let menuCellIdentifier = "menuCellIdentifier"
-
     private var menuDataSource: MenuDataSource!
 
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
 
-        menuDataSource = MenuDataSource(cellReuseIdentifier: menuCellIdentifier)
-        menuDataSource.updateSections(menuSections())
-        menuDataSource.cellConfigurationHandler = {
-            cell, menuItem in
-            cell.viewData = MenuCell.ViewData(menuItem: menuItem)
-        }
-
+        menuDataSource = MenuDataSource()
+        
         menuView.menuTableView.dataSource = menuDataSource
-        menuView.menuTableView.delegate = self
-        menuView.menuTableView.registerNib(UINib(nibName: "MenuCell", bundle: nil), forCellReuseIdentifier: menuCellIdentifier)
+        menuView.menuTableView.delegate   = self
     }
+}
 
-    // MARK: Setup Menu Items
-
-    private func menuSections() -> [TableViewSection<MenuItem>] {
-        var sections: [TableViewSection<MenuItem>] = [TableViewSection < MenuItem>]()
-
-        let toolsSection = TableViewSection<MenuItem>(title: "Tools", items: [
-                MenuItem.Home,
-        ])
-
-        let informationSection = TableViewSection<MenuItem>(title: "Misc", items: [
-                MenuItem.Logout
-        ])
-
-        sections.append(toolsSection)
-        sections.append(informationSection)
-
-        return sections
-    }
-
-    // MARK: UITableViewDelegate
-
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+// MARK: - UITableViewDelegate
+extension MenuViewController: UITableViewDelegate
+{
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    {
         if let menuItem = self.menuDataSource.itemForIndexPath(indexPath) {
             switch menuItem {
                 case .Home:
@@ -90,7 +69,8 @@ class MenuViewController: UIViewController, UITableViewDelegate {
                     if MeditationTimer.sharedInstance.state != .Stopped {
                         MeditationTimer.sharedInstance.cancelTimer()
                     }
-                    self.drawerNavigationHandler?(SplashViewController(nibName: "SplashViewController", bundle: nil), false)
+                    
+                    self.drawerNavigationHandler?(SplashViewController(nib: R.nib.splashView), false)
                 default:
                     NSLog("default")
             }

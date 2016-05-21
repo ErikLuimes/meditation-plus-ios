@@ -32,6 +32,7 @@
 
 import UIKit
 import SDWebImage
+import Rswift
 
 class MeditatorView: UIView
 {
@@ -71,12 +72,12 @@ class MeditatorView: UIView
     {
         super.awakeFromNib()
 
-        tableView.registerNib(UINib(nibName: "MeditatorCell", bundle: nil), forCellReuseIdentifier: "MeditatorCellIdentifier")
         tableView.contentInset          = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 49, 0.0)
         tableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetHeight(actionView.frame), 0.0, 49, 0.0)
         tableView.rowHeight             = UITableViewAutomaticDimension
         tableView.estimatedRowHeight    = 90
         tableView.tableFooterView       = UIView()
+        tableView.registerNib(R.nib.meditatorCell(), forCellReuseIdentifier: R.nib.meditatorCell.name)
 
         profileImageView.layer.borderColor   = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
         profileImageView.layer.borderWidth   = 5

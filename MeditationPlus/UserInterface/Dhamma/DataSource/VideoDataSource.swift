@@ -45,7 +45,7 @@ class VideoDataSource: NSObject, UITableViewDataSource
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let cell: VideoCell = tableView.dequeueReusableCellWithIdentifier("VideoCell") as! VideoCell
+        let cell: VideoCell = tableView.dequeueReusableCellWithIdentifier(R.nib.videoCell.name, forIndexPath: indexPath) as! VideoCell
 
         if let video = self.videoForIndexPath(indexPath) {
             let style: NSMutableParagraphStyle = NSMutableParagraphStyle.defaultParagraphStyle().mutableCopy() as! NSMutableParagraphStyle

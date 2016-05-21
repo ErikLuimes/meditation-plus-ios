@@ -38,6 +38,7 @@ target 'MeditationPlus' do
     pod 'CryptoSwift',           '0.3.1'
     
     pod 'Charts'
+    pod 'R.swift', '2.2.0'
 end
 
 # Display license information of used pods in settings pane

@@ -39,11 +39,17 @@ public class SetupManager
 {
     static public func setup() -> Void
     {
+        setupR()
         setupLogging()
         setupCrashlytics()
         updateSettingsPage()
         setupDefaults()
         setupMeditationTimer()
+    }
+    
+    static private func setupR()
+    {
+        R.assertValid()
     }
     
     static private func setupLogging() -> Void

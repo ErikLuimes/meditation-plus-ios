@@ -31,6 +31,7 @@
 //
 
 import UIKit
+import Rswift
 
 class MenuView: UIView
 {
@@ -40,7 +41,7 @@ class MenuView: UIView
     {
         didSet
         {
-            blurView.layer.cornerRadius = 10
+            blurView.layer.cornerRadius  = 10
             blurView.layer.masksToBounds = true
         }
     }
@@ -55,12 +56,14 @@ class MenuView: UIView
     }
 
     @IBOutlet weak var imageViewTrailingMargin: NSLayoutConstraint!
+    
     override func awakeFromNib()
     {
         super.awakeFromNib()
 
         menuTableView.tableFooterView = UIView(frame: CGRectZero)
-        menuTableView.bounces = false
+        menuTableView.bounces         = false
+        menuTableView.registerNib(R.nib.menuCell(), forCellReuseIdentifier: R.nib.menuCell.name)
 
         imageViewTrailingMargin.constant = (-CGRectGetWidth(cutoutImageView.frame) / 3.0)
     }
