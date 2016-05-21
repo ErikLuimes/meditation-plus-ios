@@ -52,44 +52,14 @@ extension Realm {
         /**
         Initializes a `Realm.Configuration`, suitable for creating new `Realm` instances.
 
-        - parameter path:               The path to the realm file.
-        - parameter inMemoryIdentifier: A string used to identify a particular in-memory Realm.
-        - parameter encryptionKey:      64-byte key to use to encrypt the data.
-        - parameter readOnly:           Whether the Realm is read-only (must be true for read-only files).
-        - parameter schemaVersion:      The current schema version.
-        - parameter migrationBlock:     The block which migrates the Realm to the current version.
-        - parameter objectTypes:        The subset of `Object` subclasses persisted in the Realm.
-        */
-        @available(*, deprecated=1, message="Use init(fileURL:...)")
-        public init(path: String?,
-                    inMemoryIdentifier: String? = nil,
-                    encryptionKey: NSData? = nil,
-                    readOnly: Bool = false,
-                    schemaVersion: UInt64 = 0,
-                    migrationBlock: MigrationBlock? = nil,
-                    objectTypes: [Object.Type]? = nil) {
-            self.fileURL = path.map { NSURL(fileURLWithPath: $0) }
-            if inMemoryIdentifier != nil {
-                self.inMemoryIdentifier = inMemoryIdentifier
-            }
-            self.encryptionKey = encryptionKey
-            self.readOnly = readOnly
-            self.schemaVersion = schemaVersion
-            self.migrationBlock = migrationBlock
-            self.objectTypes = objectTypes
-        }
-
-        /**
-        Initializes a `Realm.Configuration`, suitable for creating new `Realm` instances.
-
         - parameter fileURL:            The local URL to the realm file.
         - parameter inMemoryIdentifier: A string used to identify a particular in-memory Realm.
         - parameter encryptionKey:      64-byte key to use to encrypt the data.
         - parameter readOnly:           Whether the Realm is read-only (must be true for read-only files).
         - parameter schemaVersion:      The current schema version.
         - parameter migrationBlock:     The block which migrates the Realm to the current version.
-        - parameter deleteRealmIfMigrationNeeded: If `true`, recreate the Realm file with the new schema
-                                                  if a migration is required.
+        - parameter deleteRealmIfMigrationNeeded: If `true`, recreate the Realm file with the provided
+                                                  schema if a migration is required.
         - parameter objectTypes:        The subset of `Object` subclasses persisted in the Realm.
         */
         public init(fileURL: NSURL? = NSURL(fileURLWithPath: RLMRealmPathForFile("default.realm"), isDirectory: false),
@@ -126,19 +96,6 @@ extension Realm {
             }
         }
 
-        /// The path to the realm file.
-        /// Mutually exclusive with `inMemoryIdentifier`.
-        @available(*, deprecated=1, message="Use fileURL")
-        public var path: String? {
-            set {
-                _inMemoryIdentifier = nil
-                _path = newValue
-            }
-            get {
-                return _path
-            }
-        }
-
         private var _path: String?
 
         /// A string used to identify a particular in-memory Realm.
@@ -167,7 +124,14 @@ extension Realm {
         /// The block which migrates the Realm to the current version.
         public var migrationBlock: MigrationBlock? = nil
 
-        /// Recreate the Realm file with the new schema if a migration is required.
+        /**
+        Recreate the Realm file with the provided schema if a migration is required.
+        This is the case when the stored schema differs from the provided schema or
+        the stored schema version differs from the version on this configuration.
+        This deletes the file if a migration would otherwise be required or run.
+
+        - note: This doesn't disable file format migrations.
+        */
         public var deleteRealmIfMigrationNeeded: Bool = false
 
         /// The classes persisted in the Realm.

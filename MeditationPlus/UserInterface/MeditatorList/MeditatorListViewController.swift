@@ -77,7 +77,7 @@ class MeditatorListViewController: UIViewController
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "BuddhaIcon"), tag: 0)
+        tabBarItem = UITabBarItem(title: nil, image: R.image.buddhaIcon(), tag: 0)
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MeditatorListViewController.willEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
         
@@ -295,7 +295,12 @@ extension MeditatorListViewController: UITableViewDelegate
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
         if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath) {
-            let viewController = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: meditator.username)
+            let viewController = ProfileViewController(
+                nib: R.nib.profileView,
+                username: meditator.username,
+                profileContentProvider: ProfileContentProvider(profileService: ProfileService.sharedInstance)
+            )
+            
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
@@ -333,9 +338,9 @@ extension MeditatorListViewController: UIPickerViewDelegate
             let minutes = timerDataSource.times[row] % 60
             title = String(format: "%d:%2.2d", hours, minutes)
         } else if component == 1 {
-            title = "Walking"
+            title = NSLocalizedString("walking.meditation.title", comment: "")
         } else if component == 3 {
-            title = "Sitting"
+            title = NSLocalizedString("sitting.meditation.title", comment: "")
         }
 
 
@@ -379,10 +384,10 @@ extension MeditatorListViewController: MeditationTimerDelegate
             meditatorView.preparationProgressView.setProgress(Float(1.0 - progress), animated: true)
         } else if state == MeditationState.Meditation {
             meditatorView.preparationProgressView.setProgress(0.0, animated: false)
-            let seconds = timeLeft % 60;
-            let hours = timeLeft / 3600
-            let minutes = timeLeft / 60 % 60
-            meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d", Int(hours), Int(minutes), Int(seconds))
+//            let seconds = timeLeft % 60;
+//            let hours   = timeLeft / 3600
+//            let minutes = timeLeft / 60 % 60
+            meditatorView.meditationTimerLabel.text = TextTools.sharedInstance.formattedTimeFromSeconds(timeLeft)
         }
     }
 
@@ -392,10 +397,11 @@ extension MeditatorListViewController: MeditationTimerDelegate
             meditatorView.preparationProgressView.setProgress(Float(1.0 - totalProgress), animated: true)
         } else if state == MeditationState.Meditation {
             meditatorView.preparationProgressView.setProgress(0.0, animated: false)
-            let seconds = totalTimeLeft % 60;
-            let hours = totalTimeLeft / 3600
-            let minutes = totalTimeLeft / 60 % 60
-            meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d", Int(hours), Int(minutes), Int(seconds))
+//            let seconds = totalTimeLeft % 60;
+//            let hours   = totalTimeLeft / 3600
+//            let minutes = totalTimeLeft / 60 % 60
+//            meditatorView.meditationTimerLabel.text = String(format: "%2.2d:%2.2d:%2.2d", Int(hours), Int(minutes), Int(seconds))
+            meditatorView.meditationTimerLabel.text = TextTools.sharedInstance.formattedTimeFromSeconds(totalTimeLeft)
         }
     }
 
@@ -427,7 +433,7 @@ extension MeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDel
 
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
     {
-        return UIImage(named: "BuddhaIcon")
+        return R.image.buddhaIcon()
     }
 
     func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation!
@@ -460,7 +466,11 @@ extension MeditatorListViewController: UIViewControllerPreviewingDelegate
         if let indexPath = meditatorView.tableView.indexPathForRowAtPoint(location) {
             if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath) {
                 previewingContext.sourceRect = meditatorView.tableView.rectForRowAtIndexPath(indexPath)
-                viewController = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: meditator.username)
+                viewController               = ProfileViewController(
+                    nib: R.nib.profileView,
+                    username: meditator.username,
+                    profileContentProvider: ProfileContentProvider(profileService: ProfileService.sharedInstance)
+                )
             }
         }
         
@@ -483,7 +493,12 @@ extension MeditatorListViewController: MeditatorCellDelegate
         
         if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath)
         {
-            let viewController = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: meditator.username)
+            let viewController = ProfileViewController(
+                nib: R.nib.profileView,
+                username: meditator.username,
+                profileContentProvider: ProfileContentProvider(profileService: ProfileService.sharedInstance)
+            )
+            
             navigationController?.pushViewController(viewController, animated: true)
         }
     }

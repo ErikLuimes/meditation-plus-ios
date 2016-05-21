@@ -79,11 +79,7 @@ public class MeditatorDataSource: NSObject, UITableViewDataSource
 
     public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let cell: UITableViewCell = tableView.dequeueReusableCellWithIdentifier("MeditatorCellIdentifier")!
-
-//        if let meditator = self.meditatorForIndexPath(indexPath), meditatorCell = cell as? MeditatorCell {
-//            meditatorCell.configureWithMeditator(meditator, displayProgress: indexPath.section == 0)
-//        }
+        let cell = tableView.dequeueReusableCellWithIdentifier(R.nib.meditatorCell.name, forIndexPath: indexPath)
 
         return cell
     }
@@ -189,8 +185,8 @@ public enum MeditatorSectionData: Int
     public var title: String
     {
         switch self {
-        case .Meditating: return "Currently meditating"
-        case .Finished: return "Finished meditating"
+        case .Meditating: return NSLocalizedString("meditating.section.title", comment: "")
+        case .Finished:   return NSLocalizedString("finished.meditating.section.title", comment: "")
         }
     }
     

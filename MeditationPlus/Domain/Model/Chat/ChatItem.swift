@@ -119,15 +119,16 @@ public class ChatItem: Object, Mappable
             let font = UIFont.systemFontOfSize(15)
 
             // Html parsing
-            let modified = NSString(format: "<span style=\"font-family: \(font.fontName); font-size: \(font.pointSize)\">%@</span>", message) as String
+            let modified         = NSString(format: "<span style=\"font-family: \(font.fontName); font-size: \(font.pointSize)\">%@</span>", message) as String
             let attributedString = NSMutableAttributedString(HTMLData: modified.dataUsingEncoding(NSUnicodeStringEncoding, allowLossyConversion: true)!, options: [DTUseiOS6Attributes: true], documentAttributes: nil)
 
             // Emoji parsing
             let matches = regExp.matchesInString(attributedString.mutableString as String, options: NSMatchingOptions(), range: NSMakeRange(0, (attributedString.mutableString as String).characters.count))
 
             for result: NSTextCheckingResult in matches.reverse() {
-                let match = (message as NSString).substringWithRange(result.range)
+                let match          = (message as NSString).substringWithRange(result.range)
                 let textAttachment = NSTextAttachment()
+                
                 if let imageName = TextTools.sharedInstance.emoticons[match] {
                     textAttachment.image = UIImage(named: imageName)
                 }

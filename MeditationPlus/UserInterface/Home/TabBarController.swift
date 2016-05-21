@@ -40,32 +40,23 @@ class TabBarController: UITabBarController
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?)
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-
-        var viewControllers: [UIViewController] = []
-
-        let meditatorController: MeditatorListViewController = MeditatorListViewController(nibName: "MeditatorListViewController", bundle: nil)
-        viewControllers.append(meditatorController)
-
-        let chatViewController: ChatViewController = ChatViewController()
-        viewControllers.append(chatViewController)
-
-        let dhammaViewController: DhammaViewController = DhammaViewController(nibName: "DhammaViewController", bundle: nil)
-        viewControllers.append(dhammaViewController)
-
-        let quoteViewController: QuoteViewController = QuoteViewController(nibName: "QuoteViewController", bundle: nil)
-        viewControllers.append(quoteViewController)
-
-        self.viewControllers = viewControllers
+        
+        title = "Meditation+"
+        UITabBar.appearance().tintColor = UIColor.orangeColor()
+        tabBarTransition = TabBarTransition()
+        
+        let viewControllers: [UIViewController] = [
+            MeditatorListViewController(nib: R.nib.meditatorListView),
+            ChatViewController(),
+            DhammaViewController(nib: R.nib.dhammaView),
+            QuoteViewController(nib: R.nib.quoteView)
+        ]
         
         for viewController in viewControllers {
             viewController.tabBarItem.imageInsets = UIEdgeInsets(top: 5, left: 0, bottom: -5, right: 0)
         }
-
-        UITabBar.appearance().tintColor = UIColor.orangeColor()
-
-        title = "Meditation+"
         
-        tabBarTransition = TabBarTransition()
+        setViewControllers(viewControllers, animated: true)
     }
 
     required init?(coder aDecoder: NSCoder)
@@ -92,6 +83,5 @@ extension TabBarController: UITabBarControllerDelegate
     func tabBarController(tabBarController: UITabBarController, animationControllerForTransitionFromViewController fromVC: UIViewController, toViewController toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
         return tabBarTransition
-//        return nil
     }
 }

@@ -44,7 +44,7 @@ class QuoteViewController: UIViewController
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "BookIcon"), tag: 0)
+        tabBarItem = UITabBarItem(title: nil, image: R.image.bookIcon(), tag: 0)
     }
 
     required init?(coder aDecoder: NSCoder)

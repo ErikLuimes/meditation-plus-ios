@@ -109,6 +109,11 @@ public final class Results<T: Object>: ResultsBase {
     /// cannot exist independently from a `Realm`.
     public var realm: Realm? { return Realm(rlmResults.realm) }
 
+    /// Indicates if the results can no longer be accessed.
+    ///
+    /// Results can no longer be accessed if `invalidate` is called on the containing `Realm`.
+    public var invalidated: Bool { return rlmResults.invalidated }
+
     /// Returns the number of objects in these results.
     public var count: Int { return Int(rlmResults.count) }
 
@@ -320,64 +325,6 @@ public final class Results<T: Object>: ResultsBase {
     }
 
     // MARK: Notifications
-
-    /**
-     Register a block to be called each time the Results changes.
-
-     The block will be asynchronously called with the initial results, and then
-     called again after each write transaction which changes either any of the
-     objects in the results, or which objects are in the results.
-
-     If an error occurs the block will be called with `nil` for the results
-     parameter and a non-`nil` error. Currently the only errors that can occur are
-     when opening the Realm on the background worker thread fails.
-
-     At the time when the block is called, the Results object will be fully
-     evaluated and up-to-date, and as long as you do not perform a write transaction
-     on the same thread or explicitly call realm.refresh(), accessing it will never
-     perform blocking work.
-
-     Notifications are delivered via the standard run loop, and so can't be
-     delivered while the run loop is blocked by other activity. When
-     notifications can't be delivered instantly, multiple notifications may be
-     coalesced into a single notification. This can include the notification
-     with the initial results. For example, the following code performs a write
-     transaction immediately after adding the notification block, so there is no
-     opportunity for the initial notification to be delivered first. As a
-     result, the initial notification will reflect the state of the Realm after
-     the write transaction.
-
-         let results = realm.objects(Dog)
-         print("dogs.count: \(results?.count)") // => 0
-         let token = results.addNotificationBlock { (dogs, error) in
-             // Only fired once for the example
-             print("dogs.count: \(dogs?.count)") // will only print "dogs.count: 1"
-         }
-         try! realm.write {
-             realm.add(Dog.self, value: ["name": "Rex", "age": 7])
-         }
-         // end of runloop execution context
-
-     You must retain the returned token for as long as you want updates to continue
-     to be sent to the block. To stop receiving updates, call stop() on the token.
-
-     - warning: This method cannot be called during a write transaction, or when
-                the source realm is read-only.
-
-     - parameter block: The block to be called with the evaluated results.
-     - returns: A token which must be held for as long as you want query results to be delivered.
-     */
-    @available(*, deprecated=1, message="Use addNotificationBlock with changes")
-    @warn_unused_result(message="You must hold on to the NotificationToken returned from addNotificationBlock")
-    public func addNotificationBlock(block: (results: Results<T>?, error: NSError?) -> ()) -> NotificationToken {
-        return rlmResults.addNotificationBlock { results, changes, error in
-            if results != nil {
-                block(results: self, error: nil)
-            } else {
-                block(results: nil, error: error)
-            }
-        }
-    }
 
     /**
      Register a block to be called each time the Results changes.

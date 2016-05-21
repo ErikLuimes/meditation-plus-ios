@@ -40,10 +40,22 @@ public class SetupManager
     static public func setup() -> Void
     {
         setupLogging()
+        setupConfig()
+        setupR()
         setupCrashlytics()
         updateSettingsPage()
         setupDefaults()
         setupMeditationTimer()
+    }
+    
+    static private func setupConfig()
+    {
+        DDLogInfo("Using api config:\n\(Config.api.endpoint)" )
+    }
+    
+    static private func setupR()
+    {
+        R.assertValid()
     }
     
     static private func setupLogging() -> Void
@@ -60,7 +72,7 @@ public class SetupManager
         DDLogInfo("Send crashlogs: \(sendCrashes)")
         
         if (sendCrashes) {
-            Fabric.with([Crashlytics.sharedInstance()])
+            Crashlytics.startWithAPIKey(Config.crashlytics.key)
             NSUserDefaults.standardUserDefaults().setValue(NSNumber(bool: true), forKey: "CrashReportingPreference")
         }
     }

@@ -142,7 +142,7 @@ class ProfileView: UIView {
         let numberFormatter                     = NSNumberFormatter()
         numberFormatter.generatesDecimalNumbers = false
         
-        let chartDataSet            = BarChartDataSet(yVals: dataEntries, label: "Minutes meditated")
+        let chartDataSet            = BarChartDataSet(yVals: dataEntries, label: NSLocalizedString("meditator.chart.description", comment: ""))
         chartDataSet.valueFormatter = numberFormatter
         chartDataSet.colors         = [UIColor.orangeColor()]
         

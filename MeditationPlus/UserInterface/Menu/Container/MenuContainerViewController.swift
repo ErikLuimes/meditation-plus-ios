@@ -53,9 +53,11 @@ class MenuContainerViewController: KGDrawerViewController
         self.animator.springDamping = 1
 
         // Menu view controller
-        let menuViewController = MenuViewController(nibName: "MenuViewController", bundle: nil)
+        let menuViewController = MenuViewController(nib: R.nib.menuView)
+        
         menuViewController.drawerNavigationHandler = {
             (viewController: UIViewController, animated: Bool) in
+            
             let navigationViewController = NavigationController(rootViewController: viewController)
             navigationViewController.toggleDrawerHandler = self.toggleMenuHandler
 
@@ -67,13 +69,13 @@ class MenuContainerViewController: KGDrawerViewController
         }
 
         // Initial view controller
-        let initialContentViewController = SplashViewController(nibName: "SplashViewController", bundle: nil)
-        let navigationViewController = NavigationController(rootViewController: initialContentViewController)
+        let initialContentViewController = SplashViewController(nib: R.nib.splashView)
+        let navigationViewController     = NavigationController(rootViewController: initialContentViewController)
         navigationViewController.toggleDrawerHandler = self.toggleMenuHandler
 
         self.centerViewController = navigationViewController
-        self.leftViewController = menuViewController
-        self.backgroundImage = UIImage(named: "background_blurred")
+        self.leftViewController   = menuViewController
+        self.backgroundImage      = R.image.backgroundBlurred()
     }
 
     required init?(coder aDecoder: NSCoder)

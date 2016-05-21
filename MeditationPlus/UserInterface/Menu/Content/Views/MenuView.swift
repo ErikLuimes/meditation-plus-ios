@@ -31,6 +31,7 @@
 //
 
 import UIKit
+import Rswift
 
 class MenuView: UIView
 {
@@ -40,7 +41,7 @@ class MenuView: UIView
     {
         didSet
         {
-            blurView.layer.cornerRadius = 10
+            blurView.layer.cornerRadius  = 10
             blurView.layer.masksToBounds = true
         }
     }
@@ -50,17 +51,19 @@ class MenuView: UIView
         didSet
         {
             // Setting the rendering mode on the image is to make it work on a UIVibranceyEffectView
-            cutoutImageView.image = UIImage(named: "buddha")?.imageWithRenderingMode(.AlwaysTemplate)
+            cutoutImageView.image = R.image.buddha()?.imageWithRenderingMode(.AlwaysTemplate)
         }
     }
 
     @IBOutlet weak var imageViewTrailingMargin: NSLayoutConstraint!
+    
     override func awakeFromNib()
     {
         super.awakeFromNib()
 
         menuTableView.tableFooterView = UIView(frame: CGRectZero)
-        menuTableView.bounces = false
+        menuTableView.bounces         = false
+        menuTableView.registerNib(R.nib.menuCell(), forCellReuseIdentifier: R.nib.menuCell.name)
 
         imageViewTrailingMargin.constant = (-CGRectGetWidth(cutoutImageView.frame) / 3.0)
     }

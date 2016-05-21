@@ -37,6 +37,7 @@ import MessageUI
 import RealmSwift
 import CocoaLumberjack
 import PureLayout
+import Rswift
 
 class ChatViewController: SLKTextViewController {
     // MARK: Services
@@ -55,11 +56,6 @@ class ChatViewController: SLKTextViewController {
     {
         return Array<String>(TextTools.sharedInstance.emoticons.keys.sort() { $0 < $1 })
     }()
-
-    // MARK: Identifiers
-    
-    private let otherChatCellIdentifier = "otherChatCellIdentifier"
-    private let ownChatCellIdentifier   = "ownChatCellIdentifier"
 
     // MARK: Misc
     
@@ -80,8 +76,8 @@ class ChatViewController: SLKTextViewController {
         chatService    = ChatService()
         profileService = ProfileService.sharedInstance
         
-        tabBarItem     = UITabBarItem(title: nil, image: UIImage(named: "chat-icon"), tag: 0)
-        questionButton = UIBarButtonItem(title: "Ask Question", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChatViewController.didPressQuestionButton(_:)))
+        tabBarItem     = UITabBarItem(title: nil, image: R.image.chatIcon(), tag: 0)
+        questionButton = UIBarButtonItem(title: NSLocalizedString("ask.question.button.title", comment: ""), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChatViewController.didPressQuestionButton(_:)))
     }
 
     required init(coder decoder: NSCoder)
@@ -153,13 +149,13 @@ extension ChatViewController
         
         shouldScrollToBottomAfterKeyboardShows = true
         
-        leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
+        leftButton.setImage(R.image.smileyIcon(), forState: UIControlState.Normal)
         leftButton.tintColor = UIColor.grayColor()
         
         rightButton.setTitle("Send", forState: UIControlState.Normal)
         rightButton.tintColor = UIColor.orangeColor()
         
-        textView.placeholder      = "Message"
+        textView.placeholder      = NSLocalizedString("chat.message.placeholder", comment: "")
         textView.placeholderColor = UIColor.lightGrayColor()
         
         textInputbar.autoHideRightButton = true
@@ -170,8 +166,8 @@ extension ChatViewController
         
         view.backgroundColor = UIColor.whiteColor()
         
-        tableView?.registerNib(UINib(nibName: "OtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
-        tableView?.registerNib(UINib(nibName: "OwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
+        tableView?.registerNib(R.nib.otherMessageCell(), forCellReuseIdentifier: R.nib.otherMessageCell.name)
+        tableView?.registerNib(R.nib.ownMessageCell(), forCellReuseIdentifier: R.nib.ownMessageCell.name)
         tableView?.separatorStyle       = .None
         tableView?.rowHeight            = UITableViewAutomaticDimension
         tableView?.scrollsToTop         = false
@@ -285,7 +281,7 @@ extension ChatViewController
         super.didPressRightButton(sender)
 
         guard message?.characters.count ?? 0 > 0 else {
-            NotificationManager.displayStatusBarNotification("Please enter a message.")
+            NotificationManager.displayStatusBarNotification(NSLocalizedString("empty.message.error", comment: ""))
             return
         }
         
@@ -294,7 +290,7 @@ extension ChatViewController
             (result: ServiceResult) in
             
             if case ServiceResult.Failure(_) = result {
-                NotificationManager.displayStatusBarNotification("Failed sending message.")
+                NotificationManager.displayStatusBarNotification(NSLocalizedString("message.sending.failed.error", comment: ""))
             }
         }
     }
@@ -342,10 +338,10 @@ extension ChatViewController
             if let chatResults = self.chatResults where indexPath.section == 0 && indexPath.row < chatResults.count {
                 let chatItem = chatResults[indexPath.row]
                 if chatItem.me ?? false {
-                    cell = tableView.dequeueReusableCellWithIdentifier(self.ownChatCellIdentifier, forIndexPath: indexPath)
+                    cell = tableView.dequeueReusableCellWithIdentifier(R.nib.ownMessageCell.name, forIndexPath: indexPath)
                     (cell as? MessageCell)?.type = MessageCellType.Own
                 } else {
-                    cell = tableView.dequeueReusableCellWithIdentifier(self.otherChatCellIdentifier, forIndexPath: indexPath)
+                    cell = tableView.dequeueReusableCellWithIdentifier(R.nib.otherMessageCell.name, forIndexPath: indexPath)
                     (cell as? MessageCell)?.type = MessageCellType.Other
                 }
 
@@ -397,11 +393,11 @@ extension ChatViewController: MFMailComposeViewControllerDelegate
             case MFMailComposeResultCancelled:
                 break
             case MFMailComposeResultSent:
-                NotificationManager.displayStatusBarNotification("Report sent")
+                NotificationManager.displayStatusBarNotification(NSLocalizedString("mail.report.sent.title", comment: ""))
             case MFMailComposeResultSaved:
-                NotificationManager.displayStatusBarNotification("Report saved")
+                NotificationManager.displayStatusBarNotification(NSLocalizedString("mail.report.saved.title", comment: ""))
             case MFMailComposeResultFailed:
-                NotificationManager.displayNotification(error?.localizedDescription ?? "Somer error occurred, please try again later.")
+                NotificationManager.displayNotification(error?.localizedDescription ?? NSLocalizedString("mail.report.failed.title", comment: ""))
             default:
                 break
         }
@@ -418,10 +414,10 @@ extension ChatViewController: MessageCellDelegate
     
     func didPressReportButton(button: UIButton, chatItem: ChatItem?)
     {
-        let alertController = UIAlertController(title: "Report inappropriate content", message: "By clicking the 'Report' button you can send us an email to report abuse and inappropriate content.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let alertController = UIAlertController(title: NSLocalizedString("report.alert.title", comment: ""), message: NSLocalizedString("report.alert.description", comment: ""), preferredStyle: UIAlertControllerStyle.ActionSheet)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        let rapportAction = UIAlertAction(title: "Report ", style: UIAlertActionStyle.Destructive) {
+        let reportAction = UIAlertAction(title: "Report ", style: UIAlertActionStyle.Destructive) {
             (action) -> Void in
             self.presentedViewController?.dismissViewControllerAnimated(true, completion: nil)
             
@@ -431,11 +427,11 @@ extension ChatViewController: MessageCellDelegate
         }
         
         alertController.addAction(cancelAction)
-        alertController.addAction(rapportAction)
+        alertController.addAction(reportAction)
         
         if let popover = alertController.popoverPresentationController {
-            popover.sourceView = button
-            popover.sourceRect = button.bounds
+            popover.sourceView               = button
+            popover.sourceRect               = button.bounds
             popover.permittedArrowDirections = UIPopoverArrowDirection.Any
         }
         
@@ -446,9 +442,9 @@ extension ChatViewController: MessageCellDelegate
     {
         
         if MFMailComposeViewController.canSendMail() {
-            let title = "Report inappropriate content"
-            let body = "Dear sir/madam, \n\nI would like to report inappropriate content on the Meditator Shoutbox.\n\nusername:\n\(chatItem.username ?? "")\n\nmessage:\n\(chatItem.message ?? "")\n\nmessageId: \(chatItem.cid ?? "")"
-            let to = ["erik.luimes@gmail.com"]
+            let title = NSLocalizedString("report.mail.title", comment: "")
+            let body  = String(format: NSLocalizedString("report.mail.body.format username: %@, message: %@, messsageId: %@", comment: ""), chatItem.username ?? "", chatItem.message ?? "", chatItem.cid ?? "")
+            let to    = ["erik.luimes@gmail.com"]
             
             let composer = MFMailComposeViewController()
             composer.mailComposeDelegate = self
@@ -458,7 +454,7 @@ extension ChatViewController: MessageCellDelegate
             
             self.presentViewController(composer, animated: true, completion: nil)
         } else {
-            NotificationManager.displayNotification("Unable to use email.")
+            NotificationManager.displayNotification(NSLocalizedString("mail.configuration.error", comment: ""))
         }
     }
 }
@@ -469,7 +465,7 @@ extension ChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
 {
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
     {
-        return UIImage(named: "chat-icon")
+        return R.image.chatIcon()
     }
 
     func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation!
@@ -527,7 +523,11 @@ extension ChatViewController: UIViewControllerPreviewingDelegate
             
             if let chatItem = chatResults?[indexPath.row] {
                 previewingContext.sourceRect = tableView!.convertRect(cell.frame, toView: self.view)
-                viewController               = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: chatItem.username)
+                viewController               = ProfileViewController(
+                    nib: R.nib.profileView,
+                    username: chatItem.username,
+                    profileContentProvider: ProfileContentProvider(profileService: ProfileService.sharedInstance)
+                )
             }
         }
         

@@ -35,21 +35,13 @@ import Foundation
 enum MenuItem: Int
 {
     case Home
-    case Chat
-    case Videos
-    case Settings
-    case About
     case Logout
 
     var title: String
     {
         switch self {
-            case .Home:       return "Home"
-            case .Chat:       return "Chat"
-            case .Videos:     return "Videos"
-            case .Settings:   return "Settings"
-            case .About:      return "About"
-            case .Logout:     return "Logout"
+            case .Home:       return NSLocalizedString("menu.item.home", comment: "")
+            case .Logout:     return NSLocalizedString("menu.item.logout", comment: "")
         }
     }
 }

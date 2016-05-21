@@ -163,7 +163,7 @@ class SplashViewController: UIViewController
 
             self.authenticationManager.loginWithUsername(username, password: password, failure: {
                 (error, errorString) -> Void in
-                NotificationManager.displayNotification((errorString ?? "Some error occured, Please try again later.") as String)
+                NotificationManager.displayNotification((errorString ?? NSLocalizedString("authentication.unknown.error", comment: "")) as String)
 
                 sender.enabled = true
             }, completion: {

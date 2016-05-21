@@ -32,6 +32,7 @@
 
 import Foundation
 import UIKit
+import Rswift
 
 class VideoListView: UIView {
     @IBOutlet weak var tableView: UITableView!
@@ -41,7 +42,7 @@ class VideoListView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        tableView.registerNib(UINib(nibName: "VideoCell", bundle: nil), forCellReuseIdentifier: "VideoCell")
+        tableView.registerNib(R.nib.videoCell(), forCellReuseIdentifier: R.nib.videoCell.name)
         tableView.rowHeight = (UIScreen.mainScreen().bounds.size.width / 16.0) * 9.0
         tableView.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 49, right: 0)
         tableView.tableFooterView = UIView()

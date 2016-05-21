@@ -15,3 +15,5 @@ DerivedData
 .idea/
 *.hmap
 *.xccheckout
+*.generated.swift
+*-config.plist

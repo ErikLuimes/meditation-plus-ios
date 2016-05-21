@@ -63,11 +63,8 @@ public class TabBarTransition: NSObject, UIViewControllerAnimatedTransitioning
         fromView.frame = initialFrame
         
         // Overlay view
-//        let overlayView = UIView(frame: initialFrame)
         let overlayView = UIVisualEffectView(frame: initialFrame)
         overlayView.effect = UIBlurEffect(style: UIBlurEffectStyle.ExtraLight)
-//        overlayView.backgroundColor = UIColor.whiteColor()
-//        overlayView.alpha = 1.0
         containerView.insertSubview(overlayView, belowSubview: fromView)
         
         // To View
@@ -75,13 +72,12 @@ public class TabBarTransition: NSObject, UIViewControllerAnimatedTransitioning
         toView.layer.transform = CATransform3DTranslate(transform, 0, 0, -100)
         
         UIView.animateWithDuration(transitionDuration(transitionContext), delay: 0, options: .CurveEaseInOut, animations:
-            {
-                toView.transform = CGAffineTransformIdentity
-                fromView.layer.transform = CATransform3DTranslate(transform, 0, yTranslation, 0)
-//                overlayView.alpha = 0.0
-                overlayView.effect = nil
-                
-            })
+        {
+            toView.transform = CGAffineTransformIdentity
+            fromView.layer.transform = CATransform3DTranslate(transform, 0, yTranslation, 0)
+            overlayView.effect = nil
+            
+        })
         {
             (finished) in
             

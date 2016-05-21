@@ -35,18 +35,31 @@ import UIKit
 
 class MenuDataSource: NSObject, UITableViewDataSource
 {
-    private let cellReuseIdentifier: String
-
-    var cellConfigurationHandler: ((MenuCell, MenuItem) -> ())?
-
-    private var sections: [TableViewSection<MenuItem>] = [TableViewSection < MenuItem>]()
-
-    required init(cellReuseIdentifier: String)
+    private var sections: [TableViewSection<MenuItem>]
+    
+    override init()
     {
-        self.cellReuseIdentifier = cellReuseIdentifier
-    }
+        var sections: [TableViewSection<MenuItem>] = [TableViewSection<MenuItem>]()
 
-    // MARK: UITableViewDataSource
+        let toolsSection = TableViewSection<MenuItem>(
+            title: NSLocalizedString("menu.section.tools", comment: ""),
+            items: [
+                MenuItem.Home,
+            ]
+        )
+
+        let informationSection = TableViewSection<MenuItem>(
+            title: NSLocalizedString("menu.section.misc", comment: ""),
+            items: [
+                MenuItem.Logout
+            ]
+        )
+
+        sections.append(toolsSection)
+        sections.append(informationSection)
+        
+        self.sections = sections
+    }
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int
     {
@@ -55,21 +68,15 @@ class MenuDataSource: NSObject, UITableViewDataSource
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        var numberOfRows: Int = 0
-
-        if let items = self.sections[safe: section]?.items {
-            numberOfRows = items.count
-        }
-
-        return numberOfRows
+        return self.sections[safe: section]?.items.count ?? 0
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.cellReuseIdentifier, forIndexPath: indexPath) as! MenuCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(R.nib.menuCell.name, forIndexPath: indexPath) as! MenuCell
 
         if let menuItem = self.itemForIndexPath(indexPath) {
-            self.cellConfigurationHandler?(cell, menuItem)
+            cell.viewData = MenuCell.ViewData(menuItem: menuItem)
         }
 
         return cell
@@ -81,10 +88,10 @@ class MenuDataSource: NSObject, UITableViewDataSource
     {
         return self.sections[safe: indexPath.section]?.items[safe: indexPath.row]
     }
-
-    func updateSections(sections: [TableViewSection<MenuItem>])
+    
+    private func menueSections() -> [TableViewSection<MenuItem>]
     {
-        self.sections = sections
+        return sections
     }
 }
 
