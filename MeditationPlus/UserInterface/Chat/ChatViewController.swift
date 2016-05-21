@@ -37,6 +37,7 @@ import MessageUI
 import RealmSwift
 import CocoaLumberjack
 import PureLayout
+import Rswift
 
 class ChatViewController: SLKTextViewController {
     // MARK: Services
@@ -55,11 +56,6 @@ class ChatViewController: SLKTextViewController {
     {
         return Array<String>(TextTools.sharedInstance.emoticons.keys.sort() { $0 < $1 })
     }()
-
-    // MARK: Identifiers
-    
-    private let otherChatCellIdentifier = "otherChatCellIdentifier"
-    private let ownChatCellIdentifier   = "ownChatCellIdentifier"
 
     // MARK: Misc
     
@@ -80,7 +76,7 @@ class ChatViewController: SLKTextViewController {
         chatService    = ChatService()
         profileService = ProfileService.sharedInstance
         
-        tabBarItem     = UITabBarItem(title: nil, image: UIImage(named: "chat-icon"), tag: 0)
+        tabBarItem     = UITabBarItem(title: nil, image: R.image.chatIcon(), tag: 0)
         questionButton = UIBarButtonItem(title: "Ask Question", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ChatViewController.didPressQuestionButton(_:)))
     }
 
@@ -153,7 +149,7 @@ extension ChatViewController
         
         shouldScrollToBottomAfterKeyboardShows = true
         
-        leftButton.setImage(UIImage(named: "smiley"), forState: UIControlState.Normal)
+        leftButton.setImage(R.image.smileyIcon(), forState: UIControlState.Normal)
         leftButton.tintColor = UIColor.grayColor()
         
         rightButton.setTitle("Send", forState: UIControlState.Normal)
@@ -170,8 +166,8 @@ extension ChatViewController
         
         view.backgroundColor = UIColor.whiteColor()
         
-        tableView?.registerNib(UINib(nibName: "OtherMessageCell", bundle: nil), forCellReuseIdentifier: otherChatCellIdentifier)
-        tableView?.registerNib(UINib(nibName: "OwnMessageCell", bundle: nil), forCellReuseIdentifier: ownChatCellIdentifier)
+        tableView?.registerNib(R.nib.otherMessageCell(), forCellReuseIdentifier: R.nib.otherMessageCell.name)
+        tableView?.registerNib(R.nib.ownMessageCell(), forCellReuseIdentifier: R.nib.ownMessageCell.name)
         tableView?.separatorStyle       = .None
         tableView?.rowHeight            = UITableViewAutomaticDimension
         tableView?.scrollsToTop         = false
@@ -342,10 +338,10 @@ extension ChatViewController
             if let chatResults = self.chatResults where indexPath.section == 0 && indexPath.row < chatResults.count {
                 let chatItem = chatResults[indexPath.row]
                 if chatItem.me ?? false {
-                    cell = tableView.dequeueReusableCellWithIdentifier(self.ownChatCellIdentifier, forIndexPath: indexPath)
+                    cell = tableView.dequeueReusableCellWithIdentifier(R.nib.ownMessageCell.name, forIndexPath: indexPath)
                     (cell as? MessageCell)?.type = MessageCellType.Own
                 } else {
-                    cell = tableView.dequeueReusableCellWithIdentifier(self.otherChatCellIdentifier, forIndexPath: indexPath)
+                    cell = tableView.dequeueReusableCellWithIdentifier(R.nib.otherMessageCell.name, forIndexPath: indexPath)
                     (cell as? MessageCell)?.type = MessageCellType.Other
                 }
 
@@ -469,7 +465,7 @@ extension ChatViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource
 {
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
     {
-        return UIImage(named: "chat-icon")
+        return R.image.chatIcon()
     }
 
     func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation!
@@ -527,7 +523,11 @@ extension ChatViewController: UIViewControllerPreviewingDelegate
             
             if let chatItem = chatResults?[indexPath.row] {
                 previewingContext.sourceRect = tableView!.convertRect(cell.frame, toView: self.view)
-                viewController               = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: chatItem.username)
+                viewController               = ProfileViewController(
+                    nib: R.nib.profileView,
+                    username: chatItem.username,
+                    profileContentProvider: ProfileContentProvider(profileService: ProfileService.sharedInstance)
+                )
             }
         }
         

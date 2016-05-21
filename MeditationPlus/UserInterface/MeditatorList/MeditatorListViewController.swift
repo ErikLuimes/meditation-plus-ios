@@ -77,7 +77,7 @@ class MeditatorListViewController: UIViewController
     {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
-        tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "BuddhaIcon"), tag: 0)
+        tabBarItem = UITabBarItem(title: nil, image: R.image.buddhaIcon(), tag: 0)
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MeditatorListViewController.willEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
         
@@ -295,7 +295,12 @@ extension MeditatorListViewController: UITableViewDelegate
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
     {
         if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath) {
-            let viewController = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: meditator.username)
+            let viewController = ProfileViewController(
+                nib: R.nib.profileView,
+                username: meditator.username,
+                profileContentProvider: ProfileContentProvider(profileService: ProfileService.sharedInstance)
+            )
+            
             self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
@@ -427,7 +432,7 @@ extension MeditatorListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDel
 
     func imageForEmptyDataSet(scrollView: UIScrollView!) -> UIImage!
     {
-        return UIImage(named: "BuddhaIcon")
+        return R.image.buddhaIcon()
     }
 
     func imageAnimationForEmptyDataSet(scrollView: UIScrollView!) -> CAAnimation!
@@ -460,7 +465,11 @@ extension MeditatorListViewController: UIViewControllerPreviewingDelegate
         if let indexPath = meditatorView.tableView.indexPathForRowAtPoint(location) {
             if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath) {
                 previewingContext.sourceRect = meditatorView.tableView.rectForRowAtIndexPath(indexPath)
-                viewController = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: meditator.username)
+                viewController               = ProfileViewController(
+                    nib: R.nib.profileView,
+                    username: meditator.username,
+                    profileContentProvider: ProfileContentProvider(profileService: ProfileService.sharedInstance)
+                )
             }
         }
         
@@ -483,7 +492,12 @@ extension MeditatorListViewController: MeditatorCellDelegate
         
         if let meditator = self.meditatorDataSource?.meditatorForIndexPath(indexPath)
         {
-            let viewController = ProfileViewController(nibName: "ProfileViewController", bundle: nil, username: meditator.username)
+            let viewController = ProfileViewController(
+                nib: R.nib.profileView,
+                username: meditator.username,
+                profileContentProvider: ProfileContentProvider(profileService: ProfileService.sharedInstance)
+            )
+            
             navigationController?.pushViewController(viewController, animated: true)
         }
     }

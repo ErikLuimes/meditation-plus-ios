@@ -32,6 +32,7 @@
 
 import UIKit
 import RealmSwift
+import Rswift
 
 class ProfileViewController: UIViewController
 {
@@ -40,15 +41,15 @@ class ProfileViewController: UIViewController
         return view as! ProfileView
     }
     
-    private var profileContentProvider: ProfileContentProvider!
+    private var profileContentProvider: ProfileContentProvider
     
-    private var username: String!
+    private var username: String
     
-    init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?, username: String)
+    required init(nib: NibResourceType, username: String, profileContentProvider: ProfileContentProvider)
     {
-        super.init(nibName: nibNameOrNil, bundle: nil)
-        self.username = username
-        self.profileContentProvider = ProfileContentProvider(profileService: ProfileService.sharedInstance)
+        self.username               = username
+        self.profileContentProvider = profileContentProvider
+        super.init(nibName: nib.name, bundle: nib.bundle)
     }
 
     required init?(coder aDecoder: NSCoder) {
