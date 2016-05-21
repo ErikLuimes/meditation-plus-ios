@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>youtube</key>
+	<dict>
+		<key>key</key>
+		<string>key</string>
+	</dict>
+	<key>fabric</key>
+	<dict>
+		<key>key</key>
+		<string>key</string>
+		<key>secret</key>
+		<string>secret</string>
+	</dict>
+	<key>api</key>
+	<dict>
+		<key>endpoint</key>
+		<string></string>
+	</dict>
+</dict>
+</plist>
