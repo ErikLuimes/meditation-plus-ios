@@ -22,12 +22,33 @@ import Realm
 /// :nodoc:
 /// Internal class. Do not use directly. Used for reflection and initialization
 public class LinkingObjectsBase: NSObject, NSFastEnumeration {
-    internal var rlmResults: RLMResults
     internal let objectClassName: String
     internal let propertyName: String
 
-    init(results: RLMResults, fromClassName objectClassName: String, property propertyName: String) {
-        self.rlmResults = results
+    private var cachedRLMResults: RLMResults?
+    private var object: RLMWeakObjectHandle?
+    private var property: RLMProperty?
+
+    internal func attachTo(object object: RLMObjectBase, property: RLMProperty) {
+        self.object = RLMWeakObjectHandle(object: object)
+        self.property = property
+        self.cachedRLMResults = nil
+    }
+
+    internal var rlmResults: RLMResults {
+        if cachedRLMResults == nil {
+            if let object = self.object, property = self.property {
+                cachedRLMResults = RLMDynamicGet(object.object, property)! as? RLMResults
+                self.object = nil
+                self.property = nil
+            } else {
+                cachedRLMResults = RLMResults.emptyDetachedResults()
+            }
+        }
+        return cachedRLMResults!
+    }
+
+    init(fromClassName objectClassName: String, property propertyName: String) {
         self.objectClassName = objectClassName
         self.propertyName = propertyName
     }
@@ -66,14 +87,27 @@ public final class LinkingObjects<T: Object>: LinkingObjectsBase {
     /// Returns the Realm these linking objects are associated with.
     public var realm: Realm? { return rlmResults.attached ? Realm(rlmResults.realm) : nil }
 
+    /// Indicates if the linking objects can no longer be accessed.
+    ///
+    /// Linking objects can no longer be accessed if `invalidate` is called on the containing `Realm`.
+    public var invalidated: Bool { return rlmResults.invalidated }
+
     /// Returns the number of objects in these linking objects.
     public var count: Int { return Int(rlmResults.count) }
 
     // MARK: Initializers
 
+    /**
+     Creates a LinkingObjects. This initializer should only be called when
+     declaring a property on a Realm model.
+
+     - parameter type:         The originating type linking to this object type.
+     - parameter propertyName: The property name of the incoming relationship
+                               this LinkingObjects should refer to.
+    */
     public init(fromType type: T.Type, property propertyName: String) {
         let className = (T.self as Object.Type).className()
-        super.init(results: RLMResults.emptyDetachedResults(), fromClassName: className, property: propertyName)
+        super.init(fromClassName: className, property: propertyName)
     }
 
     /// Returns a human-readable description of the objects contained in these linking objects.
@@ -289,66 +323,6 @@ public final class LinkingObjects<T: Object>: LinkingObjectsBase {
     }
 
     // MARK: Notifications
-
-    /**
-     Register a block to be called each time the LinkingObjects changes.
-
-     The block will be asynchronously called with the initial set of objects, and then
-     called again after each write transaction which changes either any of the
-     objects in the collection, or which objects are in the collection.
-
-     If an error occurs the block will be called with `nil` for the linkingObjects
-     parameter and a non-`nil` error. Currently the only errors that can occur are
-     when opening the Realm on the background worker thread fails.
-
-     At the time when the block is called, the LinkingObjects object will be fully
-     evaluated and up-to-date, and as long as you do not perform a write transaction
-     on the same thread or explicitly call realm.refresh(), accessing it will never
-     perform blocking work.
-
-     Notifications are delivered via the standard run loop, and so can't be
-     delivered while the run loop is blocked by other activity. When
-     notifications can't be delivered instantly, multiple notifications may be
-     coalesced into a single notification. This can include the notification
-     with the initial results. For example, the following code performs a write
-     transaction immediately after adding the notification block, so there is no
-     opportunity for the initial notification to be delivered first. As a
-     result, the initial notification will reflect the state of the Realm after
-     the write transaction.
-
-         let dog = realm.objects(Dog).first!
-         let owners = dog.owners
-         print("owners.count: \(owners.count)") // => 0
-         let token = owners.addNotificationBlock { (owners, error) in
-             // Only fired once for the example
-             print("owners.count: \(owners.count)") // will only print "owners.count: 1"
-         }
-         try! realm.write {
-             realm.add(Person.self, value: ["name": "Mark", dogs: [dog]])
-         }
-         // end of runloop execution context
-
-     You must retain the returned token for as long as you want updates to continue
-     to be sent to the block. To stop receiving updates, call stop() on the token.
-
-     - warning: This method cannot be called during a write transaction, or when
-     the source realm is read-only.
-
-     - parameter block: The block to be called with the evaluated linking objects.
-     - returns: A token which must be held for as long as you want query results to be delivered.
-     */
-    @available(*, deprecated=1, message="Use addNotificationBlock with changes")
-    @warn_unused_result(message="You must hold on to the NotificationToken returned from addNotificationBlock")
-    public func addNotificationBlock(block: (linkingObjects: LinkingObjects<T>?, error: NSError?) -> ())
-        -> NotificationToken {
-        return rlmResults.addNotificationBlock { results, changes, error in
-            if results != nil {
-                block(linkingObjects: self, error: nil)
-            } else {
-                block(linkingObjects: nil, error: error)
-            }
-        }
-    }
 
     /**
      Register a block to be called each time the LinkingObjects changes.

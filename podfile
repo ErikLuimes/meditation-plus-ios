@@ -29,7 +29,7 @@ target 'MeditationPlus' do
 
     pod 'DateTools', '1.7.0'
     
-    pod 'RealmSwift', '0.102.0'
+    pod 'RealmSwift', '0.103.1'
     
     pod 'CocoaLumberjack/Swift', '2.2.0'
     

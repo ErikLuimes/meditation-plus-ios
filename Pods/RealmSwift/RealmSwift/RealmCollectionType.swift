@@ -120,7 +120,7 @@ and operated upon.
 public protocol RealmCollectionType: CollectionType, CustomStringConvertible {
 
     /// Element type contained in this collection.
-    typealias Element: Object
+    associatedtype Element: Object
 
 
     // MARK: Properties
@@ -129,6 +129,11 @@ public protocol RealmCollectionType: CollectionType, CustomStringConvertible {
     /// collection's owning object does not belong to a realm (the collection is
     /// standalone).
     var realm: Realm? { get }
+
+    /// Indicates if the collection can no longer be accessed.
+    ///
+    /// The collection can no longer be accessed if `invalidate` is called on the containing `Realm`.
+    var invalidated: Bool { get }
 
     /// Returns the number of objects in this collection.
     var count: Int { get }
@@ -360,6 +365,7 @@ private class _AnyRealmCollectionBase<T: Object> {
     typealias Wrapper = AnyRealmCollection<Element>
     typealias Element = T
     var realm: Realm? { fatalError() }
+    var invalidated: Bool { fatalError() }
     var count: Int { fatalError() }
     var description: String { fatalError() }
     func indexOf(object: Element) -> Int? { fatalError() }
@@ -398,6 +404,11 @@ private final class _AnyRealmCollection<C: RealmCollectionType>: _AnyRealmCollec
     /// collection's owning object does not belong to a realm (the collection is
     /// standalone).
     override var realm: Realm? { return base.realm }
+
+    /// Indicates if the collection can no longer be accessed.
+    ///
+    /// The collection can no longer be accessed if `invalidate` is called on the containing `Realm`.
+    override var invalidated: Bool { return base.invalidated }
 
     /// Returns the number of objects in this collection.
     override var count: Int { return base.count }
@@ -642,6 +653,11 @@ public final class AnyRealmCollection<T: Object>: RealmCollectionType {
     /// standalone).
     public var realm: Realm? { return base.realm }
 
+    /// Indicates if the collection can no longer be accessed.
+    ///
+    /// The collection can no longer be accessed if `invalidate` is called on the containing `Realm`.
+    public var invalidated: Bool { return base.invalidated }
+
     /// Returns the number of objects in this collection.
     public var count: Int { return base.count }
 
@@ -843,48 +859,6 @@ public final class AnyRealmCollection<T: Object>: RealmCollectionType {
     public func setValue(value: AnyObject?, forKey key: String) { base.setValue(value, forKey: key) }
 
     // MARK: Notifications
-
-    /**
-    Register a block to be called each time the collection changes.
-
-    The block will be asynchronously called with the initial collection, and
-    then called again after each write transaction which changes the collection
-    or any of the items in the collection.
-
-    The block is called on the same thread as it was added on, and can only
-    be added on threads which are currently within a run loop. Unless you are
-    specifically creating and running a run loop on a background thread, this
-    normally will only be the main thread.
-
-    Notifications can't be delivered as long as the runloop is blocked by
-    other activity. When notifications can't be delivered instantly, multiple
-    notifications may be coalesced. That can include the notification about the
-    initial collection.
-
-    You must retain the returned token for as long as you want updates to continue
-    to be sent to the block. To stop receiving updates, call stop() on the token.
-
-    - parameter block: The block to be called each time the collection changes.
-    - returns: A token which must be held for as long as you want notifications to be delivered.
-    */
-    @available(*, deprecated=1, message="Use addNotificationBlock with changes")
-    @warn_unused_result(message="You must hold on to the NotificationToken returned from addNotificationBlock")
-    public func addNotificationBlock(block: (collection: AnyRealmCollection<Element>?,
-                                             error: NSError?) -> ()) -> NotificationToken {
-        return base._addNotificationBlock { changes in
-            switch changes {
-            case .Initial(let collection):
-                block(collection: collection, error: nil)
-                break
-            case .Update(let collection, _, _, _):
-                block(collection: collection, error: nil)
-                break
-            case .Error(let error):
-                block(collection: nil, error: error)
-                break
-            }
-        }
-    }
 
     /**
      Register a block to be called each time the collection changes.
