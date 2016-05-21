@@ -19,8 +19,8 @@
 "meditating.section.title"          = "Currently meditating";
 "finished.meditating.section.title" = "Finished meditating";
 
-"walking.meditation.time.format minutes: %@" = "walking %@m"
-"sitting.meditation.time.format minutes: %@" = "sitting %@m"
+"walking.meditation.time.format minutes: %@" = "walking %@m";
+"sitting.meditation.time.format minutes: %@" = "sitting %@m";
 
 // Menu
 "menu.section.tools" = "Tools";
