@@ -16,3 +16,4 @@ DerivedData
 *.hmap
 *.xccheckout
 *.generated.swift
+*-config.plist
