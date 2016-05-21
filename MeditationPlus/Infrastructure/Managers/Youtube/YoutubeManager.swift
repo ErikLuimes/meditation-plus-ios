@@ -41,7 +41,7 @@ class YoutubeManager
 
     class func setup()
     {
-        sharedInstance.apiKey = NSBundle.mainBundle().objectForInfoDictionaryKey("YoutubeDataAPIKey") as? String ?? ""
+        sharedInstance.apiKey = Config.youtube.key
     }
 
     func videoList(completion: ([VideoItem] -> Void)?)
