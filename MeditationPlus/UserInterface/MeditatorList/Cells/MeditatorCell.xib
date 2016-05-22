@@ -39,7 +39,7 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="4ob-iQ-TZW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="2" id="2LK-Ln-4V4"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="4ob-iQ-TZW" secondAttribute="bottom" constant="1.5" id="F8g-oG-O3g"/>
+                    <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="4ob-iQ-TZW" secondAttribute="bottom" constant="2" id="F8g-oG-O3g"/>
                     <constraint firstItem="7C9-Mi-pBw" firstAttribute="leading" secondItem="4ob-iQ-TZW" secondAttribute="trailing" constant="20" id="Yfk-1d-tBq"/>
                     <constraint firstItem="4ob-iQ-TZW" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="2" id="hmi-dn-DVV"/>
                     <constraint firstItem="hKb-KM-NoW" firstAttribute="top" secondItem="7C9-Mi-pBw" secondAttribute="bottom" id="pv5-NW-hft"/>

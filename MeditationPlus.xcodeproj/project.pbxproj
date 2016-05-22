@@ -1043,7 +1043,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"${SRCROOT}/Scripts/fabric_run_custom.sh\"";
+			shellScript = "\"${SRCROOT}/Scripts/fabric_run_custom.sh\"";
 		};
 		039A89151CEF925400E1C8CF /* R.swift */ = {
 			isa = PBXShellScriptBuildPhase;
