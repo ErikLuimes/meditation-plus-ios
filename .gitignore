@@ -17,3 +17,4 @@ DerivedData
 *.xccheckout
 *.generated.swift
 *-config.plist
+fabric_run_custom.sh
